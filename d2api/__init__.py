@@ -1,30 +1,44 @@
 import os
 import requests
 from .src import endpoints
-from .src.rtypes import *
-
-def _logger_instance():
-    import logging
-    logging.basicConfig(level = logging.DEBUG)
-    return logging.getLogger(__name__)
+from .src.wrappers import *
+from .src.errors import *
+import logging
 
 class APIWrapper:
-    def __init__(self, api_key = None, raw = False, logging = False):
+    def __init__(self, api_key = None, log_enabled = False):
 
-        self.api_key = api_key if api_key else os.environ.get('DOTA2_KEY', None)
-        self.logger = _logger_instance() if logging else None
-        self.raw = raw
+        self.api_key = api_key if api_key else os.environ.get('DOTA2_API_KEY')
+        if log_enabled:
+            logger = logging.getLogger("d2api")
+            logger.setLevel(logging.DEBUG)
+            self.logger = logger
+        else:
+            logging.getLogger("requests").setLevel(logging.WARNING)
 
 
     def __api_call(self, url = endpoints.MATCH_HISTORY, **kwargs):
         kwargs['key'] = self.api_key
-        response = requests.get(url, params = kwargs)
-
-        if response.status_code == 200:
+        response = requests.get(url, params = kwargs, timeout = 60)
+        status = response.status_code
+        if status == 200:
             return response
+        elif status == 403:
+            raise APIAuthenticationError(api_key = self.api_key)
+        elif status == 503:
+            raise APITimeoutError()
         else:
-            raise Exception('HTTP {}: {}'.format(response.status_code, response.reason))
+            raise BaseError(msg = response.reason)
 
     def get_match_history(self, **kwargs):
         api_response = self.__api_call(endpoints.MATCH_HISTORY, **kwargs)
-        return MatchHistoryResponse(api_response, self.raw)
+        return MatchHistory(api_response)
+
+    def get_match_history_by_sequence_num(self, **kwargs):
+        api_response = self.__api_call(endpoints.MATCH_HISTORY_BY_SEQ_NUM, **kwargs)
+        return MatchHistory(api_response)
+
+    def get_match_details(self, match_id, **kwargs):
+        kwargs['match_id'] = match_id
+        api_response = self.__api_call(endpoints.MATCH_DETAILS, **kwargs)
+        return MatchDetails(api_response)
