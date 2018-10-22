@@ -106,7 +106,7 @@ class PlayerUnit(InventoryUnit, BaseWrapper):
             self._obj['_ability_upgrades'].append(BaseWrapper(au))
 
 
-class MatchHistory(BaseParse):
+class GetMatchHistory(BaseParse):
     def matches(self):
         return self._obj['_matches'].__iter__()
 
@@ -115,7 +115,7 @@ class MatchHistory(BaseParse):
         self._obj['_matches'] = [MatchSummary(match) for match in self._obj.pop('matches', [])]
 
 
-class MatchDetails(BaseParse):
+class GetMatchDetails(BaseParse):
     def players(self, minimal = False):
         if minimal:
             return [p.minimal() for p in self._obj['_players']].__iter__()
@@ -148,3 +148,19 @@ class MatchDetails(BaseParse):
             picksbans.append(BaseWrapper({'is_pick':ip, 'hero':h, 'side':s, 'order':o}))
 
         self._obj['_picks_bans'] = sorted(picksbans, key = lambda x:x.order)
+
+class GetHeroes(BaseParse):
+    def heroes(self):
+        return self._obj['_heroes'].__iter__()
+
+    def parse_response(self, response_obj):
+        self._obj = response_obj.get('result', {})
+        self._obj['_heroes'] = [BaseWrapper(h) for h in self._obj.pop('heroes', [])]
+
+class GetGameItems(BaseParse):
+    def items(self):
+        return self._obj['_items'].__iter__()
+
+    def parse_response(self, response_obj):
+        self._obj = response_obj.get('result', {})
+        self._obj['_items'] = [BaseWrapper(i) for i in self._obj.pop('items', [])]

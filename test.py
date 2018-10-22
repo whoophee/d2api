@@ -8,19 +8,20 @@ import os
 class APIPreliminaryTests(unittest.TestCase):
     def test_environment_api_key_set(self):
         self.assertIsNotNone(os.environ.get('DOTA2_API_KEY'), 
-        "DOTA2_API_KEY was not set in environment.")
+        'DOTA2_API_KEY was not set in environment')
 
     def test_correct_api_key(self):
-        tmp_api = d2api.APIWrapper("abcdxyz")
+        key = 'abcdxyz'
+        tmp_api = d2api.APIWrapper(key)
 
         with self.assertRaises(APIAuthenticationError, 
-        "Request with API key \"abcdxyz\" should raise authentication error."):
+        msg = 'Request with API key \'{}\' should raise authentication error'.format(key)):
             tmp_api.get_match_details('4176987886')
     
     def test_logger_check(self):
         tmp_api = d2api.APIWrapper(log_enabled = True)
         self.assertIsNotNone(tmp_api.logger, 
-        "Logger should not be None when \'log_enabled\' was set to True")
+        'Logger should not be None when \'log_enabled\' was set to True')
 
 class EntityTests(unittest.TestCase):
     def test_steam_32_64(self):
@@ -29,23 +30,62 @@ class EntityTests(unittest.TestCase):
         account1 = SteamAccount(account_id = steam64)
         account2 = SteamAccount(account_id = steam32)
         self.assertEqual(account1, account2,
-        "SteamAccount created with 32 Bit or 64 Bit SteamID should be indistinguishable.")
+        'SteamAccount created with 32 Bit or 64 Bit SteamID should be indistinguishable')
     
 
 
 class MatchHistoryTests(unittest.TestCase):
     def setUp(self):
         api = d2api.APIWrapper()
-        self.res = api.get_match_history()
+        self.get_match_history = api.get_match_history
     
-    def test_match_history_dtype(self):
-        self.assertIsInstance(self.res, MatchHistory, 
-        "get_match_history() should return a MatchHistory object")
+    def test_get_match_history_dtype(self):
+        self.assertIsInstance(self.get_match_history(), GetMatchHistory, 
+        'get_match_history() should return a GetMatchHistory object')
 
-
+class MatchDetailsTests(unittest.TestCase):
+    def setUp(self):
+        api = d2api.APIWrapper()
+        self.get_match_details = api.get_match_details
     
+    def test_get_match_details_dtype(self):
+        self.assertIsInstance(self.get_match_details('4176987886'), GetMatchDetails,
+        'get_match_details(\'4176987886\') should return a GetMatchDetails object')
+         
+    def test_incorrect_matchid(self):
+        res = self.get_match_details(match_id = 1)
+        self.assertTrue(res.error, msg = 'Incorrect match_id should have response error')
 
+class HeroesTests(unittest.TestCase):
+    def setUp(self):
+        api = d2api.APIWrapper()
+        self.get_heroes = api.get_heroes
+    
+    def test_get_heroes_dtype(self):
+        self.assertIsInstance(self.get_heroes(), GetHeroes,
+        'get_heroes() should return a GetHeroes object')
 
+    def test_hero_localized_name(self):
+        res = self.get_heroes()
+        cur_id = 59
+        cur_hero = [h for h in res.heroes() if h.id == cur_id][0]
+        self.assertEqual(cur_hero.localized_name, 'Huskar',
+        'Localized name of id={} should be Huskar'.format(cur_id))
+
+class GameItemsTests(unittest.TestCase):
+    def setUp(self):
+        api = d2api.APIWrapper()
+        self.get_game_items = api.get_game_items
+    
+    def test_get_game_items_dtype(self):
+        self.assertIsInstance(self.get_game_items(), GetGameItems,
+        'get_game_items() should return a GetGameItems object')
+    def test_item_localized_name(self):
+        res = self.get_game_items()
+        cur_id = 265
+        cur_item = [i for i in res.items() if i.id == cur_id][0]
+        self.assertEqual(cur_item.localized_name, 'Infused Raindrops',
+        'Localized name of id={} should be Infused Raindrops'.format(cur_id))
 
 
 
@@ -53,5 +93,5 @@ class MatchHistoryTests(unittest.TestCase):
 # m = cur.get_match_details('4176987886')
 
 # steamIDs = [114539087, 4294967295, 4294967295, 30633942, 78964422, 4294967295, 283619584, 20778465, 4294967295, 59769890]
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
