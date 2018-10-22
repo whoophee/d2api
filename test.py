@@ -49,8 +49,9 @@ class MatchDetailsTests(unittest.TestCase):
         self.get_match_details = api.get_match_details
     
     def test_get_match_details_dtype(self):
-        self.assertIsInstance(self.get_match_details('4176987886'), GetMatchDetails,
-        'get_match_details(\'4176987886\') should return a GetMatchDetails object')
+        match_id = '4176987886'
+        self.assertIsInstance(self.get_match_details(match_id), GetMatchDetails,
+        'get_match_details(\'{}\') should return a GetMatchDetails object'.format(match_id))
          
     def test_incorrect_matchid(self):
         res = self.get_match_details(match_id = 1)
