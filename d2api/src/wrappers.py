@@ -164,11 +164,3 @@ class GameItems(BaseParse):
     def parse_response(self, response_obj):
         self._obj = response_obj.get('result', {})
         self._obj['_items'] = [BaseWrapper(i) for i in self._obj.pop('items', [])]
-
-class LeagueListing(BaseParse):
-    def leagues(self):
-        return self._obj['_leagues'].__iter__()
-
-    def parse_response(self, response_obj):
-        self._obj = response_obj.get('result', {})
-        self._obj['_leagues'] = [BaseWrapper(l) for l in self._obj.pop('leagues', [])]

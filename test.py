@@ -19,9 +19,9 @@ class APIPreliminaryTests(unittest.TestCase):
             tmp_api.get_match_details('4176987886')
     
     def test_logger_check(self):
-        tmp_api = d2api.APIWrapper(log_enabled = True)
+        tmp_api = d2api.APIWrapper(logging_enabled = True)
         self.assertIsNotNone(tmp_api.logger, 
-        'Logger should not be None when \'log_enabled\' was set to True')
+        'Logger should not be None when \'logging_enabled\' was set to True')
 
 class EntityTests(unittest.TestCase):
     def test_steam_32_64(self):
@@ -88,14 +88,6 @@ class GameItemsTests(unittest.TestCase):
         self.assertEqual(cur_item.localized_name, 'Infused Raindrops',
         'Localized name of id={} should be Infused Raindrops'.format(cur_id))
 
-class LeagueListingTests(unittest.TestCase):
-    def setUp(self):
-        api = d2api.APIWrapper()
-        self.get_league_listing = api.get_league_listing
-    
-    def test_get_league_listing_dtype(self):
-        self.assertIsInstance(self.get_league_listing(), LeagueListing,
-        'get_league_listing() should return a LeagueListing object')
 
 
 # m = cur.get_match_details('4176987886')

@@ -6,10 +6,10 @@ from .src.errors import *
 import logging
 
 class APIWrapper:
-    def __init__(self, api_key = None, log_enabled = False):
+    def __init__(self, api_key = None, logging_enabled = False):
 
         self.api_key = api_key if api_key else os.environ.get('DOTA2_API_KEY')
-        if log_enabled:
+        if logging_enabled:
             logger = logging.getLogger("d2api")
             logger.setLevel(logging.DEBUG)
             self.logger = logger
@@ -52,7 +52,3 @@ class APIWrapper:
         kwargs['language'] = kwargs.get('language', 'en_us')
         api_response = self.__api_call(endpoints.GET_GAME_ITEMS, **kwargs)
         return GameItems(api_response)
-    
-    def get_league_listing(self, **kwargs):
-        api_response = self.__api_call(endpoints.GET_LEAGUE_LISTING, **kwargs)
-        return LeagueListing(api_response)
