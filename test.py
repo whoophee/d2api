@@ -40,8 +40,8 @@ class MatchHistoryTests(unittest.TestCase):
         self.get_match_history = api.get_match_history
     
     def test_get_match_history_dtype(self):
-        self.assertIsInstance(self.get_match_history(), GetMatchHistory, 
-        'get_match_history() should return a GetMatchHistory object')
+        self.assertIsInstance(self.get_match_history(), MatchHistory, 
+        'get_match_history() should return a MatchHistory object')
 
 class MatchDetailsTests(unittest.TestCase):
     def setUp(self):
@@ -50,8 +50,8 @@ class MatchDetailsTests(unittest.TestCase):
     
     def test_get_match_details_dtype(self):
         match_id = '4176987886'
-        self.assertIsInstance(self.get_match_details(match_id), GetMatchDetails,
-        'get_match_details(\'{}\') should return a GetMatchDetails object'.format(match_id))
+        self.assertIsInstance(self.get_match_details(match_id), MatchDetails,
+        'get_match_details(\'{}\') should return a MatchDetails object'.format(match_id))
          
     def test_incorrect_matchid(self):
         res = self.get_match_details(match_id = 1)
@@ -63,8 +63,8 @@ class HeroesTests(unittest.TestCase):
         self.get_heroes = api.get_heroes
     
     def test_get_heroes_dtype(self):
-        self.assertIsInstance(self.get_heroes(), GetHeroes,
-        'get_heroes() should return a GetHeroes object')
+        self.assertIsInstance(self.get_heroes(), Heroes,
+        'get_heroes() should return a Heroes object')
 
     def test_hero_localized_name(self):
         res = self.get_heroes()
@@ -79,8 +79,8 @@ class GameItemsTests(unittest.TestCase):
         self.get_game_items = api.get_game_items
     
     def test_get_game_items_dtype(self):
-        self.assertIsInstance(self.get_game_items(), GetGameItems,
-        'get_game_items() should return a GetGameItems object')
+        self.assertIsInstance(self.get_game_items(), GameItems,
+        'get_game_items() should return a GameItems object')
     def test_item_localized_name(self):
         res = self.get_game_items()
         cur_id = 265
@@ -88,7 +88,14 @@ class GameItemsTests(unittest.TestCase):
         self.assertEqual(cur_item.localized_name, 'Infused Raindrops',
         'Localized name of id={} should be Infused Raindrops'.format(cur_id))
 
-
+class LeagueListingTests(unittest.TestCase):
+    def setUp(self):
+        api = d2api.APIWrapper()
+        self.get_league_listing = api.get_league_listing
+    
+    def test_get_league_listing_dtype(self):
+        self.assertIsInstance(self.get_league_listing(), LeagueListing,
+        'get_league_listing() should return a LeagueListing object')
 
 
 # m = cur.get_match_details('4176987886')

@@ -106,7 +106,7 @@ class PlayerUnit(InventoryUnit, BaseWrapper):
             self._obj['_ability_upgrades'].append(BaseWrapper(au))
 
 
-class GetMatchHistory(BaseParse):
+class MatchHistory(BaseParse):
     def matches(self):
         return self._obj['_matches'].__iter__()
 
@@ -115,7 +115,7 @@ class GetMatchHistory(BaseParse):
         self._obj['_matches'] = [MatchSummary(match) for match in self._obj.pop('matches', [])]
 
 
-class GetMatchDetails(BaseParse):
+class MatchDetails(BaseParse):
     def players(self, minimal = False):
         if minimal:
             return [p.minimal() for p in self._obj['_players']].__iter__()
@@ -149,7 +149,7 @@ class GetMatchDetails(BaseParse):
 
         self._obj['_picks_bans'] = sorted(picksbans, key = lambda x:x.order)
 
-class GetHeroes(BaseParse):
+class Heroes(BaseParse):
     def heroes(self):
         return self._obj['_heroes'].__iter__()
 
@@ -157,10 +157,18 @@ class GetHeroes(BaseParse):
         self._obj = response_obj.get('result', {})
         self._obj['_heroes'] = [BaseWrapper(h) for h in self._obj.pop('heroes', [])]
 
-class GetGameItems(BaseParse):
+class GameItems(BaseParse):
     def items(self):
         return self._obj['_items'].__iter__()
 
     def parse_response(self, response_obj):
         self._obj = response_obj.get('result', {})
         self._obj['_items'] = [BaseWrapper(i) for i in self._obj.pop('items', [])]
+
+class LeagueListing(BaseParse):
+    def leagues(self):
+        return self._obj['_leagues'].__iter__()
+
+    def parse_response(self, response_obj):
+        self._obj = response_obj.get('result', {})
+        self._obj['_leagues'] = [BaseWrapper(l) for l in self._obj.pop('leagues', [])]

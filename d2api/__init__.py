@@ -32,25 +32,27 @@ class APIWrapper:
 
     def get_match_history(self, **kwargs):
         api_response = self.__api_call(endpoints.GET_MATCH_HISTORY, **kwargs)
-        return GetMatchHistory(api_response)
+        return MatchHistory(api_response)
 
     def get_match_history_by_sequence_num(self, **kwargs):
         api_response = self.__api_call(endpoints.GET_MATCH_HISTORY_BY_SEQ_NUM, **kwargs)
-        return GetMatchHistory(api_response)
+        return MatchHistory(api_response)
 
     def get_match_details(self, match_id, **kwargs):
         kwargs['match_id'] = match_id
         api_response = self.__api_call(endpoints.GET_MATCH_DETAILS, **kwargs)
-        return GetMatchDetails(api_response)
+        return MatchDetails(api_response)
 
     def get_heroes(self, **kwargs):
         kwargs['language'] = kwargs.get('language', 'en_us')
         api_response = self.__api_call(endpoints.GET_HEROES, **kwargs)
-        return GetHeroes(api_response)
+        return Heroes(api_response)
 
     def get_game_items(self, **kwargs):
         kwargs['language'] = kwargs.get('language', 'en_us')
         api_response = self.__api_call(endpoints.GET_GAME_ITEMS, **kwargs)
-        return GetGameItems(api_response)
+        return GameItems(api_response)
     
-
+    def get_league_listing(self, **kwargs):
+        api_response = self.__api_call(endpoints.GET_LEAGUE_LISTING, **kwargs)
+        return LeagueListing(api_response)
