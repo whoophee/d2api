@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from .entities import *
 import json
 import copy
+
+from . import entities
 
 class BaseWrapper:
     def __eq__(self, other):
@@ -47,9 +48,9 @@ class MatchSummary(BaseWrapper):
     def _parse(self):
         self._obj['_players'] = []
         for pl in self._obj.pop('players', []):
-            p = SteamAccount(pl.get('account_id'))
-            s = get_side(pl.get('player_slot', 0))
-            h = get_hero(pl.get('hero_id', None))
+            p = entities.SteamAccount(pl.get('account_id'))
+            s = entities.get_side(pl.get('player_slot', 0))
+            h = entities.Hero(pl.get('hero_id', None))
             self._obj['_players'].append(BaseWrapper({'steam_account':p, 'side':s, 'hero':h}))
 
 class InventoryUnit:
@@ -67,12 +68,12 @@ class InventoryUnit:
         self._obj['_items'] = {'_inventory':[], '_backpack':[]}
 
         for item_slot in ['item_{}'.format(i) for i in range(6)]:
-            cur_item = get_item(self._obj.get(item_slot))
+            cur_item = entities.Item(self._obj.get(item_slot))
             self._obj[item_slot] = cur_item
             self._obj['_items']['_inventory'].append(cur_item)
 
         for backpack_slot in ['backpack_{}'.format(i) for i in range(3)]:
-            cur_item = get_item(self._obj.get(backpack_slot))
+            cur_item = entities.Item(self._obj.get(backpack_slot))
             self._obj[backpack_slot] = cur_item
             self._obj['_items']['_backpack'].append(cur_item)
 
@@ -96,15 +97,15 @@ class PlayerUnit(InventoryUnit, BaseWrapper):
 
     def _parse(self):
         self.build_item_list()
-        self._obj['steam_account'] = SteamAccount(self._obj.pop('account_id', None))
-        self._obj['side'] = get_side(self._obj.pop('player_slot', 0))
-        self._obj['hero'] = get_hero(self._obj.pop('hero_id', None))
+        self._obj['steam_account'] = entities.SteamAccount(self._obj.pop('account_id', None))
+        self._obj['side'] = entities.get_side(self._obj.pop('player_slot', 0))
+        self._obj['hero'] = entities.Hero(self._obj.pop('hero_id', None))
 
         self._obj['_additional_units'] = [AdditionalUnit(a) for a in self._obj.pop('additional_units', [])]
 
         self._obj['_ability_upgrades'] = []
         for au in self._obj.pop('ability_upgrades', []):
-            au['ability'] = get_ability(au.get('ability'))
+            au['ability'] = entities.Ability(au.get('ability'))
             self._obj['_ability_upgrades'].append(BaseWrapper(au))
 
 
@@ -144,7 +145,7 @@ class MatchDetails(BaseParse):
 
         for pb in self._obj.pop('picks_bans', []):
             ip = pb.get('is_pick')
-            h = get_hero(pb.get('hero_id'))
+            h = entities.Hero(pb.get('hero_id'))
             s = 'dire' if pb.get('team') == 0 else 'radiant'
             o = pb.get('order')
             picksbans.append(BaseWrapper({'is_pick':ip, 'hero':h, 'side':s, 'order':o}))

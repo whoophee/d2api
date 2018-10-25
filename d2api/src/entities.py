@@ -1,28 +1,17 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from pathlib import Path
 import json
 
 def load_json(file_name):
     try:
-        f = open(Path('../../../data/{}'.format(file_name)), 'r')
+        f = open(Path('../data/{}'.format(file_name)), 'r')
         return json.load(f)
     except IOError:
-        return None
-
-def get_hero(hero_id):
-    ret = all_heroes.get(hero_id)
-    return ret if ret else Hero(hero_id, "Unknown hero")
-
-def get_item(item_id):
-    ret = all_items.get(item_id)
-    return ret if ret else Item(item_id, "Unknown item")
-
-def get_ability(ability_id):
-    ret = all_abilities.get(ability_id)
-    return ret if ret else Ability(ability_id, "Unknown ability")
+        return {}
 
 def get_side(player_slot):
     return "radiant" if player_slot < 128 else "dire"
-
 
 class Hero:
     def __eq__(self, other):
@@ -33,9 +22,9 @@ class Hero:
     def __repr__(self):
         return "<Hero {}>".format({'hero_id':self.hero_id, 'hero_name':self.hero_name})
 
-    def __init__(self, hero_id = None, hero_name = None):
+    def __init__(self, hero_id = None):
         self.hero_id = hero_id
-        self.hero_name = hero_name
+        self.hero_name = all_heroes.get(hero_id, "hero_unknown")
 
 class Item:
     def __eq__(self, other):
@@ -46,9 +35,9 @@ class Item:
     def __repr__(self):
         return "<Item {}>".format({'item_id':self.item_id, 'item_name':self.item_name})
 
-    def __init__(self, item_id = None, item_name = None):
+    def __init__(self, item_id = None):
         self.item_id = item_id
-        self.item_name = item_name
+        self.item_name = all_items.get(item_id, "item_unknown")
 
 class Ability:
     def __eq__(self, other):
@@ -59,9 +48,9 @@ class Ability:
     def __repr__(self):
         return "<Ability {}>".format({'ability_id':self.ability_id, 'ability_name':self.ability_name})
 
-    def __init__(self, ability_id = None, ability_name = None):
+    def __init__(self, ability_id = None):
         self.ability_id = ability_id
-        self.ability_name = ability_name
+        self.ability_name = all_abilities.get(ability_id, "ability_unknown")
 
 class SteamAccount:
     def __eq__(self, other):
@@ -85,6 +74,7 @@ class SteamAccount:
                 self.id64 = account_id
 
 
-all_heroes = {}
-all_items = {}
-all_abilities = {}
+all_heroes = load_json('heroes.json')
+all_items = load_json('items.json')
+all_abilities = load_json('abilities.json')
+
