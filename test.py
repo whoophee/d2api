@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import d2api
 from d2api.src.errors import *
 from d2api.src.wrappers import *

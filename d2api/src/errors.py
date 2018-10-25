@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 class BaseError(Exception):
     def __init__(self, msg):
         self._msg = msg
