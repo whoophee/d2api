@@ -149,6 +149,26 @@ class MatchDetails(BaseParse):
 
         self._obj['_picks_bans'] = sorted(picksbans, key = lambda x:x.order)
 
+        towers = ['top_t1', 'top_t2', 'top_t3', 'mid_t1', 'mid_t2', 'mid_t3', 'bot_t1', 'bot_t2', 'bot_t3', 'ancient_bot', 'ancient_top']
+        barracks = ['top_melee', 'top_ranged', 'mid_melee', 'mid_ranged', 'bot_melee', 'bot_ranged']
+
+        for side in ['radiant', 'dire']:
+
+            tower_status = self._obj.get('tower_status_{}'.format(side))
+            if tower_status != None:
+                for i, t in enumerate(towers):
+                    cur_tower_status = ((1<<i) & tower_status) >> i
+                    self._obj['{}_{}'.format(side, t)] = cur_tower_status
+
+            barracks_status = self._obj.get('barracks_status_{}'.format(side))
+            if barracks_status != None:
+                for i, b in enumerate(barracks):
+                    cur_barracks_status = ((1<<i) & barracks_status) >> i
+                    self._obj['{}_{}'.format(side, b)] = cur_barracks_status
+            
+
+            
+
 class Heroes(BaseParse):
     def heroes(self):
         return self._obj['_heroes'].__iter__()
