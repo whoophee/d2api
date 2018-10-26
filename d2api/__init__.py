@@ -5,7 +5,7 @@ import logging
 
 import requests
 
-from .src import endpoints, wrappers, errors
+from .src import endpoints, wrappers, errors, entities
 
 __author__ = "Raghav Sairam"
 __date__ = "25/10/2018"
@@ -62,3 +62,6 @@ class APIWrapper:
         kwargs['language'] = kwargs.get('language', 'en_us')
         api_response = self.api_call(endpoints.GET_GAME_ITEMS, **kwargs)
         return wrappers.GameItems(api_response)
+    
+    def update_local_data(self):
+        entities.update_local_data()

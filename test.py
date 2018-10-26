@@ -30,6 +30,12 @@ class APIPreliminaryTests(unittest.TestCase):
         self.assertIsNotNone(tmp_api.logger, 
         'Logger should not be None when \'logging_enabled\' was set to True')
 
+    def test_update_local_files(self):
+        tmp_api = d2api.APIWrapper()
+        self.assertNotEqual(tmp_api.update_local_data(), {},
+        msg = "Update must return remote metadata. Instead, it returned an empty dict.")
+
+
 
 class EndpointTests(unittest.TestCase):
     """
