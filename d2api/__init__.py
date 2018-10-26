@@ -63,5 +63,5 @@ class APIWrapper:
         api_response = self.api_call(endpoints.GET_GAME_ITEMS, **kwargs)
         return wrappers.GameItems(api_response)
     
-    def update_local_data(self):
-        entities.update_local_data()
+    def update_local_data(self, purge = True):
+        entities.update_local_data(purge)

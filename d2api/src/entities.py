@@ -4,6 +4,7 @@ from pathlib import Path
 import os
 import json
 import requests
+import shutil
 
 all_heroes = {}
 all_items = {}
@@ -110,11 +111,13 @@ class SteamAccount:
                 self.id64 = account_id
 
 
-def update_local_data():
+def update_local_data(purge):
     global all_heroes
     global all_items
     global all_abilities
     try:
+        if purge:
+            shutil.rmtree(Path(os.path.join(os.path.dirname(__file__), '..', 'data')))
         # Find version of local data
         local_meta = load_local_json('meta.json')
         local_version = local_meta.get('version')
