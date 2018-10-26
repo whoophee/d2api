@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import requests
-from .src import endpoints
-from .src.wrappers import *
-from .src.errors import *
 import logging
+
+import requests
+
+from .src import endpoints, wrappers, errors
+
+__author__ = "Raghav Sairam"
+__date__ = "25/10/2018"
+__license__ = "MIT"
 
 class APIWrapper:
     def __init__(self, api_key = None, logging_enabled = False):
@@ -26,35 +30,35 @@ class APIWrapper:
         if status == 200:
             return response
         elif status == 403:
-            raise APIAuthenticationError(self.api_key)
+            raise errors.APIAuthenticationError(self.api_key)
         elif status == 404:
-            raise APIMethodUnavailable(url)
+            raise errors.APIMethodUnavailable(url)
         elif status == 503:
-            raise APITimeoutError()
+            raise errors.APITimeoutError()
         elif status == 400:
-            raise APIInsufficientArguments(url, kwargs)
+            raise errors.APIInsufficientArguments(url, kwargs)
         else:
-            raise BaseError(msg = response.reason)
+            raise errors.BaseError(msg = response.reason)
 
     def get_match_history(self, **kwargs):
         api_response = self.api_call(endpoints.GET_MATCH_HISTORY, **kwargs)
-        return MatchHistory(api_response)
+        return wrappers.MatchHistory(api_response)
 
     def get_match_history_by_sequence_num(self, **kwargs):
         api_response = self.api_call(endpoints.GET_MATCH_HISTORY_BY_SEQ_NUM, **kwargs)
-        return MatchHistory(api_response)
+        return wrappers.MatchHistory(api_response)
 
     def get_match_details(self, match_id, **kwargs):
         kwargs['match_id'] = match_id
         api_response = self.api_call(endpoints.GET_MATCH_DETAILS, **kwargs)
-        return MatchDetails(api_response)
+        return wrappers.MatchDetails(api_response)
 
     def get_heroes(self, **kwargs):
         kwargs['language'] = kwargs.get('language', 'en_us')
         api_response = self.api_call(endpoints.GET_HEROES, **kwargs)
-        return Heroes(api_response)
+        return wrappers.Heroes(api_response)
 
     def get_game_items(self, **kwargs):
         kwargs['language'] = kwargs.get('language', 'en_us')
         api_response = self.api_call(endpoints.GET_GAME_ITEMS, **kwargs)
-        return GameItems(api_response)
+        return wrappers.GameItems(api_response)
