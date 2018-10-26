@@ -19,7 +19,8 @@ def load_local_json(file_name):
         return {}
 
 def load_remote_json(file_name):
-    url = "https://raw.githubusercontent.com/whoophee/d2api/d2api/data/{}".format(file_name)
+    url = "https://raw.githubusercontent.com/whoophee/d2api/master/d2api/data/{}".format(file_name)
+    print(url)
     res = requests.get(url)
     if res.status_code == 200:
         return res.json()
