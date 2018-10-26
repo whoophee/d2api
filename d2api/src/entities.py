@@ -38,41 +38,47 @@ def get_side(player_slot):
 class Hero:
     def __eq__(self, other):
         if self.__class__.__name__ == other.__class__.__name__:
-            return self.hero_id == other.hero_id and self.hero_name == other.hero_name
+            return self.hero_id == other.hero_id
         return False
 
     def __repr__(self):
-        return "<Hero {}>".format({'hero_id':self.hero_id, 'hero_name':self.hero_name})
+        return "<Hero hero_id={}>".format(self.hero_id)
 
     def __init__(self, hero_id = None):
         self.hero_id = hero_id
-        self.hero_name = all_heroes.get(hero_id, "hero_unknown")
+        cur_hero = all_heroes.get(hero_id, {})
+        self.hero_name = cur_hero.get('hero_name', 'unknown_hero')
+        
 
 class Item:
     def __eq__(self, other):
         if self.__class__.__name__ == other.__class__.__name__:
-            return self.item_id == other.item_id and self.item_name == other.item_name
+            return self.item_id == other.item_id
         return False
 
     def __repr__(self):
-        return "<Item {}>".format({'item_id':self.item_id, 'item_name':self.item_name})
+        return "<Item item_id={}>".format(self.item_id)
 
     def __init__(self, item_id = None):
         self.item_id = item_id
-        self.item_name = all_items.get(item_id, "item_unknown")
+        cur_item = all_items.get(item_id, {})
+        self.item_cost = cur_item.get('item_cost', 0)
+        self.item_aliases = cur_item.get('item_aliases', [])
+        self.item_name = cur_item.get('item_name', 'unknown_item')
 
 class Ability:
     def __eq__(self, other):
         if self.__class__.__name__ == other.__class__.__name__:
-            return self.ability_id == other.ability_id and self.ability_name == other.ability_name
+            return self.ability_id == other.ability_id
         return False
 
     def __repr__(self):
-        return "<Ability {}>".format({'ability_id':self.ability_id, 'ability_name':self.ability_name})
+        return "<Ability ability_id={}>".format(self.ability_id)
 
     def __init__(self, ability_id = None):
         self.ability_id = ability_id
-        self.ability_name = all_abilities.get(ability_id, "ability_unknown")
+        cur_ability = all_abilities.get(ability_id, {})
+        self.ability_name = cur_ability.get('ability_name', 'unknown_ability')
 
 class SteamAccount:
     def __eq__(self, other):

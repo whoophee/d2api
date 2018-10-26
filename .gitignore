@@ -104,3 +104,6 @@ venv.bak/
 .mypy_cache/
 .vscode/settings.json
 d2apidev.code-workspace
+
+# tmp
+tmp/
