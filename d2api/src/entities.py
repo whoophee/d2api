@@ -20,7 +20,6 @@ def load_local_json(file_name):
 
 def load_remote_json(file_name):
     url = "https://raw.githubusercontent.com/whoophee/d2api/master/d2api/data/{}".format(file_name)
-    print(url)
     res = requests.get(url)
     if res.status_code == 200:
         return res.json()
@@ -107,7 +106,6 @@ remote_version = remote_meta.get('version')
 
 content_files = ['heroes.json', 'abilities.json', 'items.json']
 
-print(local_version, remote_version)
 # update local files if they're outdated
 if local_version != remote_version:
     ensure_data_folder()
