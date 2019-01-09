@@ -10,8 +10,8 @@ import os
 
 class APIPreliminaryTests(unittest.TestCase):
     def test_environment_api_key_set(self):
-        self.assertIsNotNone(os.environ.get('DOTA2_API_KEY'), 
-        'DOTA2_API_KEY was not set in environment')
+        self.assertIsNotNone(os.environ.get('D2_API_KEY'), 
+        'D2_API_KEY was not set in environment')
 
     def test_correct_api_key(self):
         key = 'abcdxyz'

@@ -14,7 +14,7 @@ __license__ = "MIT"
 class APIWrapper:
     def __init__(self, api_key = None, logging_enabled = False):
 
-        self.api_key = api_key if api_key else os.environ.get('DOTA2_API_KEY')
+        self.api_key = api_key if api_key else os.environ.get('D2_API_KEY')
         if logging_enabled:
             logger = logging.getLogger("d2api")
             logger.setLevel(logging.DEBUG)

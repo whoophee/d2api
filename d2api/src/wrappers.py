@@ -21,31 +21,32 @@ class BaseWrapper:
 
     def __init__(self, default_obj = {}):
         self._obj = copy.deepcopy(default_obj)
-        self._parse()
-
-    def _parse(self):
+        self.parse()
+        
+    def parse(self):
         pass
 
-class BaseParse (BaseWrapper):
-    def raw_json(self):
-        return self._raw_json
-
+class ParseInterface(BaseWrapper):
+    pass
+    
+class ResponseInterface(BaseWrapper):
     def parse_response(self, response_obj):
         pass
 
     def __init__(self, response, unparsed = False):
-        self._raw_json = response.content
+        self.raw_json = response.content
         self._obj = {}
         if unparsed:
             self._obj = response.json()
         else:
             self.parse_response(response.json())
+    
 
-class MatchSummary(BaseWrapper):
+class MatchSummary(ParseInterface):
     def players(self):
-        return self._obj['_players'].__iter__()
+        return self._obj['_players']
 
-    def _parse(self):
+    def parse(self):
         self._obj['_players'] = []
         for pl in self._obj.pop('players', []):
             p = entities.SteamAccount(pl.get('account_id'))
@@ -53,16 +54,16 @@ class MatchSummary(BaseWrapper):
             h = entities.Hero(pl.get('hero_id', None))
             self._obj['_players'].append(BaseWrapper({'steam_account':p, 'side':s, 'hero':h}))
 
-class InventoryUnit:
+class InventoryUnit(ParseInterface):
     def items(self):
         tot = self._obj['_items']['_backpack'] + self._obj['_items']['_inventory']
-        return tot.__iter__()
+        return tot
 
     def backpack(self):
-        return self._obj['_items']['_backpack'].__iter__()
+        return self._obj['_items']['_backpack']
 
     def inventory(self):
-        return self._obj['_items']['_inventory'].__iter__()
+        return self._obj['_items']['_inventory']
 
     def build_item_list(self):
         self._obj['_items'] = {'_inventory':[], '_backpack':[]}
@@ -77,11 +78,11 @@ class InventoryUnit:
             self._obj[backpack_slot] = cur_item
             self._obj['_items']['_backpack'].append(cur_item)
 
-class AdditionalUnit(InventoryUnit, BaseWrapper):
-    def _parse(self):
+class AdditionalUnit(InventoryUnit):
+    def parse(self):
         self.build_item_list()
 
-class PlayerUnit(InventoryUnit, BaseWrapper):
+class PlayerUnit(InventoryUnit):
     def minimal(self):
         return BaseWrapper({
         'steam_account':self._obj['steam_account'],
@@ -90,12 +91,12 @@ class PlayerUnit(InventoryUnit, BaseWrapper):
         })
 
     def additional_units(self):
-        return self._obj['_additional_units'].__iter__()
+        return self._obj['_additional_units']
 
     def ability_upgrades(self):
-        return self._obj['_ability_upgrades'].__iter__()
+        return self._obj['_ability_upgrades']
 
-    def _parse(self):
+    def parse(self):
         self.build_item_list()
         self._obj['steam_account'] = entities.SteamAccount(self._obj.pop('account_id', None))
         self._obj['side'] = entities.get_side(self._obj.pop('player_slot', 0))
@@ -109,26 +110,26 @@ class PlayerUnit(InventoryUnit, BaseWrapper):
             self._obj['_ability_upgrades'].append(BaseWrapper(au))
 
 
-class MatchHistory(BaseParse):
+class MatchHistory(ResponseInterface):
     def matches(self):
-        return self._obj['_matches'].__iter__()
+        return self._obj['_matches']
 
     def parse_response(self, response_obj):
         self._obj = response_obj.get('result', {})
         self._obj['_matches'] = [MatchSummary(match) for match in self._obj.pop('matches', [])]
 
 
-class MatchDetails(BaseParse):
+class MatchDetails(ResponseInterface):
     def players(self, minimal = False):
         if minimal:
-            return [p.minimal() for p in self._obj['_players']].__iter__()
-        return self._obj['_players'].__iter__()
+            return [p.minimal() for p in self._obj['_players']]
+        return self._obj['_players']
 
     def picks_bans(self):
-        return self._obj['_picks_bans'].__iter__()
+        return self._obj['_picks_bans']
 
     def leavers(self):
-        return [p for p in self._obj['_players'] if p.leaver_status != 0].__iter__()
+        return [p for p in self._obj['_players'] if p.leaver_status != 0]
 
     def has_leaver(self):
         for p in self._obj['_players']:
@@ -168,21 +169,18 @@ class MatchDetails(BaseParse):
                 for i, b in enumerate(barracks):
                     cur_barracks_status = ((1<<i) & barracks_status) >> i
                     self._obj['{}_{}'.format(side, b)] = cur_barracks_status
-            
 
-            
-
-class Heroes(BaseParse):
+class Heroes(ResponseInterface):
     def heroes(self):
-        return self._obj['_heroes'].__iter__()
+        return self._obj['_heroes']
 
     def parse_response(self, response_obj):
         self._obj = response_obj.get('result', {})
         self._obj['_heroes'] = [BaseWrapper(h) for h in self._obj.pop('heroes', [])]
 
-class GameItems(BaseParse):
+class GameItems(ResponseInterface):
     def items(self):
-        return self._obj['_items'].__iter__()
+        return self._obj['_items']
 
     def parse_response(self, response_obj):
         self._obj = response_obj.get('result', {})
