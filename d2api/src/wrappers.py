@@ -18,7 +18,12 @@ class BaseWrapper:
         if attr == '_obj':
             return self._obj
         return self._obj[attr]
+        
+    def __init__(self, default_obj = {}):
+        self._obj = copy.deepcopy(default_obj)
+    
 
+class ParseInterface(BaseWrapper):
     def __init__(self, default_obj = {}):
         self._obj = copy.deepcopy(default_obj)
         self.parse()
@@ -26,9 +31,6 @@ class BaseWrapper:
     def parse(self):
         pass
 
-class ParseInterface(BaseWrapper):
-    pass
-    
 class ResponseInterface(BaseWrapper):
     def parse_response(self, response_obj):
         pass
