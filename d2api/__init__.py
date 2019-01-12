@@ -63,5 +63,10 @@ class APIWrapper:
         api_response = self.api_call(endpoints.GET_GAME_ITEMS, **kwargs)
         return wrappers.GameItems(api_response)
     
-    def update_local_data(self, purge = True):
-        entities.update_local_data(purge)
+    def get_tournament_prize_pool(self, **kwargs):
+        api_response = self.api_call(endpoints.GET_TOURNAMENT_PRIZE_POOL, **kwargs)
+        return wrappers.TournamentPrizePool(api_response)
+
+    
+def update_local_data(purge = True):
+    entities._update(purge)

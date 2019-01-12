@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from pathlib import Path
-import os
 import json
-import requests
+import os
 import shutil
+from pathlib import Path
+
+import requests
 
 all_heroes = {}
 all_items = {}
@@ -111,7 +112,7 @@ class SteamAccount:
                 self.id64 = account_id
 
 
-def update_local_data(purge):
+def _update(purge):
     global all_heroes
     global all_items
     global all_abilities
