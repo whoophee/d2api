@@ -21,7 +21,7 @@ class APIPreliminaryTests(unittest.TestCase):
         tmp_api = d2api.APIWrapper(key)
 
         with self.assertRaises(d2errors.APIAuthenticationError, 
-        msg = 'Request with API key \'{}\' should raise authentication error'.format(key)):
+        msg = f'Request with API key \'{key}\' should raise authentication error'):
             tmp_api.get_match_details('4176987886')
     
     def test_insufficient_params(self):
@@ -95,6 +95,10 @@ class MatchHistoryTests(unittest.TestCase):
         self.assertIsInstance(self.get_match_history(), wrappers.MatchHistory, 
         'get_match_history() should return a MatchHistory object')
 
+# m = cur.get_match_details('4176987886')
+
+# steamIDs = [114539087, 4294967295, 4294967295, 30633942, 78964422, 4294967295, 283619584, 20778465, 4294967295, 59769890]
+
 class MatchDetailsTests(unittest.TestCase):
     def setUp(self):
         api = d2api.APIWrapper()
@@ -103,11 +107,23 @@ class MatchDetailsTests(unittest.TestCase):
     def test_get_match_details_dtype(self):
         match_id = '4176987886'
         self.assertIsInstance(self.get_match_details(match_id), wrappers.MatchDetails,
-        'get_match_details(\'{}\') should return a MatchDetails object'.format(match_id))
+        f'get_match_details(\'{match_id}\') should return a MatchDetails object')
 
     def test_incorrect_matchid(self):
         res = self.get_match_details(match_id = 1)
         self.assertTrue(res.error, msg = 'Incorrect match_id should have response error')
+    
+    def test_match_content(self):
+        match_id = '4176987886'
+        res = self.get_match_details(match_id)
+
+        q = res.players_minimal[0].hero
+        a = entities.Hero(35)
+        self.assertEqual(q, a, f'get_match_details(\'{match_id}\').players_minimal[0].hero is {a}')
+
+        q = res.players[6].items()[0].item_name
+        a = 'item_tango'
+        self.assertEqual(q, a, f'get_match_details(\'{match_id}\').players[6].items()[0].item_name is {a}')
 
 class HeroesTests(unittest.TestCase):
     def setUp(self):
@@ -123,7 +139,7 @@ class HeroesTests(unittest.TestCase):
         cur_id = 59
         cur_hero = [h for h in res.heroes if h.id == cur_id][0]
         self.assertEqual(cur_hero.localized_name, 'Huskar',
-        'Localized name of id = {} should be Huskar'.format(cur_id))
+        f'Localized name of id = {cur_id} should be Huskar')
 
 class GameItemsTests(unittest.TestCase):
     def setUp(self):
@@ -139,7 +155,7 @@ class GameItemsTests(unittest.TestCase):
         cur_id = 265
         cur_item = [i for i in res.items if i.id == cur_id][0]
         self.assertEqual(cur_item.localized_name, 'Infused Raindrops',
-        'Localized name of id = {} should be Infused Raindrops'.format(cur_id))
+        f'Localized name of id = {cur_id} should be Infused Raindrops')
 
 class TournamentPrizePoolTests(unittest.TestCase):
     def setUp(self):
@@ -150,8 +166,5 @@ class TournamentPrizePoolTests(unittest.TestCase):
         self.assertIsInstance(self.get_tournament_prize_pool(), wrappers.TournamentPrizePool,
         'get_tournament_prize_pool() shoult return a TournamentPrizePool object.')
 
-# m = cur.get_match_details('4176987886')
-
-# steamIDs = [114539087, 4294967295, 4294967295, 30633942, 78964422, 4294967295, 283619584, 20778465, 4294967295, 59769890]
 if __name__ == '__main__':
     unittest.main()

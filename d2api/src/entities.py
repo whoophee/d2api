@@ -26,7 +26,7 @@ def load_local_json(file_name):
         return {}
 
 def load_remote_json(file_name):
-    url = "https://raw.githubusercontent.com/whoophee/d2api/master/d2api/data/{}".format(file_name)
+    url = f"https://raw.githubusercontent.com/whoophee/d2api/master/d2api/data/{file_name}"
     res = requests.get(url)
     if res.status_code == 200:
         return res.json()
@@ -45,60 +45,43 @@ def write_local_json(data, file_name):
 def get_side(player_slot):
     return "radiant" if player_slot < 128 else "dire"
 
-class Hero:
+class Entity:
+    def __str__(self):
+        return str(self.__dict__)
+
     def __eq__(self, other):
         if self.__class__.__name__ == other.__class__.__name__:
-            return self.hero_id == other.hero_id
+            return self.__dict__ == other.__dict__
         return False
-
+    
     def __repr__(self):
-        return "<Hero hero_id={}>".format(self.hero_id)
+        return f"<{self.__class__.__name__} {tuple(list(self.__dict__.values()))}>"
 
+class Hero(Entity):
     def __init__(self, hero_id = None):
+        hero_id = str(hero_id)
         self.hero_id = hero_id
         cur_hero = all_heroes.get(hero_id, {})
         self.hero_name = cur_hero.get('hero_name', 'unknown_hero')
         
 
-class Item:
-    def __eq__(self, other):
-        if self.__class__.__name__ == other.__class__.__name__:
-            return self.item_id == other.item_id
-        return False
-
-    def __repr__(self):
-        return "<Item item_id={}>".format(self.item_id)
-
+class Item(Entity):
     def __init__(self, item_id = None):
+        item_id = str(item_id)
         self.item_id = item_id
         cur_item = all_items.get(item_id, {})
         self.item_cost = cur_item.get('item_cost', 0)
         self.item_aliases = cur_item.get('item_aliases', [])
         self.item_name = cur_item.get('item_name', 'unknown_item')
 
-class Ability:
-    def __eq__(self, other):
-        if self.__class__.__name__ == other.__class__.__name__:
-            return self.ability_id == other.ability_id
-        return False
-
-    def __repr__(self):
-        return "<Ability ability_id={}>".format(self.ability_id)
-
+class Ability(Entity):
     def __init__(self, ability_id = None):
+        ability_id = str(ability_id)
         self.ability_id = ability_id
         cur_ability = all_abilities.get(ability_id, {})
         self.ability_name = cur_ability.get('ability_name', 'unknown_ability')
 
-class SteamAccount:
-    def __eq__(self, other):
-        if self.__class__.__name__ == other.__class__.__name__:
-            return self.id64 == other.id64 and self.id32 == other.id32
-        return False
-        
-    def __repr__(self):
-        return "<SteamAccount {}>".format({'id32':self.id32, 'id64':self.id64})
-
+class SteamAccount(Entity):
     def __init__(self, account_id = None):
         if account_id is None:
             self.id32 = self.id64 = None

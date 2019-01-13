@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import copy
+import pprint
 
 from . import entities
 
@@ -9,6 +10,9 @@ class BaseWrapper:
         if self.__class__.__name__ == other.__class__.__name__:
             return self._obj == other._obj
         return False
+
+    def __str__(self):
+        return pprint.pformat(self._obj)
 
     def __getitem__(self, key):
         return self._obj[key]
@@ -49,7 +53,6 @@ class AbstractResponse(BaseWrapper):
 
 class MatchSummary(AbstractParse):
     def parse(self):
-
         player_list = []
         for pl in self.get('players', []):
             p = entities.SteamAccount(pl.get('account_id'))
@@ -61,7 +64,7 @@ class MatchSummary(AbstractParse):
 
 class InventoryUnit(AbstractParse):
     def items(self):
-        tot = self._items['backpack'] + self._items['inventory']
+        tot = self._items['inventory'] + self._items['backpack']
         return tot
 
     def backpack(self):
@@ -73,12 +76,12 @@ class InventoryUnit(AbstractParse):
     def build_item_list(self):
         self._items = {'inventory':[], 'backpack':[]}
 
-        for item_slot in ['item_{}'.format(i) for i in range(6)]:
+        for item_slot in [f'item_{i}' for i in range(6)]:
             cur_item = entities.Item(self.get(item_slot))
             self[item_slot] = cur_item
             self._items['inventory'].append(cur_item)
 
-        for backpack_slot in ['backpack_{}'.format(i) for i in range(3)]:
+        for backpack_slot in [f'backpack_{i}' for i in range(3)]:
             cur_item = entities.Item(self.get(backpack_slot))
             self[backpack_slot] = cur_item
             self._items['backpack'].append(cur_item)
@@ -88,19 +91,12 @@ class AdditionalUnit(InventoryUnit):
         self.build_item_list()
 
 class PlayerUnit(InventoryUnit):
-    def minimal(self):
-        return BaseWrapper({
-        'steam_account':self._steam_account,
-        'side':self._side,
-        'hero':self._hero
-        })
-
     def parse(self):
         self.build_item_list()
 
-        self._steam_account = entities.SteamAccount(self.get('account_id', None))
-        self._side = entities.get_side(self.get('player_slot', 0))
-        self._hero = entities.Hero(self.get('hero_id', None))
+        self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
+        self['side'] = entities.get_side(self.pop('player_slot', 0))
+        self['hero'] = entities.Hero(self.pop('hero_id', None))
 
         self['additional_units'] = [AdditionalUnit(a) for a in self.get('additional_units', [])]
 
@@ -131,8 +127,15 @@ class MatchDetails(AbstractResponse):
     def parse_response(self):
         super().parse_response()
 
+
+        minimal = lambda x: BaseWrapper({
+            'steam_account':x.steam_account,
+            'side':x.side,
+            'hero':x.hero
+            })
+
         self['players'] = [PlayerUnit(pl) for pl in self.get('players', [])]
-        self['players_minimal'] = [p.minimal() for p in self['players']]
+        self['players_minimal'] = [minimal(p) for p in self['players']]
 
         picksbans = []
 
@@ -150,17 +153,17 @@ class MatchDetails(AbstractResponse):
 
         for side in ['radiant', 'dire']:
 
-            tower_status = self.get('tower_status_{}'.format(side))
+            tower_status = self.get(f'tower_status_{side}')
             if tower_status != None:
                 for i, t in enumerate(towers):
                     cur_tower_status = ((1<<i) & tower_status) >> i
-                    self['{}_{}'.format(side, t)] = cur_tower_status
+                    self[f'{side}_{t}'] = cur_tower_status
 
-            barracks_status = self.get('barracks_status_{}'.format(side))
+            barracks_status = self.get(f'barracks_status_{side}')
             if barracks_status != None:
                 for i, b in enumerate(barracks):
                     cur_barracks_status = ((1<<i) & barracks_status) >> i
-                    self['{}_{}'.format(side, b)] = cur_barracks_status
+                    self[f'{side}_{b}'] = cur_barracks_status
 
 class Heroes(AbstractResponse):
     def parse_response(self):
