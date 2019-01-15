@@ -26,7 +26,7 @@ class APIPreliminaryTests(unittest.TestCase):
     
     def test_insufficient_params(self):
         with self.assertRaises(d2errors.APIInsufficientArguments, msg = "match_id is a required argument for get_match_details"):
-            d2api.APIWrapper().api_call(endpoints.GET_MATCH_DETAILS)
+            d2api.APIWrapper().api_call(endpoints.GET_MATCH_DETAILS, wrappers.MatchDetails)
 
     def test_logger_check(self):
         tmp_api = d2api.APIWrapper(logging_enabled = True)
@@ -37,6 +37,9 @@ class APIPreliminaryTests(unittest.TestCase):
         self.assertNotEqual(update_local_data(), {},
         msg = "Update must return remote metadata. Instead, it returned an empty dict.")
 
+    def test_unparsed_results_dtype(self):
+        self.assertIsInstance(d2api.APIWrapper().api_call(endpoints.GET_MATCH_HISTORY, parse_results = False), dict,
+        msg = 'Setting parse_results = False should return a dict.')
 
 
 class EndpointTests(unittest.TestCase):
@@ -50,23 +53,23 @@ class EndpointTests(unittest.TestCase):
 
     def test_get_match_history_endpoint(self):
         with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_MATCH_HISTORY endpoint is not working as intended."):
-            self.api_call(endpoints.GET_MATCH_HISTORY)
+            self.api_call(endpoints.GET_MATCH_HISTORY, wrappers.MatchHistory)
     
     def test_get_match_history_by_seq_num_endpoint(self):
         with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_MATCH_HISTORY_BY_SEQ_NUM endpoint is not working as intended."):
-            self.api_call(endpoints.GET_MATCH_HISTORY_BY_SEQ_NUM)
+            self.api_call(endpoints.GET_MATCH_HISTORY_BY_SEQ_NUM, wrappers.MatchHistory)
     
     def test_get_match_details_endpoint(self):
         with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_MATCH_DETAILS endpoint is not working as intended."):
-            self.api_call(endpoints.GET_MATCH_DETAILS, match_id = '123')
+            self.api_call(endpoints.GET_MATCH_DETAILS, wrappers.MatchDetails, match_id = '123')
     
     def test_get_heroes_endpoint(self):
         with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_HEROES endpoint is not working as intended."):
-            self.api_call(endpoints.GET_HEROES)
+            self.api_call(endpoints.GET_HEROES, wrappers.Heroes)
     
     def test_get_game_items_endpoint(self):
         with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_GAME_ITEMS endpoint is not working as intended."):
-            self.api_call(endpoints.GET_GAME_ITEMS)
+            self.api_call(endpoints.GET_GAME_ITEMS, wrappers.GameItems)
 
 class DtypeTests(unittest.TestCase):
     def test_steam_32_64(self):
@@ -78,12 +81,16 @@ class DtypeTests(unittest.TestCase):
         'SteamAccount created with 32 Bit or 64 Bit SteamID should be indistinguishable')
     
     def test_basewrapper(self):
-        test_obj = wrappers.BaseWrapper({'a':1, 'b':2, 'c':3})
-        test_obj2 = wrappers.BaseWrapper({'a':1, 'b':2, 'c':3})
-        self.assertEqual(test_obj.a, 1, 'BaseWrapper __getattr__ does not work as intended.')
-        self.assertEqual(test_obj['b'], 2, 'BaseWrapper __getitem__ does not work as intended.')
-        self.assertEqual(test_obj, test_obj2, 'BaseWrapper __eq__ does not work as intended.')
-    
+        obj1 = wrappers.BaseWrapper({'a':1, 'b':2, 'c':3})
+        obj2 = wrappers.BaseWrapper({'a':1})
+        self.assertNotEqual(obj1, obj2, f'{obj1} and {obj2} are unequal.')
+        obj2.b = 2
+        obj2['c'] = 3
+        self.assertEqual(obj1.a, 1, 'BaseWrapper __getattr__ does not work as intended.')
+        self.assertEqual(obj1['b'], 2, 'BaseWrapper __getitem__ does not work as intended.')
+        self.assertEqual(obj1, obj2, 'BaseWrapper __eq__ does not work as intended.')
+        with self.assertRaises(KeyError, msg = 'Trying to access non-existant properties should raise KeyError.'):
+            obj1.unexpected_key
 
 
 class MatchHistoryTests(unittest.TestCase):
@@ -125,6 +132,10 @@ class MatchDetailsTests(unittest.TestCase):
         a = 'item_tango'
         self.assertEqual(q, a, f'get_match_details(\'{match_id}\').players[6].items()[0].item_name is {a}')
 
+        q = res['tower_status_dire']
+        a = 2047
+        self.assertEqual(q, a, f'get_match_details(\'{match_id}\')[\'tower_status_dire\'] is {a}')
+
 class HeroesTests(unittest.TestCase):
     def setUp(self):
         api = d2api.APIWrapper()
@@ -164,7 +175,16 @@ class TournamentPrizePoolTests(unittest.TestCase):
     
     def test_get_tournament_prize_pool_dtype(self):
         self.assertIsInstance(self.get_tournament_prize_pool(), wrappers.TournamentPrizePool,
-        'get_tournament_prize_pool() shoult return a TournamentPrizePool object.')
+        'get_tournament_prize_pool() should return a TournamentPrizePool object.')
+
+class TopLiveGameTests(unittest.TestCase):
+    def setUp(self):
+        api = d2api.APIWrapper()
+        self.get_top_live_game = api.get_top_live_game
+    
+    def test_get_top_live_game_dtype(self):
+        self.assertIsInstance(self.get_top_live_game(), wrappers.TopLiveGame,
+        'get_top_live_game() should return a TopLiveGame object.')
 
 if __name__ == '__main__':
     unittest.main()

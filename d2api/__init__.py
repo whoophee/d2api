@@ -12,9 +12,13 @@ __date__ = "25/10/2018"
 __license__ = "MIT"
 
 class APIWrapper:
-    def __init__(self, api_key = None, logging_enabled = False):
+    def __init__(self, api_key = None, language = 'en_us ', parse_results = True, logging_enabled = False):
 
         self.api_key = api_key if api_key else os.environ.get('D2_API_KEY')
+
+        self.parse_results = parse_results
+        self.language = language
+
         if logging_enabled:
             logger = logging.getLogger("d2api")
             logger.setLevel(logging.DEBUG)
@@ -23,12 +27,28 @@ class APIWrapper:
             logging.getLogger("requests").setLevel(logging.WARNING)
 
 
-    def api_call(self, url = endpoints.GET_MATCH_HISTORY, **kwargs):
+    def api_call(self, url, wrapper_class = lambda x: x, **kwargs):
         kwargs['key'] = self.api_key
+
+        language = kwargs.get('language')
+        if language == None:
+            language = self.language
+        kwargs['language'] = language
+
         response = requests.get(url, params = kwargs, timeout = 60)
         status = response.status_code
+        
         if status == 200:
-            return response
+            parse_results = kwargs.get('parse_results')
+
+            if parse_results == None:
+                parse_results = self.parse_results
+
+            if parse_results:
+                return wrapper_class(response)
+            else:
+                return response.json()
+
         elif status == 403:
             raise errors.APIAuthenticationError(self.api_key)
         elif status == 404:
@@ -41,31 +61,27 @@ class APIWrapper:
             raise errors.BaseError(msg = response.reason)
 
     def get_match_history(self, **kwargs):
-        api_response = self.api_call(endpoints.GET_MATCH_HISTORY, **kwargs)
-        return wrappers.MatchHistory(api_response)
+        return self.api_call(endpoints.GET_MATCH_HISTORY, wrappers.MatchHistory, **kwargs)
 
     def get_match_history_by_sequence_num(self, **kwargs):
-        api_response = self.api_call(endpoints.GET_MATCH_HISTORY_BY_SEQ_NUM, **kwargs)
-        return wrappers.MatchHistory(api_response)
+        return self.api_call(endpoints.GET_MATCH_HISTORY_BY_SEQ_NUM, wrappers.MatchHistory, **kwargs)
 
     def get_match_details(self, match_id, **kwargs):
         kwargs['match_id'] = match_id
-        api_response = self.api_call(endpoints.GET_MATCH_DETAILS, **kwargs)
-        return wrappers.MatchDetails(api_response)
+        return self.api_call(endpoints.GET_MATCH_DETAILS, wrappers.MatchDetails, **kwargs)
 
     def get_heroes(self, **kwargs):
-        kwargs['language'] = kwargs.get('language', 'en_us')
-        api_response = self.api_call(endpoints.GET_HEROES, **kwargs)
-        return wrappers.Heroes(api_response)
+        return self.api_call(endpoints.GET_HEROES, wrappers.Heroes, **kwargs)
 
     def get_game_items(self, **kwargs):
-        kwargs['language'] = kwargs.get('language', 'en_us')
-        api_response = self.api_call(endpoints.GET_GAME_ITEMS, **kwargs)
-        return wrappers.GameItems(api_response)
+        return self.api_call(endpoints.GET_GAME_ITEMS, wrappers.GameItems, **kwargs)
     
     def get_tournament_prize_pool(self, **kwargs):
-        api_response = self.api_call(endpoints.GET_TOURNAMENT_PRIZE_POOL, **kwargs)
-        return wrappers.TournamentPrizePool(api_response)
+        return self.api_call(endpoints.GET_TOURNAMENT_PRIZE_POOL, wrappers.TournamentPrizePool, **kwargs)
+    
+    def get_top_live_game(self, partner = 0, **kwargs):
+        kwargs['partner'] = partner
+        return self.api_call(endpoints.GET_TOP_LIVE_GAME, wrappers.TopLiveGame, **kwargs)
 
     
 def update_local_data(purge = True):

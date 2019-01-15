@@ -8,48 +8,47 @@ from . import entities
 class BaseWrapper:
     def __eq__(self, other):
         if self.__class__.__name__ == other.__class__.__name__:
-            return self._obj == other._obj
+            return self.__dict__ == other.__dict__
         return False
 
     def __str__(self):
-        return pprint.pformat(self._obj)
+        return pprint.pformat(self.__dict__)
 
     def __getitem__(self, key):
-        return self._obj[key]
+        return self.__dict__[key]
     
     def __setitem__(self, key, val):
-        self._obj[key] = val
+        self.__dict__[key] = val
     
     def get(self, *args):
-        return self._obj.get(*args)
+        return self.__dict__.get(*args)
     
     def pop(self, *args):
-        return self._obj.pop(*args)
+        return self.__dict__.pop(*args)
     
     def __getattr__(self, k):
-        return self._obj[k]
+        return self.__getitem__(k)
 
     def __init__(self, default_obj = {}):
-        self._obj = default_obj
+        self.__dict__ = default_obj
 
 
 class AbstractParse(BaseWrapper):
     def __init__(self, default_obj = {}):
-        self._obj = default_obj
+        self.__dict__ = default_obj
         self.parse()
     
     def parse(self):
         pass
 
 class AbstractResponse(BaseWrapper):
-    def __init__(self, response, unparsed = False):
+    def __init__(self, response):
         self.raw_json = response.content
-        self._obj = response.json()
-        if not unparsed:
-            self.parse_response()
+        self.__dict__ = response.json()
+        self.parse_response()
 
     def parse_response(self, rname = 'result'):
-        self._obj = self.get(rname, {})
+        self.__dict__ = self.get(rname, {})
 
 class MatchSummary(AbstractParse):
     def parse(self):
@@ -178,3 +177,59 @@ class GameItems(AbstractResponse):
 class TournamentPrizePool(AbstractResponse):
     def parse_response(self):
         super().parse_response()
+
+# class Player(AbstractParse):
+#     def parse(self):
+#         self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
+#         self['hero'] = entities.Hero(self.pop('hero_id', None))
+
+#         team = {0:'radiant', 1:'dire', 2:'broadcaster', 4:'unassigned'}
+#         self['team'] = team[self.get('team', 4)]
+
+
+# class Game(AbstractParse):
+#     def parse(self):
+#         self['players'] = [Player(p) for p in self.get('players', [])]
+#         self['radiant_team'] = BaseWrapper(self.get('radiant_team', {}))
+#         self['dire_team'] = BaseWrapper(self.get('dire_team', {}))
+
+#         tower_state = format(2**31 + self.get('tower_state', 0), 'b')[::-1]
+#         tower = ['top_t1', 'top_t2', 'top_t3', 'mid_t1', 'mid_t2', 'mid_t3', 'bot_t1', 'bot_t2', 'bot_t3', 'ancient_bot', 'ancient_top']
+
+#         for i in range(len(tower)):
+#             cur_tower = f'radiant_{tower[i]}'
+#             self[cur_tower] = int(tower_state[i])
+
+#             cur_tower = f'dire_{tower[i]}'
+#             self[cur_tower] = int(tower_state[i + 11])
+
+# class LiveLeagueGames(AbstractResponse):
+#     def parse_response(self):
+#         super().parse_response()
+#         self['games'] = [Game(g) for g in self['games']]
+
+class LiveGameSummary(AbstractParse):
+    def parse(self):
+        tower_state = format(2**31 + self.get('building_state', 0), 'b')[::-1]
+        tower = ['top_t1', 'top_t2', 'top_t3', 'mid_t1', 'mid_t2', 'mid_t3', 'bot_t1', 'bot_t2', 'bot_t3', 'ancient_bot', 'ancient_top']
+        for i in range(len(tower)):
+            cur_tower = f'radiant_{tower[i]}'
+            self[cur_tower] = int(tower_state[i])
+
+            cur_tower = f'dire_{tower[i]}'
+            self[cur_tower] = int(tower_state[i + 11])
+        
+        players = []
+        for p in self.get('players', []):
+            steamacc = entities.SteamAccount(p.get('account_id', None))
+            hero = entities.Hero(p.get('hero_id', None))
+            players.append(BaseWrapper({'steam_account':steamacc, 'hero': hero}))
+        
+        self['players'] = players
+
+
+
+class TopLiveGame(AbstractResponse):
+    def parse_response(self):
+        self['game_list'] = [LiveGameSummary(g) for g in self.get('game_list', [])]
+
