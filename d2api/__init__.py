@@ -82,6 +82,9 @@ class APIWrapper:
     def get_top_live_game(self, partner = 0, **kwargs):
         kwargs['partner'] = partner
         return self.api_call(endpoints.GET_TOP_LIVE_GAME, wrappers.TopLiveGame, **kwargs)
+    
+    def get_team_info_by_team_id(self, **kwargs):
+        return self.api_call(endpoints.GET_TEAM_INFO_BY_TEAM_ID, wrappers.TeamInfoByTeamID, **kwargs)
 
     
 def update_local_data(purge = True):

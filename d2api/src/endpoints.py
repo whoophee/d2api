@@ -8,4 +8,4 @@ GET_TEAM_INFO_BY_TEAM_ID = "http://api.steampowered.com/IDOTA2Match_570/GetTeamI
 GET_HEROES = "http://api.steampowered.com/IEconDOTA2_570/GetHeroes/v0001/"
 GET_GAME_ITEMS = "http://api.steampowered.com/IEconDOTA2_570/GetGameItems/v0001/"
 GET_TOURNAMENT_PRIZE_POOL = "http://api.steampowered.com/IEconDOTA2_570/GetTournamentPrizePool/v1/"
-GET_TOP_LIVE_GAME = "http://api.steampowered.com/IDOTA2Match_570/GetTopLiveGame/v1/" # TODO
+GET_TOP_LIVE_GAME = "http://api.steampowered.com/IDOTA2Match_570/GetTopLiveGame/v1/"

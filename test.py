@@ -186,5 +186,53 @@ class TopLiveGameTests(unittest.TestCase):
         self.assertIsInstance(self.get_top_live_game(), wrappers.TopLiveGame,
         'get_top_live_game() should return a TopLiveGame object.')
 
+class LanguageTests(unittest.TestCase):
+    def setUp(self):
+        api = d2api.APIWrapper(language = 'zh-CN')
+        self.api = api
+    
+    def test_wrapper_default_language(self):
+        am_name = "敌法师"
+        ret = self.api.get_heroes()
+
+        queried_am_name = None
+        for h in ret.heroes:
+            if h.id == 1:
+                queried_am_name = h.localized_name
+                break
+        
+        self.assertEqual(queried_am_name, am_name, f'Anti-mage has the name {am_name} in {self.api.language}')
+    
+    def test_wrapper_forced_language(self):
+        am_name = "敵法僧"
+        forced_lang = 'zh-TW'
+        ret = self.api.get_heroes(language = forced_lang)
+
+        queried_am_name = None
+        for h in ret.heroes:
+            if h.id == 1:
+                queried_am_name = h.localized_name
+                break
+        
+        self.assertEqual(queried_am_name, am_name, f'Anti-mage has the name {am_name} in {forced_lang}')
+
+class TeamInfoByTeamIDTests(unittest.TestCase):
+    def setUp(self):
+        api = d2api.APIWrapper()
+        self.get_team_info_by_team_id = api.get_team_info_by_team_id
+
+    def test_get_team_info_by_team_id_dtype(self):
+        self.assertIsInstance(self.get_team_info_by_team_id(), wrappers.TeamInfoByTeamID,
+        'get_team_info_by_team_id() should return a TeamInfoByTeamID object.')
+
+    def test_team_info_content(self):
+        team_id = 46
+        team_name = "Team Empire"
+        time_created = 1340178158
+        team_info = self.get_team_info_by_team_id(start_at_team_id = team_id).teams[0]
+
+        self.assertEqual(team_info.name, team_name, f'Team with team_id = {team_id} is {team_name}.')
+        self.assertEqual(team_info.time_created, time_created, f'Team {team_name} was created at {time_created}.')
+
 if __name__ == '__main__':
     unittest.main()

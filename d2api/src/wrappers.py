@@ -233,3 +233,8 @@ class TopLiveGame(AbstractResponse):
     def parse_response(self):
         self['game_list'] = [LiveGameSummary(g) for g in self.get('game_list', [])]
 
+class TeamInfoByTeamID(AbstractResponse):
+    def parse_response(self):
+        super().parse_response()
+        self['teams'] = [BaseWrapper(t) for t in self['teams']]
+
