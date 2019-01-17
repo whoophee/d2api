@@ -102,10 +102,6 @@ class MatchHistoryTests(unittest.TestCase):
         self.assertIsInstance(self.get_match_history(), wrappers.MatchHistory, 
         'get_match_history() should return a MatchHistory object')
 
-# m = cur.get_match_details('4176987886')
-
-# steamIDs = [114539087, 4294967295, 4294967295, 30633942, 78964422, 4294967295, 283619584, 20778465, 4294967295, 59769890]
-
 class MatchDetailsTests(unittest.TestCase):
     def setUp(self):
         api = d2api.APIWrapper()
