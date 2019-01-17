@@ -28,27 +28,18 @@ class APIWrapper:
 
 
     def api_call(self, url, wrapper_class = lambda x: x, **kwargs):
-        kwargs['key'] = self.api_key
 
-        language = kwargs.get('language')
-        if language == None:
-            language = self.language
-        kwargs['language'] = language
+        if not 'key' in kwargs:
+            kwargs['key'] = self.api_key
+        
+        if not 'language' in kwargs:
+            kwargs['language'] = self.language
 
         response = requests.get(url, params = kwargs, timeout = 60)
         status = response.status_code
         
         if status == 200:
-            parse_results = kwargs.get('parse_results')
-
-            if parse_results == None:
-                parse_results = self.parse_results
-
-            if parse_results:
-                return wrapper_class(response)
-            else:
-                return response.json()
-
+            return wrapper_class(response) if self.parse_results else response.json()
         elif status == 403:
             raise errors.APIAuthenticationError(self.api_key)
         elif status == 404:

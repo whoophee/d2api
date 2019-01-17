@@ -38,38 +38,9 @@ class APIPreliminaryTests(unittest.TestCase):
         msg = "Update must return remote metadata. Instead, it returned an empty dict.")
 
     def test_unparsed_results_dtype(self):
-        self.assertIsInstance(d2api.APIWrapper().api_call(endpoints.GET_MATCH_HISTORY, parse_results = False), dict,
+        api = d2api.APIWrapper(parse_results = False)
+        self.assertIsInstance(api.api_call(endpoints.GET_MATCH_HISTORY,), dict,
         msg = 'Setting parse_results = False should return a dict.')
-
-
-class EndpointTests(unittest.TestCase):
-    """
-    Working endpoints cause 403(authentication) error.
-    Enpoints that do not exist/are discontinued cause 404(not found) error.
-    """
-    def setUp(self):
-        api = d2api.APIWrapper(api_key = "0000")
-        self.api_call = api.api_call
-
-    def test_get_match_history_endpoint(self):
-        with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_MATCH_HISTORY endpoint is not working as intended."):
-            self.api_call(endpoints.GET_MATCH_HISTORY, wrappers.MatchHistory)
-    
-    def test_get_match_history_by_seq_num_endpoint(self):
-        with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_MATCH_HISTORY_BY_SEQ_NUM endpoint is not working as intended."):
-            self.api_call(endpoints.GET_MATCH_HISTORY_BY_SEQ_NUM, wrappers.MatchHistory)
-    
-    def test_get_match_details_endpoint(self):
-        with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_MATCH_DETAILS endpoint is not working as intended."):
-            self.api_call(endpoints.GET_MATCH_DETAILS, wrappers.MatchDetails, match_id = '123')
-    
-    def test_get_heroes_endpoint(self):
-        with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_HEROES endpoint is not working as intended."):
-            self.api_call(endpoints.GET_HEROES, wrappers.Heroes)
-    
-    def test_get_game_items_endpoint(self):
-        with self.assertRaises(d2errors.APIAuthenticationError, msg = "GET_GAME_ITEMS endpoint is not working as intended."):
-            self.api_call(endpoints.GET_GAME_ITEMS, wrappers.GameItems)
 
 class DtypeTests(unittest.TestCase):
     def test_steam_32_64(self):
@@ -101,6 +72,15 @@ class MatchHistoryTests(unittest.TestCase):
     def test_get_match_history_dtype(self):
         self.assertIsInstance(self.get_match_history(), wrappers.MatchHistory, 
         'get_match_history() should return a MatchHistory object')
+
+class MatchHistoryBySeqNumTests(unittest.TestCase):
+    def setUp(self):
+        api = d2api.APIWrapper()
+        self.get_match_history_by_sequence_num = api.get_match_history_by_sequence_num
+    
+    def test_get_match_history_by_sequence_num_dtype(self):
+        self.assertIsInstance(self.get_match_history_by_sequence_num(), wrappers.MatchHistory, 
+        'get_match_history_by_sequence_num() should return a MatchHistory object')
 
 class MatchDetailsTests(unittest.TestCase):
     def setUp(self):
