@@ -234,5 +234,14 @@ class TeamInfoByTeamIDTests(unittest.TestCase):
         self.assertEqual(team_info.name, team_name, f'Team with team_id = {team_id} is {team_name}.')
         self.assertEqual(team_info.time_created, time_created, f'Team {team_name} was created at {time_created}.')
 
+class LiveLeagueGamesTests(unittest.TestCase):
+    def setUp(self):
+        api = d2api.APIWrapper()
+        self.get_live_league_games = api.get_live_league_games
+    
+    def test_get_live_league_games_dtype(self):
+        self.assertIsInstance(self.get_live_league_games(), wrappers.LiveLeagueGames,
+        'get_live_league_games() should return a LiveLeagueGames object.' )
+
 if __name__ == '__main__':
     unittest.main()

@@ -86,6 +86,8 @@ class APIWrapper:
     def get_team_info_by_team_id(self, **kwargs):
         return self.api_call(endpoints.GET_TEAM_INFO_BY_TEAM_ID, wrappers.TeamInfoByTeamID, **kwargs)
 
+    def get_live_league_games(self, **kwargs):
+        return self.api_call(endpoints.GET_LIVE_LEAGUE_GAMES, wrappers.LiveLeagueGames, **kwargs)
     
 def update_local_data(purge = True):
     entities._update(purge)

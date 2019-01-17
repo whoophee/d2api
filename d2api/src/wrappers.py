@@ -178,35 +178,77 @@ class TournamentPrizePool(AbstractResponse):
     def parse_response(self):
         super().parse_response()
 
-# class Player(AbstractParse):
-#     def parse(self):
-#         self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
-#         self['hero'] = entities.Hero(self.pop('hero_id', None))
+class Player(AbstractParse):
+    def parse(self):
+        self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
+        self['hero'] = entities.Hero(self.pop('hero_id', None))
 
-#         team = {0:'radiant', 1:'dire', 2:'broadcaster', 4:'unassigned'}
-#         self['team'] = team[self.get('team', 4)]
+        team = {0:'radiant', 1:'dire', 2:'broadcaster', 4:'unassigned'}
+        self['team'] = team[self.get('team', 4)]
 
+class PlayerLive(AbstractParse):
+    def parse(self):
+        self['hero'] = entities.Hero(self.pop('hero_id', None))
+        self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
 
-# class Game(AbstractParse):
-#     def parse(self):
-#         self['players'] = [Player(p) for p in self.get('players', [])]
-#         self['radiant_team'] = BaseWrapper(self.get('radiant_team', {}))
-#         self['dire_team'] = BaseWrapper(self.get('dire_team', {}))
+        items = []
+        for i in range(6):
+            items.append(entities.Item(self.pop(f'item{i}', None)))
+        self['items'] = items
 
-#         tower_state = format(2**31 + self.get('tower_state', 0), 'b')[::-1]
-#         tower = ['top_t1', 'top_t2', 'top_t3', 'mid_t1', 'mid_t2', 'mid_t3', 'bot_t1', 'bot_t2', 'bot_t3', 'ancient_bot', 'ancient_top']
+class TeamLive(AbstractParse):
+    def parse(self):
+        towers = ['top_t1', 'top_t2', 'top_t3', 'mid_t1', 'mid_t2', 'mid_t3', 'bot_t1', 'bot_t2', 'bot_t3', 'ancient_bot', 'ancient_top']
+        barracks = ['top_melee', 'top_ranged', 'mid_melee', 'mid_ranged', 'bot_melee', 'bot_ranged']
 
-#         for i in range(len(tower)):
-#             cur_tower = f'radiant_{tower[i]}'
-#             self[cur_tower] = int(tower_state[i])
+        tower_status = self.get(f'tower_state')
+        if tower_status != None:
+            for i, t in enumerate(towers):
+                cur_tower_status = ((1<<i) & tower_status) >> i
+                self[t] = cur_tower_status
 
-#             cur_tower = f'dire_{tower[i]}'
-#             self[cur_tower] = int(tower_state[i + 11])
+        barracks_status = self.get(f'barracks_state')
+        if barracks_status != None:
+            for i, b in enumerate(barracks):
+                cur_barracks_status = ((1<<i) & barracks_status) >> i
+                self[b] = cur_barracks_status
+        
+        self['picks'] = [entities.Hero(h['hero_id']) for h in self.get('picks', [])]
+        self['bans'] = [entities.Hero(h['hero_id']) for h in self.get('bans', [])]
+        self['players'] = [PlayerLive(p) for p in self.get('players', [])]
 
-# class LiveLeagueGames(AbstractResponse):
-#     def parse_response(self):
-#         super().parse_response()
-#         self['games'] = [Game(g) for g in self['games']]
+        abilities = []
+
+        for ab in self.get('abilities', []):
+            ability_id = ab.get('ability_id', None)
+            ability_level = ab.get('ability_level', 1)
+            abilities.append(BaseWrapper({'ability': entities.Ability(ability_id), 'ability_level':ability_level}))
+        
+        self['abilities'] = abilities
+
+class Scoreboard(AbstractParse):
+    def parse(self):
+        self['radiant'] = TeamLive(self.get('radiant', {}))
+        self['dire'] = TeamLive(self.get('dire', {}))
+
+class Game(AbstractParse):
+    def parse(self):
+        self['radiant_team'] = BaseWrapper(self.get('radiant_team', {}))
+        self['dire_team'] = BaseWrapper(self.get('dire_team', {}))
+        self['scoreboard'] = Scoreboard(self.get('scoreboard', {}))
+
+        players = []
+        for p in self.get('players', {}):
+            p['steam_account'] = entities.SteamAccount(p.pop('account_id'))
+            p['hero'] = entities.Hero(p.pop('hero_id'))
+            p['team'] = 'dire' if p.get('team') == 0 else 'radiant'
+            players.append(BaseWrapper(p))
+        self['players'] = players
+
+class LiveLeagueGames(AbstractResponse):
+    def parse_response(self):
+        super().parse_response()
+        self['games'] = [Game(g) for g in self['games']]
 
 class LiveGameSummary(AbstractParse):
     def parse(self):
@@ -226,8 +268,6 @@ class LiveGameSummary(AbstractParse):
             players.append(BaseWrapper({'steam_account':steamacc, 'hero': hero}))
         
         self['players'] = players
-
-
 
 class TopLiveGame(AbstractResponse):
     def parse_response(self):
