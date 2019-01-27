@@ -107,3 +107,4 @@ d2apidev.code-workspace
 
 # tmp
 tmp/
+_build/

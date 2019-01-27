@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""List of WebAPI endpoints."""
 GET_MATCH_HISTORY = "http://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/v001/"
 GET_MATCH_HISTORY_BY_SEQ_NUM = "http://api.steampowered.com/IDOTA2Match_570/GetMatchHistoryBySequenceNum/v0001/"
 GET_MATCH_DETAILS = "http://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/v001/"

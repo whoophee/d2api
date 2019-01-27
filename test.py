@@ -26,7 +26,7 @@ class APIPreliminaryTests(unittest.TestCase):
     
     def test_insufficient_params(self):
         with self.assertRaises(d2errors.APIInsufficientArguments, msg = "match_id is a required argument for get_match_details"):
-            d2api.APIWrapper().api_call(endpoints.GET_MATCH_DETAILS, wrappers.MatchDetails)
+            d2api.APIWrapper().get_match_details(match_id = None)
 
     def test_logger_check(self):
         tmp_api = d2api.APIWrapper(logging_enabled = True)
@@ -39,7 +39,7 @@ class APIPreliminaryTests(unittest.TestCase):
 
     def test_unparsed_results_dtype(self):
         api = d2api.APIWrapper(parse_results = False)
-        self.assertIsInstance(api.api_call(endpoints.GET_MATCH_HISTORY,), dict,
+        self.assertIsInstance(api.get_match_history(), dict,
         msg = 'Setting parse_results = False should return a dict.')
 
 class DtypeTests(unittest.TestCase):
@@ -55,13 +55,11 @@ class DtypeTests(unittest.TestCase):
         obj1 = wrappers.BaseWrapper({'a':1, 'b':2, 'c':3})
         obj2 = wrappers.BaseWrapper({'a':1})
         self.assertNotEqual(obj1, obj2, f'{obj1} and {obj2} are unequal.')
-        obj2.b = 2
+        obj2['b'] = 2
         obj2['c'] = 3
-        self.assertEqual(obj1.a, 1, 'BaseWrapper __getattr__ does not work as intended.')
         self.assertEqual(obj1['b'], 2, 'BaseWrapper __getitem__ does not work as intended.')
-        self.assertEqual(obj1, obj2, 'BaseWrapper __eq__ does not work as intended.')
-        with self.assertRaises(KeyError, msg = 'Trying to access non-existant properties should raise KeyError.'):
-            obj1.unexpected_key
+        with self.assertRaises(KeyError, msg = 'Trying to access non-existent properties should raise KeyError.'):
+            obj1['unexpected_key']
 
 
 class MatchHistoryTests(unittest.TestCase):
@@ -72,6 +70,22 @@ class MatchHistoryTests(unittest.TestCase):
     def test_get_match_history_dtype(self):
         self.assertIsInstance(self.get_match_history(), wrappers.MatchHistory, 
         'get_match_history() should return a MatchHistory object')
+
+    def test_get_match_history_hero(self):
+        hero_id = 1
+        hero = entities.Hero(1)
+        match_hist1 = self.get_match_history(hero_id = hero_id)
+        match_hist2 = self.get_match_history(hero = hero)
+        self.assertEqual(match_hist1, match_hist2, 
+        f'Match history called with hero = {hero} and hero_id = {hero_id} should return the same result.')
+    
+    def test_get_match_history_steam_account(self):
+        account_id = '76561198088874284'
+        steam_account = entities.SteamAccount(account_id = '76561198088874284')
+        match_hist1 = self.get_match_history(account_id = account_id)
+        match_hist2 = self.get_match_history(steam_account = steam_account)
+        self.assertEqual(match_hist1, match_hist2,
+        f'Match history called with account_id = {account_id} and steam_account = {steam_account} should return the same result.')
 
 class MatchHistoryBySeqNumTests(unittest.TestCase):
     def setUp(self):
@@ -94,23 +108,23 @@ class MatchDetailsTests(unittest.TestCase):
 
     def test_incorrect_matchid(self):
         res = self.get_match_details(match_id = 1)
-        self.assertTrue(res.error, msg = 'Incorrect match_id should have response error')
+        self.assertTrue(res['error'], msg = 'Incorrect match_id should have response error')
     
     def test_match_content(self):
         match_id = '4176987886'
         res = self.get_match_details(match_id)
 
-        q = res.players_minimal[0].hero
+        q = res['players_minimal'][0]['hero']
         a = entities.Hero(35)
-        self.assertEqual(q, a, f'get_match_details(\'{match_id}\').players_minimal[0].hero is {a}')
+        self.assertEqual(q, a, f'get_match_details(\'{match_id}\')[\'players_minimal\'][0][\'hero\'] is {a}')
 
-        q = res.players[6].items()[0].item_name
+        q = res['players'][6].all_items()[0]['item_name']
         a = 'item_tango'
-        self.assertEqual(q, a, f'get_match_details(\'{match_id}\').players[6].items()[0].item_name is {a}')
+        self.assertEqual(q, a, f'get_match_details(\'{match_id}\')[\'players\'][6].all_items()[0][\'item_name\'] is {a}')
 
-        q = res['tower_status_dire']
+        q = res['dire_buildings']['tower_status']
         a = 2047
-        self.assertEqual(q, a, f'get_match_details(\'{match_id}\')[\'tower_status_dire\'] is {a}')
+        self.assertEqual(q, a, f'get_match_details(\'{match_id}\')[\'dire_buildings\'][\'tower_status\'] is {a}')
 
 class HeroesTests(unittest.TestCase):
     def setUp(self):
@@ -122,10 +136,10 @@ class HeroesTests(unittest.TestCase):
         'get_heroes() should return a Heroes object')
 
     def test_hero_localized_name(self):
-        res = self.get_heroes()
+        res = self.get_heroes(language = 'en_us')
         cur_id = 59
-        cur_hero = [h for h in res.heroes if h.id == cur_id][0]
-        self.assertEqual(cur_hero.localized_name, 'Huskar',
+        cur_hero = [h for h in res['heroes'] if h['id'] == cur_id][0]
+        self.assertEqual(cur_hero['localized_name'], 'Huskar',
         f'Localized name of id = {cur_id} should be Huskar')
 
 class GameItemsTests(unittest.TestCase):
@@ -138,10 +152,10 @@ class GameItemsTests(unittest.TestCase):
         'get_game_items() should return a GameItems object')
         
     def test_item_localized_name(self):
-        res = self.get_game_items()
+        res = self.get_game_items(language = 'en_us')
         cur_id = 265
-        cur_item = [i for i in res.items if i.id == cur_id][0]
-        self.assertEqual(cur_item.localized_name, 'Infused Raindrops',
+        cur_item = [i for i in res['items'] if i['id'] == cur_id][0]
+        self.assertEqual(cur_item['localized_name'], 'Infused Raindrops',
         f'Localized name of id = {cur_id} should be Infused Raindrops')
 
 class TournamentPrizePoolTests(unittest.TestCase):
@@ -164,33 +178,16 @@ class TopLiveGameTests(unittest.TestCase):
 
 class LanguageTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper(language = 'zh-CN')
+        api = d2api.APIWrapper()
         self.api = api
     
-    def test_wrapper_default_language(self):
-        am_name = "敌法师"
-        ret = self.api.get_heroes()
-
-        queried_am_name = None
-        for h in ret.heroes:
-            if h.id == 1:
-                queried_am_name = h.localized_name
-                break
-        
-        self.assertEqual(queried_am_name, am_name, f'Anti-mage has the name {am_name} in {self.api.language}')
-    
-    def test_wrapper_forced_language(self):
+    def test_wrapper_language(self):
         am_name = "敵法僧"
-        forced_lang = 'zh-TW'
-        ret = self.api.get_heroes(language = forced_lang)
-
-        queried_am_name = None
-        for h in ret.heroes:
-            if h.id == 1:
-                queried_am_name = h.localized_name
-                break
+        lang = 'zh-TW'
+        ret = self.api.get_heroes(language = lang)
+        queried_am_name = [h['localized_name'] for h in ret['heroes'] if h['id'] == 1][0]
         
-        self.assertEqual(queried_am_name, am_name, f'Anti-mage has the name {am_name} in {forced_lang}')
+        self.assertEqual(queried_am_name, am_name, f'Anti-mage has the name {am_name} in {lang}')
 
 class TeamInfoByTeamIDTests(unittest.TestCase):
     def setUp(self):
@@ -205,10 +202,10 @@ class TeamInfoByTeamIDTests(unittest.TestCase):
         team_id = 46
         team_name = "Team Empire"
         time_created = 1340178158
-        team_info = self.get_team_info_by_team_id(start_at_team_id = team_id).teams[0]
+        team_info = self.get_team_info_by_team_id(start_at_team_id = team_id)['teams'][0]
 
-        self.assertEqual(team_info.name, team_name, f'Team with team_id = {team_id} is {team_name}.')
-        self.assertEqual(team_info.time_created, time_created, f'Team {team_name} was created at {time_created}.')
+        self.assertEqual(team_info['name'], team_name, f'Team with team_id = {team_id} is {team_name}.')
+        self.assertEqual(team_info['time_created'], time_created, f'Team {team_name} was created at {time_created}.')
 
 class LiveLeagueGamesTests(unittest.TestCase):
     def setUp(self):
@@ -218,6 +215,13 @@ class LiveLeagueGamesTests(unittest.TestCase):
     def test_get_live_league_games_dtype(self):
         self.assertIsInstance(self.get_live_league_games(), wrappers.LiveLeagueGames,
         'get_live_league_games() should return a LiveLeagueGames object.' )
+
+# class ArbitraryTests(unittest.TestCase):
+#     def setUp(self):
+#         self.api = d2api.APIWrapper()
+    
+#     def test_print_stuff(self):
+#         print(self.api.get_match_details(4367716007))
 
 if __name__ == '__main__':
     unittest.main()
