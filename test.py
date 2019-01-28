@@ -10,6 +10,7 @@ from d2api.src import errors as d2errors
 from d2api.src import wrappers
 from d2api import update_local_data
 
+# TODO: A whole lot more test cases
 
 class APIPreliminaryTests(unittest.TestCase):
     def test_environment_api_key_set(self):

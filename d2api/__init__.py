@@ -102,6 +102,8 @@ class APIWrapper:
         :type start_at_match_id: int, optional
         :type matches_requested: int, optional
         :type tournament_games_only: int, optional
+
+        :rtype: MatchHistory 
         """
         parse_get_match_history(kwargs)
         return self._api_call(endpoints.GET_MATCH_HISTORY, wrappers.MatchHistory, **kwargs)
@@ -112,13 +114,17 @@ class APIWrapper:
 
         :type start_at_match_seq_num: int
         :type matches_requested: int, optional
+
+        :rtype: MatchHistory
         """
         return self._api_call(endpoints.GET_MATCH_HISTORY_BY_SEQ_NUM, wrappers.MatchHistory, **kwargs)
 
     def get_match_details(self, match_id, **kwargs):
         """:param match_id: Match ID
 
-        :type match_id: string
+        :type match_id: int, string
+
+        :rtype: MatchDetails
         """
         kwargs['match_id'] = match_id
         return self._api_call(endpoints.GET_MATCH_DETAILS, wrappers.MatchDetails, **kwargs)
@@ -129,6 +135,8 @@ class APIWrapper:
 
         :type language: string, optional
         :type itemizedonly: bool, optional
+
+        :rtype: Heroes
         """
         return self._api_call(endpoints.GET_HEROES, wrappers.Heroes, **kwargs)
 
@@ -136,6 +144,8 @@ class APIWrapper:
         """:param language: The language to provide hero names in
 
         :type language: string, optional
+
+        :rtype: GameItems
         """
         return self._api_call(endpoints.GET_GAME_ITEMS, wrappers.GameItems, **kwargs)
     
@@ -143,6 +153,8 @@ class APIWrapper:
         """:param leagueid: The ID of the league to get the prize pool of
 
         :type leagueid: int
+
+        :rtype: TournamentPrizePool
         """
         return self._api_call(endpoints.GET_TOURNAMENT_PRIZE_POOL, wrappers.TournamentPrizePool, **kwargs)
     
@@ -150,6 +162,8 @@ class APIWrapper:
         """:param partner: Which partner's games to use (default `0`)
 
         :type partner: int, optional
+
+        :rtype: TopLiveGame
         """
         kwargs['partner'] = partner
         return self._api_call(endpoints.GET_TOP_LIVE_GAME, wrappers.TopLiveGame, **kwargs)
@@ -160,12 +174,13 @@ class APIWrapper:
 
         :type start_at_team_id: int, optional
         :type teams_requested: int, optional
+
+        :rtype: TeamInfoByTeamID
         """
         return self._api_call(endpoints.GET_TEAM_INFO_BY_TEAM_ID, wrappers.TeamInfoByTeamID, **kwargs)
 
     def get_live_league_games(self, **kwargs):
-        """No parameters.
-        """
+        """:rtype: LiveLeagueGames"""
         return self._api_call(endpoints.GET_LIVE_LEAGUE_GAMES, wrappers.LiveLeagueGames, **kwargs)
 
 def update_local_data(purge = True):

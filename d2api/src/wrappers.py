@@ -15,7 +15,7 @@ def _get_side_from_team(team):
     return {0:'radiant', 1:'dire', 2:'broadcaster', 4:'unassigned'}.get(team, 'unassigned')
 
 def _get_subdict(d, keys):
-    """Get a subdict with spacific keys"""
+    """Get a subdict with specific keys"""
     return {k: d.get(k) for k in keys}
 
 class BaseWrapper(dict):
@@ -26,10 +26,7 @@ class BaseWrapper(dict):
     def _copy_dict(self, other):
         for k, v in other.items():
             super().__setitem__(k, v)
-
-    def pop(self, k, default = None):
-        return super().pop(k, default)
-
+            
     def __init__(self, default_obj = {}):
         self._copy_dict(default_obj)
 
@@ -69,17 +66,17 @@ class PlayerMinimal(AbstractParse):
     :vartype hero: Hero
     """
     def parse(self):
-        self['steam_account'] = entities.SteamAccount(self.pop('account_id'))
+        self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
 
-        player_slot = self.pop('player_slot')
+        player_slot = self.pop('player_slot', None)
         if not player_slot == None:
             self['side'] = _get_side_from_slot(player_slot)
 
-        team = self.pop('team')
+        team = self.pop('team', None)
         if not team == None:
             self['side'] = _get_side_from_team(team)
 
-        self['hero'] = entities.Hero(self.pop('hero_id'))
+        self['hero'] = entities.Hero(self.pop('hero_id', None))
 
 # TODO : parse lobby_type or add enumeration for lobby_type
 class MatchSummary(AbstractParse):
@@ -127,11 +124,11 @@ class InventoryUnit(AbstractParse):
         self['backpack'] = []
 
         for item_slot in [f'item_{i}' for i in range(6)]:
-            cur_item = entities.Item(self.pop(item_slot))
+            cur_item = entities.Item(self.pop(item_slot, None))
             self['inventory'].append(cur_item)
 
         for backpack_slot in [f'backpack_{i}' for i in range(3)]:
-            cur_item = entities.Item(self.pop(backpack_slot))
+            cur_item = entities.Item(self.pop(backpack_slot, None))
             self['backpack'].append(cur_item)
 
 class AdditionalUnit(InventoryUnit):
@@ -142,8 +139,6 @@ class AdditionalUnit(InventoryUnit):
 
     :vartype inventory: list(Item)
     :vartype backpack: list(Item)
-
-    :members: all_items
     """
 
     def parse(self):
@@ -161,7 +156,7 @@ class AbilityUpgrade(AbstractParse):
     :vartype level: int
     """
     def parse(self):
-        self['ability'] = entities.Ability(self.pop('ability_id'))
+        self['ability'] = entities.Ability(self.pop('ability_id', None))
 
 # TODO: add leaver status enumeration
 
@@ -214,15 +209,15 @@ class PlayerUnit(InventoryUnit):
     def parse(self):
         self._build_item_list()
 
-        self['steam_account'] = entities.SteamAccount(self.pop('account_id'))
+        self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
         self['side'] = _get_side_from_slot(self.pop('player_slot', 0))
-        self['hero'] = entities.Hero(self.pop('hero_id'))
+        self['hero'] = entities.Hero(self.pop('hero_id', None))
 
         self['additional_units'] = [AdditionalUnit(a) for a in self.get('additional_units', [])]
 
         au_list = []
         for au in self.get('ability_upgrades', []):
-            au['ability_id'] = au.pop('ability')
+            au['ability_id'] = au.pop('ability', None)
             au_list.append(AbilityUpgrade(au))
         self['ability_upgrades'] = au_list
 
@@ -271,8 +266,8 @@ class PickBan(AbstractParse):
     :vartype order: int
     """
     def parse(self):
-        self['hero'] = entities.Hero(self.pop('hero_id'))
-        self['side'] = 'dire' if self.pop('team') == 0 else 'radiant'
+        self['hero'] = entities.Hero(self.pop('hero_id', None))
+        self['side'] = 'dire' if self.pop('team', 0) == 0 else 'radiant'
 
 
 
@@ -355,15 +350,15 @@ class MatchDetails(AbstractResponse):
         self['players'] = [PlayerUnit(pl) for pl in self.get('players', [])]
 
         if 'radiant_win' in self:
-            self['winner'] = 'radiant' if self.pop('radiant_win') else 'dire'
+            self['winner'] = 'radiant' if self.pop('radiant_win', None) else 'dire'
 
         picks_bans = [PickBan(pb) for pb in self.get('picks_bans', [])]
         self['picks_bans'] = sorted(picks_bans, key = lambda x: x['order'])
 
         
         for side in ['radiant', 'dire']:
-            tower_status = self.pop(f'tower_status_{side}')
-            barracks_status = self.pop(f'barracks_status_{side}')
+            tower_status = self.pop(f'tower_status_{side}', None)
+            barracks_status = self.pop(f'barracks_status_{side}', None)
             self[f'{side}_buildings'] = Buildings({'tower_status': tower_status, 'barracks_status': barracks_status})
 
 class LocalizedHero(AbstractParse):
@@ -479,12 +474,12 @@ class PlayerLive(AbstractParse):
     :vartype net_worth: int
     """
     def parse(self):
-        self['hero'] = entities.Hero(self.pop('hero_id'))
-        self['steam_account'] = entities.SteamAccount(self.pop('account_id'))
+        self['hero'] = entities.Hero(self.pop('hero_id', None))
+        self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
 
-        self['deaths'] = self.pop('death')
+        self['deaths'] = self.pop('death', None)
 
-        self['inventory'] = [entities.Item(self.pop(f'item{i}')) for i in range(6)]
+        self['inventory'] = [entities.Item(self.pop(f'item{i}', None)) for i in range(6)]
 
 class TeamLive(AbstractParse):
     """Information of a team in live game
@@ -659,10 +654,10 @@ class LiveGameSummary(AbstractParse):
         self['dire_towers'] = Buildings({'tower_status': dire_tower_state})
         self['players'] = [PlayerMinimal(p) for p in self.get('players', [])]
         
-        radiant_team_name = self.pop('team_name_radiant')
-        dire_team_name = self.pop('team_name_dire')
-        radiant_team_id = self.pop('team_id_radiant')
-        dire_team_id = self.pop('team_id_dire')
+        radiant_team_name = self.pop('team_name_radiant', None)
+        dire_team_name = self.pop('team_name_dire', None)
+        radiant_team_id = self.pop('team_id_radiant', None)
+        dire_team_id = self.pop('team_id_dire', None)
 
         self['radiant_team'] = TeamInfo({'team_name': radiant_team_name, 'team_id': radiant_team_id})
         self['dire_team'] = TeamInfo({'dire_name': dire_team_name, 'dire_id': dire_team_id})
