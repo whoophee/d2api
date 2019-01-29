@@ -35,7 +35,7 @@ def _load_remote_json(file_name):
     res = requests.get(url)
     if res.status_code == 200:
         return res.json()
-    else:
+    else: # pragma: no cover
         return {}
 
 def _write_local_json(data, file_name):
@@ -54,15 +54,19 @@ def _write_local_json(data, file_name):
 class Entity(dict):
     """Generic entity class"""
     def __str__(self):
-        return f"{self.__class__.__name__}({str(super().__str__())})"
+        return self.__repr__()
 
 class Hero(Entity):
     """Wrapper to map hero information to hero_id"""
     def __repr__(self):
         return f"Hero(hero_id = {self['hero_id']})"
 
-    def __init__(self, hero_id = None):
-        hero_id = str(hero_id)
+    def __bool__(self):
+        return self['hero_id'] != None
+
+    def __init__(self, hero_id):
+        if hero_id != None:
+            hero_id = str(hero_id)
         self['hero_id'] = hero_id
         cur_hero = all_heroes.get(hero_id, {})
         self['hero_name'] = cur_hero.get('hero_name', 'unknown_hero')
@@ -73,8 +77,12 @@ class Item(Entity):
     def __repr__(self):
         return f"Item(item_id = {self['item_id']})"
 
-    def __init__(self, item_id = None):
-        item_id = str(item_id)
+    def __bool__(self):
+        return self['item_id'] != None
+
+    def __init__(self, item_id):
+        if item_id != None:
+            item_id = str(item_id)
         self['item_id'] = item_id
         cur_item = all_items.get(item_id, {})
         self['item_cost'] = cur_item.get('item_cost', 0)
@@ -86,8 +94,12 @@ class Ability(Entity):
     def __repr__(self):
         return f"Ability(ability_id = {self['ability_id']})"
 
-    def __init__(self, ability_id = None):
-        ability_id = str(ability_id)
+    def __bool__(self):
+        return self['ability_id'] != None
+
+    def __init__(self, ability_id):
+        if ability_id != None:
+            ability_id = str(ability_id)
         self['ability_id'] = ability_id
         cur_ability = all_abilities.get(ability_id, {})
         self['ability_name'] = cur_ability.get('ability_name', 'unknown_ability')
@@ -98,7 +110,10 @@ class SteamAccount(Entity):
     def __repr__(self):
         return f"SteamAccount(account_id = {self['id32']})"
 
-    def __init__(self, account_id = None):
+    def __bool__(self):
+        return self['id32'] != None
+
+    def __init__(self, account_id):
         if account_id is None:
             self['id32'] = self['id64'] = None
         else:
@@ -141,5 +156,5 @@ def _update(purge):
         all_items = _load_local_json('items.json')
         all_abilities = _load_local_json('abilities.json')
         return remote_meta
-    except:
+    except: # pragma: no cover
         return {}

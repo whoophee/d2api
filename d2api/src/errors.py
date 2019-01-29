@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-class BaseError(Exception):
+class BaseError(Exception): # pragma: no cover
     """Generic error wrapper."""
     def __init__(self, msg):
         self._msg = msg
@@ -23,7 +23,7 @@ class APIInsufficientArguments(BaseError):
     def __init__(self, query = None, params = {}):
         self._msg = f"HTTP 400: Insufficient arguments for \"{query}\". Parameters provided: {params}"
 
-class APITimeoutError(BaseError):
+class APITimeoutError(BaseError): # pragma: no cover
     """Error for server timeout."""
     def __init__(self):
         self._msg = "HTTP 503: Timeout error."

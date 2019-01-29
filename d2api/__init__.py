@@ -12,11 +12,12 @@ __date__ = "25/10/2018"
 __license__ = "MIT"
 
 def parse_get_match_history(cur_args):
-    if 'account_id' in cur_args:
-        cur_args['account_id'] = entities.SteamAccount(cur_args['account_id'])['id32']
-    
-    if 'steam_account' in cur_args:
-        cur_args['account_id'] = cur_args.pop('steam_account')['id32']
+
+    steam_default = entities.SteamAccount(cur_args.pop('account_id', None))
+    steam_account = cur_args.pop('steam_account', None) if not steam_default else steam_default
+
+    if steam_account:
+        cur_args['account_id'] = steam_account['id32']
     
     if 'hero' in cur_args:
         cur_args['hero_id'] = cur_args.pop('hero')['hero_id']
@@ -56,9 +57,6 @@ class APIWrapper:
         :type url: string, required
         :type wrapper_class: Class
         """
-        if not wrapper_class:
-            wrapper_class = lambda x: x
-
         if not 'key' in kwargs:
             kwargs['key'] = self.api_key
 
@@ -71,11 +69,11 @@ class APIWrapper:
             raise errors.APIAuthenticationError(self.api_key)
         elif status == 404:
             raise errors.APIMethodUnavailable(url)
-        elif status == 503:
+        elif status == 503: # pragma: no cover
             raise errors.APITimeoutError()
         elif status == 400:
             raise errors.APIInsufficientArguments(url, kwargs)
-        else:
+        else: # pragma: no cover
             raise errors.BaseError(msg = response.reason)
 
     def get_match_history(self, **kwargs):

@@ -326,20 +326,20 @@ class MatchDetails(AbstractResponse):
         """
         :return: List of leavers in a game.
 
-        :rtype: list(PlayerUnit)
+        :rtype: list(SteamAccount)
         """
-        return [p for p in self['players'] if p['leaver_status'] != 0]
+        return [p['steam_account'] for p in self['players'] if p['leaver_status'] != 0]
 
-    def has_leaver(self):
+    def has_leavers(self):
         """
         :return: ``True`` if the game contains a leaver
 
         :rtype: bool
         """
+        has_leaver = False
         for p in self['players']:
-            if p['leaver_status'] != 0:
-                return True
-        return False
+            has_leaver |= p['leaver_status'] != 0
+        return has_leaver
 
     def parse_response(self):
         super().parse_response()
@@ -411,13 +411,13 @@ class Heroes(AbstractResponse):
 class GameItems(AbstractResponse):
     """get_game_items response object
 
-    :var items: List of localized item information
+    :var game_items: List of localized item information
     
-    :vartype items: list(LocalizedGameItem)
+    :vartype game_items: list(LocalizedGameItem)
     """
     def parse_response(self):
         super().parse_response()
-        self['items'] = [LocalizedGameItem(i) for i in self.get('items', [])]
+        self['game_items'] = [LocalizedGameItem(i) for i in self.pop('items', [])]
 
 class TournamentPrizePool(AbstractResponse):
     """get_tournament_prize_pool response object
@@ -477,7 +477,7 @@ class PlayerLive(AbstractParse):
         self['hero'] = entities.Hero(self.pop('hero_id', None))
         self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
 
-        self['deaths'] = self.pop('death', None)
+        self['deaths'] = self.pop('death', 0)
 
         self['inventory'] = [entities.Item(self.pop(f'item{i}', None)) for i in range(6)]
 

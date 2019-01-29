@@ -28,6 +28,11 @@ class APIPreliminaryTests(unittest.TestCase):
     def test_insufficient_params(self):
         with self.assertRaises(d2errors.APIInsufficientArguments, msg = "match_id is a required argument for get_match_details"):
             d2api.APIWrapper().get_match_details(match_id = None)
+        
+    def test_api_method_unavailable(self):
+        method_url = 'http://api.steampowered.com/IDOTA2Match_570/RANDOMMETHOD/v0001/'
+        with self.assertRaises(d2errors.APIMethodUnavailable, msg = f"{method_url} is an unavailable method."):
+            d2api.APIWrapper()._api_call(method_url)
 
     def test_logger_check(self):
         tmp_api = d2api.APIWrapper(logging_enabled = True)
@@ -42,6 +47,52 @@ class APIPreliminaryTests(unittest.TestCase):
         api = d2api.APIWrapper(parse_results = False)
         self.assertIsInstance(api.get_match_history(), dict,
         msg = 'Setting parse_results = False should return a dict.')
+
+class EntityTests(unittest.TestCase):
+    def test_item_repr(self):
+        item_repr = repr(entities.Item(3))
+        item_match_str = "Item(item_id = 3)"
+        self.assertEqual(item_repr, item_match_str, f"repr(entities.Item(3)) should be {item_match_str}")
+
+    def test_hero_repr(self):
+        hero_repr = repr(entities.Hero(1))
+        hero_match_str = "Hero(hero_id = 1)"
+        self.assertEqual(hero_repr, hero_match_str, f"repr(entities.Hero(1)) should be {hero_match_str}")
+
+    def test_ability_repr(self):
+        ability_repr = repr(entities.Ability(1))
+        ability_match_str = "Ability(ability_id = 1)"
+        self.assertEqual(ability_repr, ability_match_str, f"repr(entities.Ability(1)) should be {ability_match_str}")
+
+    def test_steamaccount_repr(self):
+        steam_repr = repr(entities.SteamAccount(1))
+        steam_match_str = "SteamAccount(account_id = 1)"
+        self.assertEqual(steam_repr, steam_match_str, f"repr(entities.SteamAccount(1)) should be {steam_match_str}")
+    
+    def test_ability_bool(self):
+        ability1 = entities.Ability(None)
+        ability2 = entities.Ability(2)
+        self.assertTrue(not ability1, f"not {ability1} should be True")
+        self.assertFalse(not ability2, f"not {ability2} should be False")
+    
+    def test_hero_bool(self):
+        hero1 = entities.Hero(None)
+        hero2 = entities.Hero(2)
+        self.assertTrue(not hero1, f"not {hero1} should be True")
+        self.assertFalse(not hero2, f"not {hero2} should be False")
+    
+    def test_item_bool(self):
+        item1 = entities.Item(None)
+        item2 = entities.Item(2)
+        self.assertTrue(not item1, f"not {item1} should be True")
+        self.assertFalse(not item2, f"not {item2} should be False")
+    
+    def test_steamaccount_bool(self):
+        acct1 = entities.SteamAccount(None)
+        acct2 = entities.SteamAccount(2)
+        self.assertTrue(not acct1, f"not {acct1} should be True")
+        self.assertFalse(not acct2, f"not {acct2} should be False")
+    
 
 class DtypeTests(unittest.TestCase):
     def test_steam_32_64(self):
@@ -71,22 +122,25 @@ class MatchHistoryTests(unittest.TestCase):
     def test_get_match_history_dtype(self):
         self.assertIsInstance(self.get_match_history(), wrappers.MatchHistory, 
         'get_match_history() should return a MatchHistory object')
-
-    def test_get_match_history_hero(self):
-        hero_id = 1
-        hero = entities.Hero(1)
-        match_hist1 = self.get_match_history(hero_id = hero_id)
-        match_hist2 = self.get_match_history(hero = hero)
-        self.assertEqual(match_hist1, match_hist2, 
-        f'Match history called with hero = {hero} and hero_id = {hero_id} should return the same result.')
     
-    def test_get_match_history_steam_account(self):
-        account_id = '76561198088874284'
-        steam_account = entities.SteamAccount(account_id = '76561198088874284')
-        match_hist1 = self.get_match_history(account_id = account_id)
-        match_hist2 = self.get_match_history(steam_account = steam_account)
-        self.assertEqual(match_hist1, match_hist2,
-        f'Match history called with account_id = {account_id} and steam_account = {steam_account} should return the same result.')
+    def test_steamaccount_arg(self):
+        steam_account = entities.SteamAccount('76561198088874284')
+        
+        res = self.get_match_history(steam_account = steam_account)
+        game_accounts = [p['steam_account'] for p in res['matches'][0]['players']]
+
+        self.assertIn(steam_account, game_accounts, 
+        f"get_match_history(steam_account = {steam_account}) should contain {steam_account}")
+    
+    def test_hero_arg(self):
+        hero = entities.Hero(1)
+
+        res = self.get_match_history(hero = hero)
+        game_heroes = [p['hero'] for p in res['matches'][0]['players']]
+
+        self.assertIn(hero, game_heroes,
+        f"get_match_history(hero = {hero}) should contain {hero}")
+
 
 class MatchHistoryBySeqNumTests(unittest.TestCase):
     def setUp(self):
@@ -126,6 +180,28 @@ class MatchDetailsTests(unittest.TestCase):
         q = res['dire_buildings']['tower_status']
         a = 2047
         self.assertEqual(q, a, f'get_match_details(\'{match_id}\')[\'dire_buildings\'][\'tower_status\'] is {a}')
+    
+    def test_leaver_status(self):
+        match_id = '4176987886'
+        res = self.get_match_details(match_id)
+        self.assertTrue(res.has_leavers(), f"get_match_details(\'{match_id}\').has_leavers() is True")
+
+        leavers = [entities.SteamAccount(account_id = 4294967295), 
+        entities.SteamAccount(account_id = 283619584), 
+        entities.SteamAccount(account_id = 20778465), 
+        entities.SteamAccount(account_id = 4294967295), 
+        entities.SteamAccount(account_id = 59769890)]
+
+        self.assertEqual(res.leavers(), leavers, f"get_match_details(\'{match_id}\').leavers() does not work as intended")
+    
+    def test_ability_upgrade(self):
+        match_id = '4300255508'
+        res = self.get_match_details(match_id)
+        ability = res['players'][0]['ability_upgrades'][0]['ability']
+        ability_match = entities.Ability(ability_id = 5008)
+        
+        self.assertEqual(ability, ability_match, 
+        f"get_match_details({match_id})[\'players\'][0][\'ability_upgrades\'][0][\'ability\'] should be {ability_match}")
 
 class HeroesTests(unittest.TestCase):
     def setUp(self):
@@ -155,7 +231,7 @@ class GameItemsTests(unittest.TestCase):
     def test_item_localized_name(self):
         res = self.get_game_items(language = 'en_us')
         cur_id = 265
-        cur_item = [i for i in res['items'] if i['id'] == cur_id][0]
+        cur_item = [i for i in res['game_items'] if i['id'] == cur_id][0]
         self.assertEqual(cur_item['localized_name'], 'Infused Raindrops',
         f'Localized name of id = {cur_id} should be Infused Raindrops')
 
@@ -224,5 +300,5 @@ class LiveLeagueGamesTests(unittest.TestCase):
 #     def test_print_stuff(self):
 #         print(self.api.get_match_details(4367716007))
 
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma: no cover
     unittest.main()
