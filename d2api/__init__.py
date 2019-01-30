@@ -63,7 +63,7 @@ class APIWrapper:
 
         response = requests.get(url, params = kwargs, timeout = 60)
         status = response.status_code
-        
+
         if status == 200:
             return wrapper_class(response) if self.parse_results else response.json()
         elif status == 403:
@@ -184,4 +184,4 @@ class APIWrapper:
 
 def update_local_data(purge = True):
     """Synchronize local data with current repository data"""
-    entities._update(purge)
+    return entities._update(purge)

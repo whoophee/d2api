@@ -40,8 +40,9 @@ class APIPreliminaryTests(unittest.TestCase):
         'Logger should not be None when \'logging_enabled\' was set to True')
 
     def test_update_local_files(self):
-        self.assertNotEqual(update_local_data(), {},
-        msg = "Update must return remote metadata. Instead, it returned an empty dict.")
+        remote_meta = update_local_data()
+        self.assertNotEqual(remote_meta, {},
+        msg = "Update must return remote metadata. Instead, it returned nothing.")
 
     def test_unparsed_results_dtype(self):
         api = d2api.APIWrapper(parse_results = False)
@@ -292,16 +293,5 @@ class LiveLeagueGamesTests(unittest.TestCase):
         self.get_live_league_games = api.get_live_league_games
     
     def test_get_live_league_games_dtype(self):
-        print(self.get_live_league_games())
         self.assertIsInstance(self.get_live_league_games(), wrappers.LiveLeagueGames,
         'get_live_league_games() should return a LiveLeagueGames object.' )
-
-# class ArbitraryTests(unittest.TestCase):
-#     def setUp(self):
-#         self.api = d2api.APIWrapper()
-    
-#     def test_print_stuff(self):
-#         print(self.api.get_match_details(4367716007))
-
-if __name__ == '__main__': # pragma: no cover
-    unittest.main()
