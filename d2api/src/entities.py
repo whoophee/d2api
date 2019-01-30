@@ -7,10 +7,6 @@ from pathlib import Path
 
 import requests
 
-all_heroes = {}
-all_items = {}
-all_abilities = {}
-
 # TODO : Implement cleaner way to ensure data is up to date and multi-language compliant
 # This appears to be an especially weird problem since the data has to parsed from a local Dota 2 installation
 
@@ -47,6 +43,9 @@ def _write_local_json(data, file_name):
         else:
             json.dump(data, outfile)
 
+all_heroes = _load_local_json('heroes.json')
+all_items = _load_local_json('items.json')
+all_abilities = _load_local_json('abilities.json')
 
 
 # Most ID based response values have more data associated with them. 
@@ -125,7 +124,6 @@ class SteamAccount(Entity):
             else:
                 self['id32'] = account_id - steam64
                 self['id64'] = account_id
-
 
 def _update(purge):
     """Helper function to synchronize local with remote data."""

@@ -1,0 +1,991 @@
+{
+    "players": [
+        {
+            "account_id": 107768833,
+            "name": "SharkyIce",
+            "hero_id": 0,
+            "team": 4
+        },
+        {
+            "account_id": 89871557,
+            "name": "��L�O",
+            "hero_id": 1,
+            "team": 0
+        },
+        {
+            "account_id": 70388657,
+            "name": " ���O",
+            "hero_id": 22,
+            "team": 0
+        },
+        {
+            "account_id": 153727297,
+            "name": "►懒惰之神♂",
+            "hero_id": 18,
+            "team": 1
+        },
+        {
+            "account_id": 180011187,
+            "name": "boys who cry",
+            "hero_id": 27,
+            "team": 1
+        },
+        {
+            "account_id": 372022646,
+            "name": "POS 4 OR THROW",
+            "hero_id": 100,
+            "team": 1
+        },
+        {
+            "account_id": 152838763,
+            "name": "卡尔 Vinz ♥ ",
+            "hero_id": 106,
+            "team": 1
+        },
+        {
+            "account_id": 150972003,
+            "name": "Tigers.Dendi.dTs",
+            "hero_id": 34,
+            "team": 1
+        },
+        {
+            "account_id": 87196890,
+            "name": "`k��O",
+            "hero_id": 121,
+            "team": 0
+        },
+        {
+            "account_id": 121404228,
+            "name": "p�q�O",
+            "hero_id": 107,
+            "team": 0
+        },
+        {
+            "account_id": 38628747,
+            "name": "�P��O",
+            "hero_id": 13,
+            "team": 0
+        }
+    ],
+    "radiant_team": {
+        "team_name": "Tigers",
+        "team_id": 6187627,
+        "team_logo": 941705216659818425,
+        "complete": true
+    },
+    "dire_team": {
+        "team_name": "PG Godlike",
+        "team_id": 6019885,
+        "team_logo": 947336408508392662,
+        "complete": true
+    },
+    "lobby_id": 25984751142024998,
+    "match_id": 4375122984,
+    "spectators": 3935,
+    "league_id": 10646,
+    "league_node_id": 0,
+    "stream_delay_s": 300,
+    "radiant_series_wins": 0,
+    "dire_series_wins": 0,
+    "series_type": 0,
+    "scoreboard": {
+        "duration": 2372.423828125,
+        "roshan_respawn_timer": 607,
+        "radiant": {
+            "score": 37,
+            "tower_state": 1798,
+            "barracks_state": 51,
+            "picks": [
+                {
+                    "hero_id": 121
+                },
+                {
+                    "hero_id": 107
+                },
+                {
+                    "hero_id": 1
+                },
+                {
+                    "hero_id": 13
+                },
+                {
+                    "hero_id": 22
+                }
+            ],
+            "bans": [
+                {
+                    "hero_id": 97
+                },
+                {
+                    "hero_id": 19
+                },
+                {
+                    "hero_id": 94
+                },
+                {
+                    "hero_id": 55
+                },
+                {
+                    "hero_id": 28
+                },
+                {
+                    "hero_id": 109
+                }
+            ],
+            "players": [
+                {
+                    "player_slot": 0,
+                    "account_id": 87196890,
+                    "hero_id": 121,
+                    "kills": 5,
+                    "death": 2,
+                    "assists": 15,
+                    "last_hits": 91,
+                    "denies": 5,
+                    "gold": 1843,
+                    "level": 18,
+                    "gold_per_min": 345,
+                    "xp_per_min": 395,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 43,
+                    "item1": 254,
+                    "item2": 188,
+                    "item3": 36,
+                    "item4": 214,
+                    "item5": 232,
+                    "respawn_timer": 0,
+                    "position_x": 354.69915771484375,
+                    "position_y": -3784.80908203125,
+                    "net_worth": 8663
+                },
+                {
+                    "player_slot": 1,
+                    "account_id": 38628747,
+                    "hero_id": 13,
+                    "kills": 11,
+                    "death": 1,
+                    "assists": 15,
+                    "last_hits": 244,
+                    "denies": 14,
+                    "gold": 3213,
+                    "level": 24,
+                    "gold_per_min": 517,
+                    "xp_per_min": 656,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 1,
+                    "item1": 100,
+                    "item2": 204,
+                    "item3": 48,
+                    "item4": 36,
+                    "item5": 77,
+                    "respawn_timer": 0,
+                    "position_x": 1806.6024169921875,
+                    "position_y": -4233.45751953125,
+                    "net_worth": 19428
+                },
+                {
+                    "player_slot": 2,
+                    "account_id": 89871557,
+                    "hero_id": 1,
+                    "kills": 12,
+                    "death": 4,
+                    "assists": 11,
+                    "last_hits": 477,
+                    "denies": 27,
+                    "gold": 3040,
+                    "level": 25,
+                    "gold_per_min": 745,
+                    "xp_per_min": 722,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 147,
+                    "item1": 143,
+                    "item2": 145,
+                    "item3": 114,
+                    "item4": 160,
+                    "item5": 117,
+                    "respawn_timer": 0,
+                    "position_x": 581.73699951171875,
+                    "position_y": -2899.282958984375,
+                    "net_worth": 27490
+                },
+                {
+                    "player_slot": 3,
+                    "account_id": 121404228,
+                    "hero_id": 107,
+                    "kills": 1,
+                    "death": 6,
+                    "assists": 19,
+                    "last_hits": 31,
+                    "denies": 2,
+                    "gold": 1565,
+                    "level": 18,
+                    "gold_per_min": 225,
+                    "xp_per_min": 377,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 73,
+                    "item1": 29,
+                    "item2": 73,
+                    "item3": 73,
+                    "item4": 34,
+                    "item5": 90,
+                    "respawn_timer": 0,
+                    "position_x": 1704.6693115234375,
+                    "position_y": -3666.212158203125,
+                    "net_worth": 6885
+                },
+                {
+                    "player_slot": 4,
+                    "account_id": 70388657,
+                    "hero_id": 22,
+                    "kills": 8,
+                    "death": 7,
+                    "assists": 22,
+                    "last_hits": 220,
+                    "denies": 16,
+                    "gold": 1612,
+                    "level": 23,
+                    "gold_per_min": 434,
+                    "xp_per_min": 583,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 254,
+                    "item1": 100,
+                    "item2": 256,
+                    "item3": 108,
+                    "item4": 33,
+                    "item5": 29,
+                    "respawn_timer": 0,
+                    "position_x": 1438.503173828125,
+                    "position_y": -4050.345703125,
+                    "net_worth": 15962
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 8000,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 8006,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 8007,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 6491,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 6007,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6197,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 5069,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5071,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5072,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5070,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5073,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 5965,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6055,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6219,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 5003,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5004,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 7314,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5006,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 5906,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6606,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6012,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6353,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 5608,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5609,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5610,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5611,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 5612,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 5940,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6203,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 5110,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5111,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5112,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 6325,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 5113,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 5987,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6157,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6518,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ]
+        },
+        "dire": {
+            "score": 20,
+            "tower_state": 1796,
+            "barracks_state": 63,
+            "picks": [
+                {
+                    "hero_id": 18
+                },
+                {
+                    "hero_id": 100
+                },
+                {
+                    "hero_id": 27
+                },
+                {
+                    "hero_id": 106
+                },
+                {
+                    "hero_id": 34
+                }
+            ],
+            "bans": [
+                {
+                    "hero_id": 85
+                },
+                {
+                    "hero_id": 96
+                },
+                {
+                    "hero_id": 78
+                },
+                {
+                    "hero_id": 69
+                },
+                {
+                    "hero_id": 8
+                },
+                {
+                    "hero_id": 65
+                }
+            ],
+            "players": [
+                {
+                    "player_slot": 128,
+                    "account_id": 372022646,
+                    "hero_id": 100,
+                    "kills": 3,
+                    "death": 12,
+                    "assists": 10,
+                    "last_hits": 65,
+                    "denies": 0,
+                    "gold": 68,
+                    "level": 18,
+                    "gold_per_min": 351,
+                    "xp_per_min": 396,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 92,
+                    "item1": 229,
+                    "item2": 1,
+                    "item3": 81,
+                    "item4": 40,
+                    "item5": 29,
+                    "respawn_timer": 0,
+                    "position_x": 5531.361328125,
+                    "position_y": 3758.772705078125,
+                    "net_worth": 9798
+                },
+                {
+                    "player_slot": 129,
+                    "account_id": 150972003,
+                    "hero_id": 34,
+                    "kills": 7,
+                    "death": 3,
+                    "assists": 7,
+                    "last_hits": 353,
+                    "denies": 11,
+                    "gold": 3457,
+                    "level": 24,
+                    "gold_per_min": 627,
+                    "xp_per_min": 670,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 178,
+                    "item1": 232,
+                    "item2": 48,
+                    "item3": 1,
+                    "item4": 96,
+                    "item5": 259,
+                    "respawn_timer": 0,
+                    "position_x": 6726.41015625,
+                    "position_y": 6014.07861328125,
+                    "net_worth": 23827
+                },
+                {
+                    "player_slot": 130,
+                    "account_id": 180011187,
+                    "hero_id": 27,
+                    "kills": 2,
+                    "death": 11,
+                    "assists": 7,
+                    "last_hits": 69,
+                    "denies": 4,
+                    "gold": 15,
+                    "level": 17,
+                    "gold_per_min": 282,
+                    "xp_per_min": 350,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 36,
+                    "item1": 29,
+                    "item2": 42,
+                    "item3": 1,
+                    "item4": 232,
+                    "item5": 73,
+                    "respawn_timer": 0,
+                    "position_x": 5975.98046875,
+                    "position_y": 2607.54541015625,
+                    "net_worth": 6180
+                },
+                {
+                    "player_slot": 131,
+                    "account_id": 152838763,
+                    "hero_id": 106,
+                    "kills": 3,
+                    "death": 8,
+                    "assists": 3,
+                    "last_hits": 245,
+                    "denies": 12,
+                    "gold": 2149,
+                    "level": 21,
+                    "gold_per_min": 454,
+                    "xp_per_min": 484,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 75,
+                    "item1": 51,
+                    "item2": 36,
+                    "item3": 63,
+                    "item4": 100,
+                    "item5": 158,
+                    "respawn_timer": 0,
+                    "position_x": 5757.41943359375,
+                    "position_y": 504.871795654296875,
+                    "net_worth": 15114
+                },
+                {
+                    "player_slot": 132,
+                    "account_id": 153727297,
+                    "hero_id": 18,
+                    "kills": 4,
+                    "death": 3,
+                    "assists": 7,
+                    "last_hits": 334,
+                    "denies": 9,
+                    "gold": 613,
+                    "level": 23,
+                    "gold_per_min": 514,
+                    "xp_per_min": 617,
+                    "ultimate_state": 3,
+                    "ultimate_cooldown": 0,
+                    "item0": 112,
+                    "item1": 1,
+                    "item2": 90,
+                    "item3": 149,
+                    "item4": 63,
+                    "item5": 178,
+                    "respawn_timer": 0,
+                    "position_x": 5977.01904296875,
+                    "position_y": 2548.224365234375,
+                    "net_worth": 18938
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 5565,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5566,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 7322,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5568,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 5641,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 6007,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6411,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 5150,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5151,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5152,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5153,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 5947,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6564,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6952,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 5078,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5079,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5080,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5081,
+                    "ability_level": 2
+                },
+                {
+                    "ability_id": 6017,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6197,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 5603,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5604,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5605,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5607,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 5606,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 6009,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6647,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 5989,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ],
+            "abilities": [
+                {
+                    "ability_id": 5094,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5095,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5096,
+                    "ability_level": 4
+                },
+                {
+                    "ability_id": 5097,
+                    "ability_level": 3
+                },
+                {
+                    "ability_id": 6160,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6141,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 6045,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7804,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7806,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7807,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7816,
+                    "ability_level": 1
+                },
+                {
+                    "ability_id": 7809,
+                    "ability_level": 1
+                }
+            ]
+        }
+    }
+}

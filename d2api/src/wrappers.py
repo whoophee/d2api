@@ -49,7 +49,7 @@ class AbstractResponse(BaseWrapper):
     """Interface to implement parsed response objects."""
     def __init__(self, response):
         self.raw_json = response.content
-        super().__init__(util.decode_json(response.content.decode('utf-8')))
+        super().__init__(util.decode_json(response.text))
         self.parse_response()
 
     def parse_response(self, rname = 'result'):
@@ -516,7 +516,7 @@ class TeamLive(AbstractParse):
         # util.decode_json describes the modified parser (to handle repeated names)
         for i in range(len(players)):
             players[i]['abilities'] = self.pop(f'abilities_{i}', [])
-        
+
         self['players'] = [PlayerLive(p) for p in players]
 
 class Scoreboard(AbstractParse):

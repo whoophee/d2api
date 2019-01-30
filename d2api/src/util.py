@@ -7,6 +7,8 @@ def _make_unique(key, dct):
     while unique_key in dct:
         counter += 1
         unique_key = f'{key}_{counter}'
+    if counter == 1:
+        dct[f'{key}_0'] = dct.pop(key)
     return unique_key
 
 def _parse_object_pairs(pairs):
