@@ -45,6 +45,7 @@ class APIWrapper:
             logger.setLevel(logging.DEBUG)
             self.logger = logger
         else:
+            self.logger = None
             logging.getLogger("requests").setLevel(logging.WARNING)
 
 

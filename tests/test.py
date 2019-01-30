@@ -125,21 +125,23 @@ class MatchHistoryTests(unittest.TestCase):
     
     def test_steamaccount_arg(self):
         steam_account = entities.SteamAccount('76561198088874284')
+        account_id = '76561198088874284'
         
-        res = self.get_match_history(steam_account = steam_account)
-        game_accounts = [p['steam_account'] for p in res['matches'][0]['players']]
+        res1 = self.get_match_history(steam_account = steam_account)
+        res2 = self.get_match_history(account_id = account_id)
 
-        self.assertIn(steam_account, game_accounts, 
-        f"get_match_history(steam_account = {steam_account}) should contain {steam_account}")
+        self.assertEqual(res1, res2, 
+        f"get_match_history(steam_account = {steam_account}) should be the same as get_match_history(match_id = {account_id})")
     
     def test_hero_arg(self):
         hero = entities.Hero(1)
+        hero_id = 1
 
-        res = self.get_match_history(hero = hero)
-        game_heroes = [p['hero'] for p in res['matches'][0]['players']]
+        res1 = self.get_match_history(account_id = '76561198088874284', hero = hero)
+        res2 = self.get_match_history(account_id = '76561198088874284', hero_id = hero_id)
 
-        self.assertIn(hero, game_heroes,
-        f"get_match_history(hero = {hero}) should contain {hero}")
+        self.assertEqual(res1, res2,
+        f"get_match_history(hero = {hero}) should be the same as get_match_history(hero_id = {hero_id})")
 
 
 class MatchHistoryBySeqNumTests(unittest.TestCase):
@@ -290,6 +292,7 @@ class LiveLeagueGamesTests(unittest.TestCase):
         self.get_live_league_games = api.get_live_league_games
     
     def test_get_live_league_games_dtype(self):
+        print(self.get_live_league_games())
         self.assertIsInstance(self.get_live_league_games(), wrappers.LiveLeagueGames,
         'get_live_league_games() should return a LiveLeagueGames object.' )
 

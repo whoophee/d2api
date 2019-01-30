@@ -4,6 +4,7 @@ import copy
 import pprint
 
 from . import entities
+from . import util
 """Parse wrapper definitions"""
 
 def _get_side_from_slot(player_slot):
@@ -48,7 +49,7 @@ class AbstractResponse(BaseWrapper):
     """Interface to implement parsed response objects."""
     def __init__(self, response):
         self.raw_json = response.content
-        super().__init__(response.json())
+        super().__init__(util.decode_json(response.content.decode('utf-8')))
         self.parse_response()
 
     def parse_response(self, rname = 'result'):
@@ -446,6 +447,7 @@ class PlayerLive(AbstractParse):
     :var level: Current level
     :var gold_per_min: gold/min at time of query
     :var xp_per_min: XP/min at time of query
+    :var abilities: List of abilities
     :var ultimate_state: Current state of ultimate
     :var ultimate_cooldown: Remaining time for ultimate to come off cooldown
     :var inventory: List of items in player inventory
@@ -465,6 +467,7 @@ class PlayerLive(AbstractParse):
     :vartype level: int
     :vartype gold_per_min: int
     :vartype xp_per_min: int
+    :vartype abilities: list(AbilityUpgrade)
     :vartype ultimate_state: int
     :vartype ultimate_cooldown: int
     :vartype inventory: list(Item)
@@ -481,6 +484,8 @@ class PlayerLive(AbstractParse):
 
         self['inventory'] = [entities.Item(self.pop(f'item{i}', None)) for i in range(6)]
 
+        self['abilities'] = [AbilityUpgrade(au) for au in self.get('abilities', [])]
+
 class TeamLive(AbstractParse):
     """Information of a team in live game
 
@@ -489,14 +494,12 @@ class TeamLive(AbstractParse):
     :var picks: List of heroes picked
     :var bans: List of heroes banned
     :var players: List of player summaries
-    :var abilities: List of abilities being performed at time of query
     
     :vartype score: int 
     :vartype buildings: Buildings
     :vartype picks: list(Hero)
     :vartype bans: list(Hero)
     :vartype players: list(PlayerLive)
-    :vartype abilities: list(AbilityUpgrade)
     """
     def parse(self):
 
@@ -506,9 +509,15 @@ class TeamLive(AbstractParse):
         
         self['picks'] = [entities.Hero(h['hero_id']) for h in self.get('picks', [])]
         self['bans'] = [entities.Hero(h['hero_id']) for h in self.get('bans', [])]
-        self['players'] = [PlayerLive(p) for p in self.get('players', [])]
+
+        players = self.get('players', [])
+        # because the WebAPI is stupid
+        # Steam WebAPI returns multiple entries with the same name which I can only assume correspond to each player
+        # util.decode_json describes the modified parser (to handle repeated names)
+        for i in range(len(players)):
+            players[i]['abilities'] = self.pop(f'abilities_{i}', [])
         
-        self['abilities'] = [AbilityUpgrade(ab) for ab in self.get('abilities', [])]
+        self['players'] = [PlayerLive(p) for p in players]
 
 class Scoreboard(AbstractParse):
     """Scoreboard of live game
