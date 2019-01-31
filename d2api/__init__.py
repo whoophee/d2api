@@ -6,11 +6,7 @@ import requests
 
 from .src import endpoints, entities, errors, wrappers
 
-__author__ = "Raghav Sairam"
-__date__ = "25/10/2018"
-__license__ = "MIT"
-
-def parse_get_match_history(cur_args):
+def _parse_get_match_history(cur_args):
 
     steam_default = entities.SteamAccount(cur_args.pop('account_id', None))
     steam_account = cur_args.pop('steam_account', None) if not steam_default else steam_default
@@ -93,7 +89,7 @@ class APIWrapper:
 
         :rtype: MatchHistory 
         """
-        parse_get_match_history(kwargs)
+        _parse_get_match_history(kwargs)
         return self._api_call(endpoints.GET_MATCH_HISTORY, wrappers.MatchHistory, **kwargs)
 
     def get_match_history_by_sequence_num(self, **kwargs):
