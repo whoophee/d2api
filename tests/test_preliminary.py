@@ -22,7 +22,7 @@ class APIPreliminaryTests(unittest.TestCase):
         tmp_api = d2api.APIWrapper(key)
 
         with self.assertRaises(d2errors.APIAuthenticationError, 
-        msg = f'Request with API key \'{key}\' should raise authentication error'):
+        msg = 'Request with API key \'{0}\' should raise authentication error'.format(key)):
             tmp_api.get_match_details('4176987886')
     
     def test_insufficient_params(self):
@@ -31,7 +31,7 @@ class APIPreliminaryTests(unittest.TestCase):
         
     def test_api_method_unavailable(self):
         method_url = 'http://api.steampowered.com/IDOTA2Match_570/RANDOMMETHOD/v0001/'
-        with self.assertRaises(d2errors.APIMethodUnavailable, msg = f"{method_url} is an unavailable method."):
+        with self.assertRaises(d2errors.APIMethodUnavailable, msg = "{0} is an unavailable method.".format(method_url)):
             d2api.APIWrapper()._api_call(method_url)
 
     def test_update_local_files(self):
@@ -48,46 +48,46 @@ class EntityTests(unittest.TestCase):
     def test_item_repr(self):
         item_repr = repr(entities.Item(3))
         item_match_str = "Item(item_id = 3)"
-        self.assertEqual(item_repr, item_match_str, f"repr(entities.Item(3)) should be {item_match_str}")
+        self.assertEqual(item_repr, item_match_str, "repr(entities.Item(3)) should be {0}".format(item_match_str))
 
     def test_hero_repr(self):
         hero_repr = repr(entities.Hero(1))
         hero_match_str = "Hero(hero_id = 1)"
-        self.assertEqual(hero_repr, hero_match_str, f"repr(entities.Hero(1)) should be {hero_match_str}")
+        self.assertEqual(hero_repr, hero_match_str, "repr(entities.Hero(1)) should be {0}".format(hero_match_str))
 
     def test_ability_repr(self):
         ability_repr = repr(entities.Ability(1))
         ability_match_str = "Ability(ability_id = 1)"
-        self.assertEqual(ability_repr, ability_match_str, f"repr(entities.Ability(1)) should be {ability_match_str}")
+        self.assertEqual(ability_repr, ability_match_str, "repr(entities.Ability(1)) should be {0}".format(ability_match_str))
 
     def test_steamaccount_repr(self):
         steam_repr = repr(entities.SteamAccount(1))
         steam_match_str = "SteamAccount(account_id = 1)"
-        self.assertEqual(steam_repr, steam_match_str, f"repr(entities.SteamAccount(1)) should be {steam_match_str}")
+        self.assertEqual(steam_repr, steam_match_str, "repr(entities.SteamAccount(1)) should be {0}".format(steam_match_str))
     
     def test_ability_bool(self):
         ability1 = entities.Ability(None)
         ability2 = entities.Ability(2)
-        self.assertTrue(not ability1, f"not {ability1} should be True")
-        self.assertFalse(not ability2, f"not {ability2} should be False")
+        self.assertTrue(not ability1, "not {0} should be True".format(ability1))
+        self.assertFalse(not ability2, "not {0} should be False".format(ability2))
     
     def test_hero_bool(self):
         hero1 = entities.Hero(None)
         hero2 = entities.Hero(2)
-        self.assertTrue(not hero1, f"not {hero1} should be True")
-        self.assertFalse(not hero2, f"not {hero2} should be False")
+        self.assertTrue(not hero1, "not {0} should be True".format(hero1))
+        self.assertFalse(not hero2, "not {0} should be False".format(hero2))
     
     def test_item_bool(self):
         item1 = entities.Item(None)
         item2 = entities.Item(2)
-        self.assertTrue(not item1, f"not {item1} should be True")
-        self.assertFalse(not item2, f"not {item2} should be False")
+        self.assertTrue(not item1, "not {0} should be True".format(item1))
+        self.assertFalse(not item2, "not {0} should be False".format(item2))
     
     def test_steamaccount_bool(self):
         acct1 = entities.SteamAccount(None)
         acct2 = entities.SteamAccount(2)
-        self.assertTrue(not acct1, f"not {acct1} should be True")
-        self.assertFalse(not acct2, f"not {acct2} should be False")
+        self.assertTrue(not acct1, "not {0} should be True".format(acct1))
+        self.assertFalse(not acct2, "not {0} should be False".format(acct2))
     
 
 class DtypeTests(unittest.TestCase):
@@ -102,7 +102,7 @@ class DtypeTests(unittest.TestCase):
     def test_basewrapper(self):
         obj1 = wrappers.BaseWrapper({'a':1, 'b':2, 'c':3})
         obj2 = wrappers.BaseWrapper({'a':1})
-        self.assertNotEqual(obj1, obj2, f'{obj1} and {obj2} are unequal.')
+        self.assertNotEqual(obj1, obj2, '{0} and {1} are unequal.'.format(obj1, obj2))
         obj2['b'] = 2
         obj2['c'] = 3
         self.assertEqual(obj1['b'], 2, 'BaseWrapper __getitem__ does not work as intended.')

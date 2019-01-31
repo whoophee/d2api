@@ -31,7 +31,7 @@ class MatchHistoryTests(unittest.TestCase):
         res2 = self.get_match_history(account_id = account_id)
 
         self.assertEqual(res1, res2, 
-        f"get_match_history(steam_account = {steam_account}) should be the same as get_match_history(match_id = {account_id})")
+        "get_match_history(steam_account = {0}) should be the same as get_match_history(match_id = {1})".format(steam_account, account_id))
     
     def test_hero_arg(self):
         hero = entities.Hero(1)
@@ -41,7 +41,7 @@ class MatchHistoryTests(unittest.TestCase):
         res2 = self.get_match_history(account_id = '76561198088874284', hero_id = hero_id)
 
         self.assertEqual(res1, res2,
-        f"get_match_history(hero = {hero}) should be the same as get_match_history(hero_id = {hero_id})")
+        "get_match_history(hero = {0}) should be the same as get_match_history(hero_id = {1})".format(hero, hero_id))
 
 
 class MatchHistoryBySeqNumTests(unittest.TestCase):
@@ -61,7 +61,7 @@ class MatchDetailsTests(unittest.TestCase):
     def test_get_match_details_dtype(self):
         match_id = '4176987886'
         self.assertIsInstance(self.get_match_details(match_id), wrappers.MatchDetails,
-        f'get_match_details(\'{match_id}\') should return a MatchDetails object')
+        'get_match_details(\'{0}\') should return a MatchDetails object'.format(match_id))
 
     def test_incorrect_matchid(self):
         res = self.get_match_details(match_id = 1)
@@ -73,20 +73,23 @@ class MatchDetailsTests(unittest.TestCase):
 
         q = res['players_minimal'][0]['hero']
         a = entities.Hero(35)
-        self.assertEqual(q, a, f'get_match_details(\'{match_id}\')[\'players_minimal\'][0][\'hero\'] is {a}')
+        self.assertEqual(q, a, 
+        'get_match_details(\'{0}\')[\'players_minimal\'][0][\'hero\'] is {1}'.format(match_id, a))
 
         q = res['players'][6].all_items()[0]['item_name']
         a = 'item_tango'
-        self.assertEqual(q, a, f'get_match_details(\'{match_id}\')[\'players\'][6].all_items()[0][\'item_name\'] is {a}')
+        self.assertEqual(q, a, 
+        'get_match_details(\'{0}\')[\'players\'][6].all_items()[0][\'item_name\'] is {1}'.format(match_id, a))
 
         q = res['dire_buildings']['tower_status']
         a = 2047
-        self.assertEqual(q, a, f'get_match_details(\'{match_id}\')[\'dire_buildings\'][\'tower_status\'] is {a}')
+        self.assertEqual(q, a, 
+        'get_match_details(\'{0}\')[\'dire_buildings\'][\'tower_status\'] is {1}'.format(match_id, a))
     
     def test_leaver_status(self):
         match_id = '4176987886'
         res = self.get_match_details(match_id)
-        self.assertTrue(res.has_leavers(), f"get_match_details(\'{match_id}\').has_leavers() is True")
+        self.assertTrue(res.has_leavers(), "get_match_details(\'{0}\').has_leavers() is True".format(match_id))
 
         leavers = [entities.SteamAccount(account_id = 4294967295), 
         entities.SteamAccount(account_id = 283619584), 
@@ -94,7 +97,8 @@ class MatchDetailsTests(unittest.TestCase):
         entities.SteamAccount(account_id = 4294967295), 
         entities.SteamAccount(account_id = 59769890)]
 
-        self.assertEqual(res.leavers(), leavers, f"get_match_details(\'{match_id}\').leavers() does not work as intended")
+        self.assertEqual(res.leavers(), leavers, 
+        "get_match_details(\'{0}\').leavers() does not work as intended".format(match_id))
     
     def test_ability_upgrade(self):
         match_id = '4300255508'
@@ -103,7 +107,7 @@ class MatchDetailsTests(unittest.TestCase):
         ability_match = entities.Ability(ability_id = 5008)
         
         self.assertEqual(ability, ability_match, 
-        f"get_match_details({match_id})[\'players\'][0][\'ability_upgrades\'][0][\'ability\'] should be {ability_match}")
+        "get_match_details({0})[\'players\'][0][\'ability_upgrades\'][0][\'ability\'] should be {1}".format(match_id, ability_match))
 
 class HeroesTests(unittest.TestCase):
     def setUp(self):
@@ -119,7 +123,7 @@ class HeroesTests(unittest.TestCase):
         cur_id = 59
         cur_hero = [h for h in res['heroes'] if h['id'] == cur_id][0]
         self.assertEqual(cur_hero['localized_name'], 'Huskar',
-        f'Localized name of id = {cur_id} should be Huskar')
+        'Localized name of id = {0} should be Huskar'.format(cur_id))
 
 class GameItemsTests(unittest.TestCase):
     def setUp(self):
@@ -135,7 +139,7 @@ class GameItemsTests(unittest.TestCase):
         cur_id = 265
         cur_item = [i for i in res['game_items'] if i['id'] == cur_id][0]
         self.assertEqual(cur_item['localized_name'], 'Infused Raindrops',
-        f'Localized name of id = {cur_id} should be Infused Raindrops')
+        'Localized name of id = {0} should be Infused Raindrops'.format(cur_id))
 
 class TournamentPrizePoolTests(unittest.TestCase):
     def setUp(self):
@@ -166,7 +170,7 @@ class LanguageTests(unittest.TestCase):
         ret = self.api.get_heroes(language = lang)
         queried_am_name = [h['localized_name'] for h in ret['heroes'] if h['id'] == 1][0]
         
-        self.assertEqual(queried_am_name, am_name, f'Anti-mage has the name {am_name} in {lang}')
+        self.assertEqual(queried_am_name, am_name, 'Anti-mage has the name {0} in {1}'.format(am_name, lang))
 
 class TeamInfoByTeamIDTests(unittest.TestCase):
     def setUp(self):
@@ -183,8 +187,11 @@ class TeamInfoByTeamIDTests(unittest.TestCase):
         time_created = 1340178158
         team_info = self.get_team_info_by_team_id(start_at_team_id = team_id)['teams'][0]
 
-        self.assertEqual(team_info['name'], team_name, f'Team with team_id = {team_id} is {team_name}.')
-        self.assertEqual(team_info['time_created'], time_created, f'Team {team_name} was created at {time_created}.')
+        self.assertEqual(team_info['name'], team_name, 
+        'Team with team_id = {0} is {1}.'.format(team_id, team_name))
+
+        self.assertEqual(team_info['time_created'], time_created, 
+        'Team {0} was created at {1}.'.format(team_name, time_created))
 
 class LiveLeagueGamesTests(unittest.TestCase):
     def setUp(self):

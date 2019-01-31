@@ -124,11 +124,11 @@ class InventoryUnit(AbstractParse):
         self['inventory'] = []
         self['backpack'] = []
 
-        for item_slot in [f'item_{i}' for i in range(6)]:
+        for item_slot in ['item_{}'.format(i) for i in range(6)]:
             cur_item = entities.Item(self.pop(item_slot, None))
             self['inventory'].append(cur_item)
 
-        for backpack_slot in [f'backpack_{i}' for i in range(3)]:
+        for backpack_slot in ['backpack_{}'.format(i) for i in range(3)]:
             cur_item = entities.Item(self.pop(backpack_slot, None))
             self['backpack'].append(cur_item)
 
@@ -358,9 +358,9 @@ class MatchDetails(AbstractResponse):
 
         
         for side in ['radiant', 'dire']:
-            tower_status = self.pop(f'tower_status_{side}', None)
-            barracks_status = self.pop(f'barracks_status_{side}', None)
-            self[f'{side}_buildings'] = Buildings({'tower_status': tower_status, 'barracks_status': barracks_status})
+            tower_status = self.pop('tower_status_{}'.format(side), None)
+            barracks_status = self.pop('barracks_status_{}'.format(side), None)
+            self['{}_buildings'.format(side)] = Buildings({'tower_status': tower_status, 'barracks_status': barracks_status})
 
 class LocalizedHero(AbstractParse):
     """Localized hero information
@@ -482,7 +482,7 @@ class PlayerLive(AbstractParse):
 
         self['deaths'] = self.pop('death', 0)
 
-        self['inventory'] = [entities.Item(self.pop(f'item{i}', None)) for i in range(6)]
+        self['inventory'] = [entities.Item(self.pop('item{}'.format(i), None)) for i in range(6)]
 
         self['abilities'] = [AbilityUpgrade(au) for au in self.get('abilities', [])]
 
@@ -515,7 +515,7 @@ class TeamLive(AbstractParse):
         # Steam WebAPI returns multiple entries with the same name which I can only assume correspond to each player
         # util.decode_json describes the modified parser (to handle repeated names)
         for i in range(len(players)):
-            players[i]['abilities'] = self.pop(f'abilities_{i}', [])
+            players[i]['abilities'] = self.pop('abilities_{}'.format(i), [])
 
         self['players'] = [PlayerLive(p) for p in players]
 

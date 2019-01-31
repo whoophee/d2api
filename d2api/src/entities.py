@@ -29,7 +29,7 @@ def _load_local_json(file_name):
 
 def _load_remote_json(file_name):
     """Helper method to retrieve remote data."""
-    url = f"https://raw.githubusercontent.com/whoophee/d2api/master/d2api/ref/{file_name}"
+    url = "https://raw.githubusercontent.com/whoophee/d2api/master/d2api/ref/{}".format(file_name)
     res = requests.get(url)
     if res.status_code == 200:
         return res.json()
@@ -60,7 +60,7 @@ class Entity(dict):
 class Hero(Entity):
     """Wrapper to map hero information to hero_id"""
     def __repr__(self):
-        return f"Hero(hero_id = {self['hero_id']})"
+        return "Hero(hero_id = {})".format(self['hero_id'])
 
     def __bool__(self):
         return self['hero_id'] != None
@@ -76,7 +76,7 @@ class Hero(Entity):
 class Item(Entity):
     """Wrapper to map item information to item_id"""
     def __repr__(self):
-        return f"Item(item_id = {self['item_id']})"
+        return "Item(item_id = {})".format(self['item_id'])
 
     def __bool__(self):
         return self['item_id'] != None
@@ -93,7 +93,7 @@ class Item(Entity):
 class Ability(Entity):
     """Wrapper to map ability data to ability_id"""
     def __repr__(self):
-        return f"Ability(ability_id = {self['ability_id']})"
+        return "Ability(ability_id = {})".format(self['ability_id'])
 
     def __bool__(self):
         return self['ability_id'] != None
@@ -109,7 +109,7 @@ class Ability(Entity):
 class SteamAccount(Entity):
     """Wrapper to implicitly store steam32 and steam64 account IDs"""
     def __repr__(self):
-        return f"SteamAccount(account_id = {self['id32']})"
+        return "SteamAccount(account_id = {})".format(self['id32'])
 
     def __bool__(self):
         return self['id32'] != None
