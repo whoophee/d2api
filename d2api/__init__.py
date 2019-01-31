@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import logging
 
 import requests
 
-from .src import endpoints, wrappers, errors, entities
+from .src import endpoints, entities, errors, wrappers
 
 __author__ = "Raghav Sairam"
 __date__ = "25/10/2018"
@@ -29,24 +28,14 @@ class APIWrapper:
 
     :param api_key: Steam API key
     :param parse_results: set to ``False`` to get plain json dict (default ``True``)
-    :param logging_enabled: set to ``True`` to enable logging (default ``False``)
 
     :type api_key: str
     :type parse_results: bool, optional
-    :type logging_enabled: bool, optional
     """
-    def __init__(self, api_key = None, parse_results = True, logging_enabled = False):
+    def __init__(self, api_key = None, parse_results = True):
         self.api_key = api_key if api_key else os.environ.get('D2_API_KEY')
 
         self.parse_results = parse_results
-
-        if logging_enabled:
-            logger = logging.getLogger("d2api")
-            logger.setLevel(logging.DEBUG)
-            self.logger = logger
-        else:
-            self.logger = None
-            logging.getLogger("requests").setLevel(logging.WARNING)
 
 
     def _api_call(self, url, wrapper_class = wrappers.BaseWrapper, **kwargs):

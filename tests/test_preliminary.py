@@ -34,11 +34,6 @@ class APIPreliminaryTests(unittest.TestCase):
         with self.assertRaises(d2errors.APIMethodUnavailable, msg = f"{method_url} is an unavailable method."):
             d2api.APIWrapper()._api_call(method_url)
 
-    def test_logger_check(self):
-        tmp_api = d2api.APIWrapper(logging_enabled = True)
-        self.assertIsNotNone(tmp_api.logger, 
-        'Logger should not be None when \'logging_enabled\' was set to True')
-
     def test_update_local_files(self):
         remote_meta = update_local_data()
         self.assertNotEqual(remote_meta, {},
