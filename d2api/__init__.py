@@ -127,7 +127,7 @@ class APIWrapper:
         return self._api_call(endpoints.GET_HEROES, wrappers.Heroes, **kwargs)
 
     def get_game_items(self, **kwargs):
-        """:param language: The language <https://partner.steamgames.com/doc/store/localization#supported_languages>`_ to provide hero names in
+        """:param language: The `language <https://partner.steamgames.com/doc/store/localization#supported_languages>`_ to provide hero names in
 
         :type language: string, optional
 
