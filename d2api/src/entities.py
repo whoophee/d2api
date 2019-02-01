@@ -3,25 +3,24 @@
 import json
 import os
 import shutil
-from pathlib import Path
 
 import requests
 
 # TODO : Implement cleaner way to ensure data is up to date and multi-language compliant
 # This appears to be an especially weird problem since the data has to parsed from a local Dota 2 installation
 
-_here = os.path.dirname(__file__)
+_here = os.path.abspath(os.path.dirname(__file__))
 
 def _ensure_data_folder():
     """Helper method to ensure data folder existence."""
-    directory = Path(os.path.join(_here, '..', 'ref'))
+    directory = os.path.abspath(os.path.join(_here, '..', 'ref'))
     if not os.path.exists(directory):
         os.makedirs(directory)
 
 def _load_local_json(file_name):
     """Helper method to read local data."""
     try:
-        p = Path(os.path.join(_here, '..', 'ref', file_name))
+        p = os.path.abspath(os.path.join(_here, '..', 'ref', file_name))
         with open(p, 'r') as f:
             return json.load(f)
     except IOError:
@@ -38,7 +37,7 @@ def _load_remote_json(file_name):
 
 def _write_local_json(data, file_name):
     """Helper method to write local data."""
-    p = Path(os.path.join(_here, '..', 'ref', file_name))
+    p = os.path.abspath(os.path.join(_here, '..', 'ref', file_name))
     with open(p, 'w') as outfile:
         if file_name == 'meta.json':
             json.dump(data, outfile, sort_keys=True, indent=4)
@@ -165,8 +164,8 @@ def _update(purge):
     global all_items
     global all_abilities
     try:
-        path = Path(os.path.join(_here, '..', 'ref'))
-        if purge and path.exists():
+        path = os.path.abspath(os.path.join(_here, '..', 'ref'))
+        if purge and os.path.exists(path):
             shutil.rmtree(path)
         # Find version of local data
         local_meta = _load_local_json('meta.json')
