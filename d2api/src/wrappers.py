@@ -99,7 +99,7 @@ class MatchSummary(AbstractParse):
         self['players'] = [PlayerMinimal(p) for p in self.get('players', [])]
 
 class MatchHistory(AbstractResponse):
-    """get_match_history response object
+    """:py:meth:`~d2api.APIWrapper.get_match_history` or :py:meth:`~d2api.APIWrapper.get_match_history_by_sequence_num` response object
 
     :var matches: List of match summaries
 
@@ -145,7 +145,7 @@ class AdditionalUnit(InventoryUnit):
     def parse(self):
         self._build_item_list()
 
-class AbilityUpgrade(AbstractParse):
+class AbilityInfo(AbstractParse):
     """Ability upgrade during game.
 
     :var ability: Ability upgraded.
@@ -205,7 +205,7 @@ class PlayerUnit(InventoryUnit):
     :vartype additional_units: list(AdditionalUnit)
     :vartype inventory: list(Item)
     :vartype backpack: list(Item)
-    :vartype ability_upgrades: list(AbilityUpgrade)
+    :vartype ability_upgrades: list(AbilityInfo)
     """
     def parse(self):
         self._build_item_list()
@@ -219,7 +219,7 @@ class PlayerUnit(InventoryUnit):
         au_list = []
         for au in self.get('ability_upgrades', []):
             au['ability_id'] = au.pop('ability', None)
-            au_list.append(AbilityUpgrade(au))
+            au_list.append(AbilityInfo(au))
         self['ability_upgrades'] = au_list
 
 class Buildings(AbstractParse):
@@ -273,7 +273,7 @@ class PickBan(AbstractParse):
 
 
 class MatchDetails(AbstractResponse):
-    """Detailed summary of a match
+    """:py:meth:`~d2api.APIWrapper.get_match_details` response object
 
     :var players: List of players in the game
     :var players_minimal: List of players represented minimally
@@ -397,7 +397,7 @@ class LocalizedGameItem(AbstractParse):
     pass
 
 class Heroes(AbstractResponse):
-    """get_heroes response object
+    """:py:meth:`~d2api.APIWrapper.get_heroes` response object
 
     :var heroes: List of localized hero information
     :var count: Number of heroes returned
@@ -410,7 +410,7 @@ class Heroes(AbstractResponse):
         self['heroes'] = [LocalizedHero(h) for h in self.get('heroes', [])]
 
 class GameItems(AbstractResponse):
-    """get_game_items response object
+    """:py:meth:`~d2api.APIWrapper.get_game_items` response object
 
     :var game_items: List of localized item information
     
@@ -421,7 +421,7 @@ class GameItems(AbstractResponse):
         self['game_items'] = [LocalizedGameItem(i) for i in self.pop('items', [])]
 
 class TournamentPrizePool(AbstractResponse):
-    """get_tournament_prize_pool response object
+    """:py:meth:`~d2api.APIWrapper.get_tournament_prize_pool` response object
 
     :var prize_pool: Prize pool
     :var league_id: League ID for which prize pool was fetched
@@ -447,7 +447,7 @@ class PlayerLive(AbstractParse):
     :var level: Current level
     :var gold_per_min: gold/min at time of query
     :var xp_per_min: XP/min at time of query
-    :var abilities: List of abilities
+    :var abilities: List of ability information
     :var ultimate_state: Current state of ultimate
     :var ultimate_cooldown: Remaining time for ultimate to come off cooldown
     :var inventory: List of items in player inventory
@@ -467,7 +467,7 @@ class PlayerLive(AbstractParse):
     :vartype level: int
     :vartype gold_per_min: int
     :vartype xp_per_min: int
-    :vartype abilities: list(AbilityUpgrade)
+    :vartype abilities: list(AbilityInfo)
     :vartype ultimate_state: int
     :vartype ultimate_cooldown: int
     :vartype inventory: list(Item)
@@ -484,7 +484,7 @@ class PlayerLive(AbstractParse):
 
         self['inventory'] = [entities.Item(self.pop('item{}'.format(i), None)) for i in range(6)]
 
-        self['abilities'] = [AbilityUpgrade(au) for au in self.get('abilities', [])]
+        self['abilities'] = [AbilityInfo(au) for au in self.get('abilities', [])]
 
 class TeamLive(AbstractParse):
     """Information of a team in live game
@@ -590,7 +590,7 @@ class Game(AbstractParse):
         self['players'] = [PlayerMinimal(p) for p in self.get('players', [])]
 
 class LiveLeagueGames(AbstractResponse):
-    """get_live_league_games response object
+    """:py:meth:`~d2api.APIWrapper.get_live_league_games` response object
 
     :var games: List of games
 
@@ -672,7 +672,7 @@ class LiveGameSummary(AbstractParse):
         self['dire_team'] = TeamInfo({'dire_name': dire_team_name, 'dire_id': dire_team_id})
 
 class TopLiveGame(AbstractResponse):
-    """get_top_live_game response object
+    """:py:meth:`~d2api.APIWrapper.get_top_live_game` response object
 
     :var game_list: List of top live games
 
@@ -682,7 +682,7 @@ class TopLiveGame(AbstractResponse):
         self['game_list'] = [LiveGameSummary(g) for g in self.get('game_list', [])]
 
 class TeamInfoByTeamID(AbstractResponse):
-    """get_team_info_by_team_id response object
+    """:py:meth:`~d2api.APIWrapper.get_team_info_by_team_id` response object
 
     :var teams: List of team information
 

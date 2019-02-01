@@ -58,7 +58,14 @@ class Entity(dict):
         return self.__repr__()
 
 class Hero(Entity):
-    """Wrapper to map hero information to hero_id"""
+    """Wrapper to map hero information to hero_id
+    
+    :var hero_id: Unique identifier of hero
+    :var hero_name: Name of the hero
+
+    :vartype hero_id: int
+    :vartype hero_name: str
+    """
     def __repr__(self):
         return "Hero(hero_id = {})".format(self['hero_id'])
 
@@ -74,7 +81,18 @@ class Hero(Entity):
         
 
 class Item(Entity):
-    """Wrapper to map item information to item_id"""
+    """Wrapper to map item information to item_id
+
+    :var item_id: Unique identifier of item
+    :var item_cost: Cost of the item
+    :var item_aliases: List of names by which the item is known
+    :var item_name: Name of the item
+
+    :vartype item_id: int
+    :vartype item_cost: int
+    :vartype item_aliases: list(str)
+    :vartype item_name: str
+    """
     def __repr__(self):
         return "Item(item_id = {})".format(self['item_id'])
 
@@ -91,7 +109,14 @@ class Item(Entity):
         self['item_name'] = cur_item.get('item_name', 'unknown_item')
 
 class Ability(Entity):
-    """Wrapper to map ability data to ability_id"""
+    """Wrapper to map ability data to ability_id
+    
+    :var ability_id: Unique identifier of ability
+    :var ability_name: Name of the ability
+
+    :vartype ability_id: int
+    :vartype ability_name: str
+    """
     def __repr__(self):
         return "Ability(ability_id = {})".format(self['ability_id'])
 
@@ -107,7 +132,14 @@ class Ability(Entity):
 
 # Removes the hassle of having to manually convert between Steam 32-bit/64-bit IDs
 class SteamAccount(Entity):
-    """Wrapper to implicitly store steam32 and steam64 account IDs"""
+    """Wrapper to implicitly store steam32 and steam64 account IDs
+    
+    :var id32: 32-bit Steam ID
+    :var id64: 64-bit Steam ID
+
+    :vartype id32: int
+    :vartype id64: int
+    """
     def __repr__(self):
         return "SteamAccount(account_id = {})".format(self['id32'])
 

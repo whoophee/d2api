@@ -93,7 +93,9 @@ class APIWrapper:
         return self._api_call(endpoints.GET_MATCH_HISTORY, wrappers.MatchHistory, **kwargs)
 
     def get_match_history_by_sequence_num(self, **kwargs):
-        """:param start_at_match_seq_num: The match sequence number to start returning results from
+        """Uses a parser similar to that of :py:meth:`~d2api.APIWrapper.get_match_history` method
+        
+        :param start_at_match_seq_num: The match sequence number to start returning results from
         :param matches_requested: Defaults to `100`
 
         :type start_at_match_seq_num: int
@@ -125,7 +127,7 @@ class APIWrapper:
         return self._api_call(endpoints.GET_HEROES, wrappers.Heroes, **kwargs)
 
     def get_game_items(self, **kwargs):
-        """:param language: The language to provide hero names in
+        """:param language: The language <https://partner.steamgames.com/doc/store/localization#supported_languages>`_ to provide hero names in
 
         :type language: string, optional
 
