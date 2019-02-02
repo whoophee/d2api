@@ -23,15 +23,15 @@ class APIWrapper:
     """Wrapper initialization requires either environment variable ``D2_API_KEY`` be set, or ``api_key`` be provided as an argument.
 
     :param api_key: Steam API key
-    :param parse_results: set to ``False`` to get plain json dict (default ``True``)
+    :param parse_response: set to ``False`` to get plain json dict (default ``True``)
 
     :type api_key: str
-    :type parse_results: bool, optional
+    :type parse_response: bool, optional
     """
-    def __init__(self, api_key = None, parse_results = True):
+    def __init__(self, api_key = None, parse_response = True):
         self.api_key = api_key if api_key else os.environ.get('D2_API_KEY')
 
-        self.parse_results = parse_results
+        self.parse_response = parse_response
 
 
     def _api_call(self, url, wrapper_class = wrappers.BaseWrapper, **kwargs):
@@ -50,7 +50,7 @@ class APIWrapper:
         status = response.status_code
 
         if status == 200:
-            return wrapper_class(response) if self.parse_results else response.json()
+            return wrapper_class(response.text) if self.parse_response else response.text
         elif status == 403:
             raise errors.APIAuthenticationError(self.api_key)
         elif status == 404:

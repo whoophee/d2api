@@ -47,9 +47,9 @@ class AbstractParse(BaseWrapper):
 
 class AbstractResponse(BaseWrapper):
     """Interface to implement parsed response objects."""
-    def __init__(self, response):
-        self.raw_json = response.content
-        super().__init__(util.decode_json(response.text))
+    def __init__(self, response_text):
+        self.raw_json = response_text
+        super().__init__(util.decode_json(response_text))
         self.parse_response()
 
     def parse_response(self, rname = 'result'):
@@ -339,7 +339,7 @@ class MatchDetails(AbstractResponse):
         """
         has_leaver = False
         for p in self['players']:
-            has_leaver |= p['leaver_status'] != 0
+            has_leaver |= p.get('leaver_status', 0) != 0
         return has_leaver
 
     def parse_response(self):

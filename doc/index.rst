@@ -14,4 +14,4 @@ This Python library is an unofficial wrapper and parser for the `Dota 2 Web API 
    installation
    endpoints
    documentation
-   examples
+   tutorial

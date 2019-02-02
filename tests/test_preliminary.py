@@ -40,9 +40,9 @@ class APIPreliminaryTests(unittest.TestCase):
         msg = "Update must return remote metadata. Instead, it returned nothing.")
 
     def test_unparsed_results_dtype(self):
-        api = d2api.APIWrapper(parse_results = False)
-        self.assertIsInstance(api.get_match_history(), dict,
-        msg = 'Setting parse_results = False should return a dict.')
+        api = d2api.APIWrapper(parse_response = False)
+        self.assertIsInstance(api.get_match_history(), str,
+        msg = 'Setting parse_response = False should return a dict.')
 
 class EntityTests(unittest.TestCase):
     def test_item_repr(self):
