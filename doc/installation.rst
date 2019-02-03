@@ -1,6 +1,16 @@
 Installation
 ############
 
+Install using pip (recommended)
+*******************************
+
+Install d2api from pip using:
+
+.. code-block:: bash
+
+    $ pip install d2api
+
+
 Build from source
 *****************
 
