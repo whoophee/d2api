@@ -13,7 +13,7 @@ NAME = 'd2api'
 URL = "https://github.com/whoophee/d2api"
 DATE = "25/10/2018"
 LICENSE = "GPL-3.0"
-VERSION = '0.1.0'
+VERSION = '0.1'
 DESCR = "Dota 2 API wrapper and parser for Python 3"
 
 setup(
