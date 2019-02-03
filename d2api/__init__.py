@@ -23,7 +23,7 @@ class APIWrapper:
     """Wrapper initialization requires either environment variable ``D2_API_KEY`` be set, or ``api_key`` be provided as an argument.
 
     :param api_key: Steam API key
-    :param parse_response: set to ``False`` to get plain json dict (default ``True``)
+    :param parse_response: set to ``False`` to get an unparsed json string (default ``True``)
 
     :type api_key: str
     :type parse_response: bool, optional
