@@ -3,6 +3,7 @@
 """Setup script"""
 
 import re
+from os import path
 
 from setuptools import setup
 
@@ -13,8 +14,12 @@ NAME = 'd2api'
 URL = "https://github.com/whoophee/d2api"
 DATE = "25/10/2018"
 LICENSE = "GPL-3.0"
-VERSION = '0.1'
+VERSION = '1.0'
 DESCR = "Dota 2 API wrapper and parser for Python 3"
+
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    LONG_DESCR = f.read()
 
 setup(
     name = NAME,
@@ -23,6 +28,8 @@ setup(
     author_email = EMAIL,
     url = URL,
     description = DESCR,
+    long_description = LONG_DESCR,
+    long_description_content_type='text/markdown',
     license = LICENSE,
     keywords = "dota2 dota api d2api parser",
     packages = ['d2api', 'd2api.src', 'd2api.ref'],

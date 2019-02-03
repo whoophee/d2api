@@ -11,6 +11,13 @@ This project is still growing, with additonal parsing, tests,  documentation and
 
 ## Installation
 
+### Install using pip (recommended)
+Install from pip using:
+```bash
+$ pip install d2api
+```
+
+### Clone from github
 Download the latest build and install using:
 ```bash
 $ git clone https://github.com/whoophee/d2api/
