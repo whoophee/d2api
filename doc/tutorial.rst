@@ -35,6 +35,8 @@ The wrapper returns the response text as is (without using the built-in json par
     Some responses of the Steam WebAPI consists of such repeated key-value pairs. Use ``d2api.src.util.decode_json`` to parse 
     these results to avoid losing content.
 
+.. _tutorial-examples:
+
 Examples
 ========
 

@@ -2,7 +2,11 @@ Documentation
 #############
 
 There are several response types/entities accross the different endpoints of the `Dota 2 WebAPI <https://wiki.teamfortress.com/wiki/WebAPI#Dota_2>`_. 
-This API aims at removing inconsistencies and unifying the response content.
+This API aims at removing inconsistencies and unifying the response content. 
+
+All variables belonging to a class are accessed using the ``__getitem__`` method (similar to a dict). See :ref:`examples <tutorial-examples>` 
+for more details.
+
 
 .. py:module:: d2api.src.wrappers
 
