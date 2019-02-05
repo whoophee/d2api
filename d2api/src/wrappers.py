@@ -692,18 +692,3 @@ class TeamInfoByTeamID(AbstractResponse):
         super().parse_response()
         self['teams'] = [TeamInfo(t) for t in self.get('teams', [])]
 
-class BroadcasterInfo(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_broadcaster_info` response object
-
-    :var steam_account: Steam account of broadcaster
-    :var server_steam_id: Unique ID of game server currently being broadcasted
-    :var live: ``True`` if the user is currently broadcasting
-    :var allow_live_video: ``True`` if the user has allowed live video
-
-    :vartype steam_account: SteamAccount
-    :vartype server_steam_id: int
-    :vartype live: bool
-    :vartype allow_live_video: bool
-    """
-    def parse_response(self):
-        self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))

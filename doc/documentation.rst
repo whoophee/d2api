@@ -83,11 +83,6 @@ get_team_info_by_team_id()
 .. autoclass:: TeamInfoByTeamID
    :members:
 
-get_broadcaster_info()
-======================
-.. autoclass:: BroadcasterInfo
-   :members:
-   
 Common wrappers and entities
 ============================
 .. autoclass:: TeamInfo

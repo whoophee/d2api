@@ -209,12 +209,3 @@ class LiveLeagueGamesTests(unittest.TestCase):
         
         self.assertEqual(game['scoreboard']['radiant']['players'][0]['abilities'][3]['ability'], entities.Ability(ability_id = 6491),
         "Parsing repeated keys does not work as intended.")
-    
-class BroadcasterInfoTests(unittest.TestCase):
-    def setUp(self):
-        api = d2api.APIWrapper()
-        self.get_broadcaster_info = api.get_broadcaster_info
-    
-    def test_get_broadcaster_info_dtype(self):
-        self.assertIsInstance(self.get_broadcaster_info(account_id = 40), wrappers.BroadcasterInfo,
-        'get_broadcaster_info() should return a BroadcasterInfo object.')
