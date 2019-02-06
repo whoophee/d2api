@@ -692,3 +692,99 @@ class TeamInfoByTeamID(AbstractResponse):
         super().parse_response()
         self['teams'] = [TeamInfo(t) for t in self.get('teams', [])]
 
+class BroadcasterInfo(AbstractResponse):
+    """:py:meth:`~d2api.APIWrapper.get_broadcaster_info` response object
+
+    :var steam_account: Steam account of broadcaster
+    :var server_steam_id: Unique ID of game server currently being broadcasted
+    :var live: ``True`` if the user is currently broadcasting
+    :var allow_live_video: ``True`` if the user has allowed live video
+
+    :vartype steam_account: SteamAccount
+    :vartype server_steam_id: int
+    :vartype live: bool
+    :vartype allow_live_video: bool
+    """
+    def parse_response(self):
+        self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
+
+class SteamDetails(AbstractParse):
+    """Information about a player as on Steam.
+
+    :var steam_account: Steam account of the player
+    :var communityvisibility: A string representing the access setting of the profile
+    :var profilestate: Set to ``1`` if the user has configured their profile
+    :var personname: Display name
+    :var lastlogoff: Unix timestamp of when the player was last online
+    :var profileurl: The URL to the user's steam profile
+    :var avatar: URL of 32x32 image
+    :var avatarmedium: URL of 64x64 image
+    :var avatarfull: URL of 184x184 image
+    :var personastate: A string representing user's status
+    :var commentpermission: If present the profile allows public comments
+    :var realname: The user's real name
+    :var primaryclanid: The 64 bit ID of the user's primary group
+    :var timecreated: A unix timestamp of the date the profile was created
+    :var loccountrycode: ISO 3166 code of where the user is located
+    :var locstatecode: Variable length code representing the state the user is located in
+    :var loccityid: An integer ID internal to Steam representing the user's city
+    :var gameid: If the user is in game this will be set to it's app ID as a string
+    :var gameextrainfo: The title of the game
+    :var gameserverip: The server URL given as an IP address and port number
+
+    :vartype steam_account: SteamAccount
+    :vartype communityvisibility: str
+    :vartype profilestate: int
+    :vartype personname: str
+    :vartype lastlogoff: int
+    :vartype profileurl: str
+    :vartype avatar: str
+    :vartype avatarmedium: str
+    :vartype avatarfull: str
+    :vartype personastate: str
+    :vartype commentpermission: int
+    :vartype realname: str
+    :vartype primaryclanid: int
+    :vartype timecreated: int
+    :vartype loccountrycode: int
+    :vartype locstatecode: int
+    :vartype loccityid: int
+    :vartype gameid: int
+    :vartype gameextrainfo: str
+    :vartype gameserverip: str
+    """
+    def parse(self):
+        self['steam_account'] = entities.SteamAccount(self.get('steamid'))
+
+        comm_descr = {
+            1: 'private', 
+            2: 'friends_only', 
+            3: 'friends_of_friends',
+            4: 'users_only',
+            5: 'public'
+        }
+
+        self['communityvisibility'] = comm_descr[self.pop('communityvisibilitystate', 1)]
+
+        persona_descr = {
+            0: 'offline',
+            1: 'online',
+            2: 'busy',
+            3: 'away',
+            4: 'snooze',
+            5: 'looking_to_trade',
+            6: 'looking_to_play'
+        }
+        self['personastate'] = persona_descr[self.pop('personastate', 0)]
+        
+class PlayerSummaries(AbstractResponse):
+    """:py:meth:`~d2api.APIWrapper.get_player_summaries` response object
+
+    :var players: List of steam information in ascending order of account ids
+    
+    :vartype players: list(SteamDetails)
+    """
+    def parse_response(self):
+        super().parse_response('response')
+        # For some reason, the WebAPI doesn't maintain relative ordering. Sorted to make the response consistent.
+        self['players'] = sorted([SteamDetails(p) for p in self.get('players', [])], key = lambda x: x['steam_account']['id64'])

@@ -83,6 +83,19 @@ get_team_info_by_team_id()
 .. autoclass:: TeamInfoByTeamID
    :members:
 
+get_broadcaster_info()
+======================
+.. autoclass:: BroadcasterInfo
+   :members:
+
+get_player_summaries()
+======================
+.. autoclass:: PlayerSummaries
+   :members:
+
+.. autoclass:: SteamDetails
+   :members:
+
 Common wrappers and entities
 ============================
 .. autoclass:: TeamInfo
