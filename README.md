@@ -3,7 +3,8 @@
 ## Introduction
 Python 3 wrapper and parser for interacting with Valve's Dota 2 WebAPI.
 
-
+| Documentation | Version | License |
+|-|-|-|
 | [![Documentation](https://readthedocs.org/projects/d2api/badge/?version=latest)](https://readthedocs.org/projects/d2api/?badge=latest) | [![Version](https://img.shields.io/pypi/v/d2api.svg?style=flat)](https://pypi.org/project/d2api/) | [![License](https://img.shields.io/pypi/l/d2api.svg)](https://github.com/whoophee/d2api/blob/master/LICENSE) |
 
 This project is still growing, with additonal parsing, tests,  documentation and examples.
