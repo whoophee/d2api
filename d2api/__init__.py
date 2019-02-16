@@ -41,11 +41,12 @@ def _parse_steam_account_list(cur_args):
 class APIWrapper:
     """Wrapper initialization requires either environment variable ``D2_API_KEY`` be set, or ``api_key`` be provided as an argument.
 
-    :param api_key: Steam API key
-    :param parse_response: set to ``False`` to get an unparsed json string (default ``True``)
-
-    :type api_key: str
-    :type parse_response: bool, optional
+    Parameters
+    ----------
+    api_key : str
+        Steam API key
+    parse_response : bool
+        set to ``False`` to get an unparsed json string
     """
     def __init__(self, api_key = None, parse_response = True):
         self.api_key = api_key if api_key else os.environ.get('D2_API_KEY')
@@ -56,11 +57,12 @@ class APIWrapper:
     def _api_call(self, url, wrapper_class = wrappers.BaseWrapper, **kwargs):
         """Helper function to perform WebAPI requests.
 
-        :param url: Request url
-        :param wrapper_class: Wrapper class used to parse response
-
-        :type url: string, required
-        :type wrapper_class: Class
+        Parameters
+        ----------
+        url : string 
+            Request url
+        wrapper_class : Class
+            Wrapper class used to parse response
         """
         if not 'key' in kwargs:
             kwargs['key'] = self.api_key
@@ -82,140 +84,180 @@ class APIWrapper:
             raise errors.BaseError(msg = response.reason)
 
     def get_match_history(self, **kwargs):
-        """A list of matches, filterable by various parameters.
+        """Get a list of matches, filtered by various parameters.
         
-        :param hero_id: A list of hero IDs can be fetched via the :py:meth:`~d2api.APIWrapper.get_heroes` method
-        :param hero: Used in place of hero_id
-        :param game_mode: Games of this game mode are fetched
-        :param skill: Skill bracket for the matches (Ignored if an account ID is specified)
-        :param min_players: Minimum amount of players in a match for the match to be returned.
-        :param account_id: 32/64-bit account ID
-        :param steam_account: Used in place of account_id
-        :param league_id: Only return matches from this league. get_league_listing() has been discontinued
-        :param start_at_match_id: Start searching for matches equal to or older than this match ID
-        :param matches_requested: Defaults to `100`
-        :param tournament_games_only: 0 = False, 1 = True
+        Parameters
+        ----------
+        hero_id : int, optional 
+            Matches containing this hero. A list of hero IDs can be fetched via the :any:`get_heroes()` method
+        hero : Hero, optional 
+            Used in place of hero_id
+        game_mode : int, optional
+            Games of this game mode are fetched
+        skill : int, optional
+            Skill bracket for the matches (Ignored if an account ID is specified)
+        min_players : int, optional
+            Minimum amount of players in a match for the match to be returned.
+        account_id : int, optional
+            32/64-bit account ID
+        steam_account : SteamAccount, optional
+            Used in place of account_id
+        league_id : int, optional
+            Only return matches from this league. get_league_listing() has been discontinued
+        start_at_match_id : int, optional
+            Start searching for matches equal to or older than this match ID
+        matches_requested : int, optional
+            Defaults to `100`
+        tournament_games_only : int, optional 
+            0 = False, 1 = True
 
-        :type hero_id: int, optional
-        :type hero: Hero, optional
-        :type game_mode: int, optional
-        :type skill: int, optional
-        :type min_players: int, optional
-        :type account_id: int, optional
-        :type steam_account: SteamAccount, optional
-        :type league_id: int, optional
-        :type start_at_match_id: int, optional
-        :type matches_requested: int, optional
-        :type tournament_games_only: int, optional
-
-        :rtype: MatchHistory 
+        Returns
+        -------
+        MatchHistory
+            Information of matches.
         """
         _parse_steam_account(kwargs)
         _parse_hero(kwargs)
         return self._api_call(endpoints.GET_MATCH_HISTORY, wrappers.MatchHistory, **kwargs)
 
     def get_match_history_by_sequence_num(self, **kwargs):
-        """A list of matches ordered by sequence number. 
-        Uses a parser similar to that of :py:meth:`~d2api.APIWrapper.get_match_history` method
+        """Get a list of matches ordered by sequence number. 
+        Uses a parser similar to that of :any:`get_match_history()` method
         
-        :param start_at_match_seq_num: The match sequence number to start returning results from
-        :param matches_requested: Defaults to `100`
+        Parameters
+        ----------
+        start_at_match_seq_num : int 
+            The match sequence number to start returning results from
+        matches_requested : int, optional 
+            Defaults to `100`
 
-        :type start_at_match_seq_num: int
-        :type matches_requested: int, optional
-
-        :rtype: MatchHistory
+        Returns
+        -------
+        MatchHistory
+            Information of matches.
         """
         return self._api_call(endpoints.GET_MATCH_HISTORY_BY_SEQ_NUM, wrappers.MatchHistory, **kwargs)
 
     def get_match_details(self, match_id, **kwargs):
-        """Detailed information about a particular match.
+        """Get detailed information about a particular match.
         
-        :param match_id: Match ID
-
-        :type match_id: int, string
-
-        :rtype: MatchDetails
+        Parameters
+        ----------
+        match_id : int, string
+            Match ID
+        
+        Returns
+        -------
+        MatchDetails
+            Details of a match.
         """
         kwargs['match_id'] = match_id
         return self._api_call(endpoints.GET_MATCH_DETAILS, wrappers.MatchDetails, **kwargs)
 
     def get_heroes(self, **kwargs):
-        """A list of heroes in Dota 2.
-        
-        :param language: The `language <https://partner.steamgames.com/doc/store/localization#supported_languages>`_ to provide hero names in
-        :param itemizedonly: Return a list of itemized heroes only
+        """Get a list of heroes in Dota 2.
 
-        :type language: string, optional
-        :type itemizedonly: bool, optional
+        Parameters
+        ----------
+        language : string, optional
+            The `language <https://partner.steamgames.com/doc/store/localization#supported_languages>`_ to provide hero names in
+        itemizedonly : bool, optional 
+            Return a list of itemized heroes only
 
-        :rtype: Heroes
+        Returns
+        -------
+        Heroes
+            Hero information.
         """
         return self._api_call(endpoints.GET_HEROES, wrappers.Heroes, **kwargs)
 
     def get_game_items(self, **kwargs):
-        """A list of items in Dota 2.
+        """Get a list of items in Dota 2.
         
-        :param language: The `language <https://partner.steamgames.com/doc/store/localization#supported_languages>`_ to provide hero names in
+        Parameters
+        ----------
+        language : string, optional 
+            The `language <https://partner.steamgames.com/doc/store/localization#supported_languages>`_ to provide hero names in
 
-        :type language: string, optional
-
-        :rtype: GameItems
+        Returns
+        -------
+        GameItems
+            Item information.
         """
         return self._api_call(endpoints.GET_GAME_ITEMS, wrappers.GameItems, **kwargs)
     
     def get_tournament_prize_pool(self, **kwargs):
-        """The current prizepool of specific tournaments.
+        """Get the current prizepool of specific tournaments.
         
-        :param leagueid: The ID of the league to get the prize pool of
+        Parameters
+        ----------
+        leagueid : int 
+            The ID of the league to get the prize pool of
 
-        :type leagueid: int
-
-        :rtype: TournamentPrizePool
+        Return
+        ------
+        TournamentPrizePool
+            Prizepool of a tournament.
         """
         return self._api_call(endpoints.GET_TOURNAMENT_PRIZE_POOL, wrappers.TournamentPrizePool, **kwargs)
     
     def get_top_live_game(self, partner = 0, **kwargs):
-        """Details of on-going live games.
+        """Get details of on-going live games.
         
-        :param partner: Which partner's games to use (default `0`)
+        Parameters
+        ----------
+        partner : int, optional 
+            Which partner's games to use (default `0`)
 
-        :type partner: int, optional
-
-        :rtype: TopLiveGame
+        Returns
+        -------
+        TopLiveGame
+            Details of on-going live games.
         """
         kwargs['partner'] = partner
         return self._api_call(endpoints.GET_TOP_LIVE_GAME, wrappers.TopLiveGame, **kwargs)
     
     def get_team_info_by_team_id(self, **kwargs):
-        """A list of teams' information.
+        """Get a list of teams' information.
         
-        :param start_at_team_id: The team id to start returning results from
-        :param teams_requested: The amount of teams to return
+        Parameters
+        ----------
+        start_at_team_id : int, optional 
+            The team id to start returning results from
+        teams_requested : int, optional 
+            The amount of teams to return
 
-        :type start_at_team_id: int, optional
-        :type teams_requested: int, optional
-
-        :rtype: TeamInfoByTeamID
+        Returns
+        -------
+        TeamInfoByTeamID
+            A list of teams' information.
         """
         return self._api_call(endpoints.GET_TEAM_INFO_BY_TEAM_ID, wrappers.TeamInfoByTeamID, **kwargs)
 
     def get_live_league_games(self, **kwargs):
-        """A list of in-progress league matches, as well as their details at the time of query.
+        """Get a list of in-progress league matches, as well as their details at the time of query.
         
-        :rtype: LiveLeagueGames"""
+        Returns
+        -------
+        LiveLeagueGames
+            Details of in-progress live league games.
+        """
         return self._api_call(endpoints.GET_LIVE_LEAGUE_GAMES, wrappers.LiveLeagueGames, **kwargs)
 
     def get_broadcaster_info(self, **kwargs):
         """Get the broadcasting status of a user.
 
-        :param account_id: 32/64-bit account ID
-        :param steam_account: Used in place of account_id
-
-        :type account_id: int
-        :type steam_account: SteamAccount
-
-        :rtype: BroadcasterInfo
+        Parameters
+        ----------
+        account_id : int 
+            32/64-bit account ID
+        steam_account : SteamAccount 
+            Used in place of account_id
+        
+        Returns
+        -------
+        BroadcasterInfo
+            Broadcasting information of a user.
         """
         _parse_steam_account(kwargs)
         kwargs['broadcaster_steam_id'] = kwargs.pop('account_id')
@@ -224,13 +266,17 @@ class APIWrapper:
     def get_player_summaries(self, **kwargs):
         """Get Steam details of users.
 
-        :param account_ids: 32/64-bit account ID
-        :param steam_accounts: Used in place of account IDs
+        Parameters
+        ----------
+        account_ids : list(int) 
+            32/64-bit account ID
+        steam_accounts : list(SteamAccount) 
+            Used in place of account IDs
 
-        :type account_ids: list(int)
-        :type steam_accounts: list(SteamAccount)
-
-        :rtype: PlayerSummaries
+        Returns
+        -------
+        PlayerSummaries
+            Information of steam accounts
         """
         _parse_steam_account_list(kwargs)
         return self._api_call(endpoints.GET_PLAYER_SUMMARIES, wrappers.PlayerSummaries, **kwargs)
@@ -239,8 +285,9 @@ class APIWrapper:
 def update_local_data(purge = True):
     """Synchronize local data with current repository data
     
-    :param purge: Set to ``True`` to delete local content
-
-    :type purge: bool
+    Parameters
+    ----------
+    purge : bool 
+        Set to ``True`` to delete local content
     """
     return entities._update(purge)

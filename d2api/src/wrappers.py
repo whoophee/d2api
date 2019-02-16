@@ -35,9 +35,10 @@ class AbstractParse(BaseWrapper):
     """Interface to implement parsed objects."""
     def __init__(self, default_obj = {}):
         """
-        :param default_obj: 
-
-        :type default_obj: dict
+        Parameters
+        ----------
+        default_obj : dict
+            The class wraps around this dict.
         """
         super().__init__(default_obj)
         self.parse()
@@ -57,14 +58,15 @@ class AbstractResponse(BaseWrapper):
 
 class PlayerMinimal(AbstractParse):
     """A minimal information wrapper for a player
-
-    :var steam_account: Steam account of player
-    :var side: side to which a player belongs (radiant/dire)
-    :var hero: hero played
-
-    :vartype steam_account: SteamAccount
-    :vartype side: str
-    :vartype hero: Hero
+    
+    Attributes
+    ----------
+    steam_account : SteamAccount
+        Steam account of player
+    side : str
+        side to which a player belongs (radiant/dire)
+    hero : Hero
+        hero played
     """
     def parse(self):
         self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
@@ -82,28 +84,30 @@ class PlayerMinimal(AbstractParse):
 # TODO : parse lobby_type or add enumeration for lobby_type
 class MatchSummary(AbstractParse):
     """A brief summary of queried games
-
-    :var match_id: The unique ID of a match
-    :var match_seq_num: Represents the sequence in which matches were recorded
-    :var start_time: Unix timestamp of game begin time
-    :var lobby_type: Integer representing type of lobby
-    :var players: List of player summaries
-
-    :vartype match_id: int
-    :vartype match_seq_num: int
-    :vartype start_time: int
-    :vartype lobby_type: int
-    :vartype players: list(PlayerMinimal)
+    
+    Attributes
+    ----------
+    match_id : int
+        The unique ID of a match
+    match_seq_num : int
+        Represents the sequence in which matches were recorded
+    start_time : int
+        Unix timestamp of game begin time
+    lobby_type : int
+        Integer representing type of lobby
+    players : list(PlayerMinimal)
+        List of player summaries
     """
     def parse(self):
         self['players'] = [PlayerMinimal(p) for p in self.get('players', [])]
 
 class MatchHistory(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_match_history` or :py:meth:`~d2api.APIWrapper.get_match_history_by_sequence_num` response object
+    """:any:`get_match_history` or :any:`get_match_history_by_sequence_num` response object
 
-    :var matches: List of match summaries
-
-    :vartype matches: list(MatchSummary)
+    Attributes
+    ----------
+    matches : list(MatchSummary)
+        List of match summaries
     """
     def parse_response(self):
         super().parse_response()
@@ -113,9 +117,10 @@ class InventoryUnit(AbstractParse):
     """Any unit having item slots."""
     def all_items(self):
         """
-        :return: Combined list of inventory and backpack items
-        
-        :rtype: list(Item)
+        Returns
+        -------
+        list(Item)
+            Combined list of inventory and backpack items
         """
         tot = self['inventory'] + self['backpack']
         return tot
@@ -135,11 +140,12 @@ class InventoryUnit(AbstractParse):
 class AdditionalUnit(InventoryUnit):
     """An inventoried unit besides heroes (e.g. Lone druid bear)
     
-    :var inventory: List of inventory items
-    :var backpack: List of backpack items
-
-    :vartype inventory: list(Item)
-    :vartype backpack: list(Item)
+    Attributes
+    ----------
+    inventory : list(Item)
+        List of inventory items
+    backpack : list(Item)
+        List of backpack items
     """
 
     def parse(self):
@@ -148,13 +154,14 @@ class AdditionalUnit(InventoryUnit):
 class AbilityInfo(AbstractParse):
     """Ability upgrade during game.
 
-    :var ability: Ability upgraded.
-    :var time: Game time at which ability was upgraded
-    :var level: Level of the player at which ability was upgraded.
-
-    :vartype ability: Ability
-    :vartype time: int
-    :vartype level: int
+    Attributes
+    ----------
+    ability : Ability
+        Ability upgraded.
+    time : int
+        Game time at which ability was upgraded
+    level : int
+        Level of the player at which ability was upgraded.
     """
     def parse(self):
         self['ability'] = entities.Ability(self.pop('ability_id', None))
@@ -164,48 +171,48 @@ class AbilityInfo(AbstractParse):
 class PlayerUnit(InventoryUnit):
     """An inventoried hero unit
 
-    :var steam_account: Steam account of player
-    :var side: Side to which a player belongs (radiant/dire)
-    :var hero: Hero played
-    :var kills: Number of kills at the end of the match
-    :var deaths: Number of deaths at the end of the match
-    :var assists: Number of assists at the end of the match
-    :var leaver_status: Type of leaver
-    :var gold: Amount of gold remaining at the end of the match
-    :var last_hits: Number of list hits at the end of the match
-    :var denies: Number of denies at the end of the game
-    :var gold_per_minute: Overall gold/minute
-    :var xp_per_minute: Overall XP/min
-    :var gold_spent: Amount of gold spent during the match
-    :var hero_damage: Total damage done to other heroes at the end of the match
-    :var tower_damage: Total damage done to opponent towers at  the end of the match
-    :var hero_healing: Total healing done to other heroes at the end of the match
-    :var additional_units: Additional units belonging to the current unit
-    :var inventory: List of inventory items
-    :var backpack: List of backpack items
-    :var ability_upgrades: Ability upgrade information
-    
-
-    :vartype steam_account: SteamAccount 
-    :vartype side: str
-    :vartype hero: Hero
-    :vartype kills: int
-    :vartype deaths: int
-    :vartype assists: int
-    :vartype leaver_status: int
-    :vartype gold: int
-    :vartype last_hits: int
-    :vartype denies: int
-    :vartype gold_per_min: int
-    :vartype xp_per_min: int
-    :vartype gold_spent: int
-    :vartype hero_damage: int
-    :vartype tower_damage: int
-    :vartype hero_healing: int
-    :vartype additional_units: list(AdditionalUnit)
-    :vartype inventory: list(Item)
-    :vartype backpack: list(Item)
-    :vartype ability_upgrades: list(AbilityInfo)
+    Attributes
+    ----------
+    steam_account : SteamAccount
+        Steam account of player
+    side : str
+        Side to which a player belongs (radiant/dire)
+    hero : Hero
+        Hero played
+    kills : int
+        Number of kills at the end of the match
+    deaths : int
+        Number of deaths at the end of the match
+    assists : int
+        Number of assists at the end of the match
+    leaver_status : int
+        Type of leaver
+    gold : int
+        Amount of gold remaining at the end of the match
+    last_hits : int
+        Number of list hits at the end of the match
+    denies : int
+        Number of denies at the end of the game
+    gold_per_minute : int
+        Overall gold/minute
+    xp_per_minute : int
+        Overall XP/min
+    gold_spent : int
+        Amount of gold spent during the match
+    hero_damage : int
+        Total damage done to other heroes at the end of the match
+    tower_damage : int
+        Total damage done to opponent towers at  the end of the match
+    hero_healing : int
+        Total healing done to other heroes at the end of the match
+    additional_units : list(AdditionalUnit) 
+        Additional units belonging to the current unit
+    inventory : list(Item)
+        List of inventory items
+    backpack : list(Item)
+        List of backpack items
+    ability_upgrades : list(AbilityInfo)
+        Ability upgrade information
     """
     def parse(self):
         self._build_item_list()
@@ -225,15 +232,16 @@ class PlayerUnit(InventoryUnit):
 class Buildings(AbstractParse):
     """Represents current state of buildings
 
-    :var {lane}_{position}: Tower status [lane = top, mid, bot][position = 1, 2, 3] (e.g. top_t2)
-    :var ancient_bot: Ancient bottom tower
-    :var ancient_top: Ancient top tower
-    :var {lane}_{type}: Barracks status [lane = top, mid, bot][type = ranged, melee] (e.g. mid_melee) 
-
-    :vartype {lane}_{position}: bool
-    :vartype ancient_top: bool
-    :vartype ancient_bot: bool
-    :vartype {lane}_{type}: bool
+    Attributes
+    ----------
+    {lane}_{position} : bool
+        Tower status [lane = top, mid, bot][position = 1, 2, 3] (e.g. top_t2)
+    ancient_bot : bool
+        Ancient bottom tower
+    ancient_top : bool
+        Ancient top tower
+    {lane}_{type} : bool
+        Barracks status [lane = top, mid, bot][type = ranged, melee] (e.g. mid_melee)
     """
     def parse(self):
 
@@ -256,15 +264,16 @@ class Buildings(AbstractParse):
 class PickBan(AbstractParse):
     """Reprents a pick/ban during a game
 
-    :var is_pick: ``True`` if the hero was picked
-    :var hero: Hero being picked/banned
-    :var side: Side that picked/banned this hero (radiant/dire)
-    :var order: Order in which the hero was picked/banned
-
-    :vartype is_pick: bool
-    :vartype hero: Hero
-    :vartype side: str
-    :vartype order: int
+    Attributes
+    ----------
+    is_pick : bool
+        ``True`` if the hero was picked
+    hero : Hero
+        Hero being picked/banned
+    side : str
+        Side that picked/banned this hero (radiant/dire)
+    order : int
+        Order in which the hero was picked/banned
     """
     def parse(self):
         self['hero'] = entities.Hero(self.pop('hero_id', None))
@@ -273,69 +282,72 @@ class PickBan(AbstractParse):
 
 
 class MatchDetails(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_match_details` response object
+    """:any:`get_match_details` response object
 
-    :var players: List of players in the game
-    :var players_minimal: List of players represented minimally
-    :var picks_bans: List of picks/bans
-    :var season: The season in which the game was played
-    :var winner: Side that won the game (radiant/dire)
-    :var duration: Duration of the game (in seconds)
-    :var pre_game_duration: Duration for game to begin (in seconds)
-    :var start_time: Unix timestamp of match start
-    :var match_seq_num: Number denoting the order in which matches were recorded
-    :var radiant_buildings: Radiant building statuses at the end of the game
-    :var dire_buildings: Dire building statuses at the end of the game
-    :var cluster: The server cluster the match was played upon (used to fetch replays)
-    :var first_blood_time: Time of first-blood occurrance
-    :var lobby_type: Type of lobby
-    :var human_players: Number of human players in the game
-    :var leagueid: The league that this match was a part of
-    :var positive_votes: The number of thumbs-up the game has received by users
-    :var negative_votes: The number of thumbs-down the game has received by users
-    :var game_mode: Game mode
-    :var engine: Source 1/Source 2
-    :var radiant_score: TODO
-    :var dire_score: TODO
-    :var flags: TODO
-
-    :vartype players: PlayerUnit
-    :vartype players_minimal: PlayerMinimal
-    :vartype picks_bans: PickBan
-    :vartype season: int
-    :vartype winner: str
-    :vartype duration: int
-    :vartype pre_game_duration: int
-    :vartype start_time: int
-    :vartype match_seq_num: int
-    :vartype radiant_buildings: Buildings
-    :vartype dire_buildings: Buildings
-    :vartype cluster: int
-    :vartype first_blood_time: int
-    :vartype lobby_type: int
-    :vartype human_players: int
-    :vartype leagueid: int
-    :vartype positive_votes: int
-    :vartype negative_votes: int
-    :vartype game_mode: int
-    :vartype engine: int
-    :vartype radiant_score: int
-    :vartype dire_score: int
-    :vartype flags: ?
+    Attributes
+    ----------
+    players : PlayerUnit
+        List of players in the game
+    players_minimal : PlayerMinimal
+        List of players represented minimally
+    picks_bans : PickBan
+        List of picks/bans
+    season : int
+        The season in which the game was played
+    winner : str
+        Side that won the game (radiant/dire)
+    duration : int
+        Duration of the game (in seconds)
+    pre_game_duration : int
+        Duration for game to begin (in seconds)
+    start_time : int
+        Unix timestamp of match start
+    match_seq_num : int
+        Number denoting the order in which matches were recorded
+    radiant_buildings : Buildings
+        Radiant building statuses at the end of the game
+    dire_buildings : Buildings
+        Dire building statuses at the end of the game
+    cluster : int
+        The server cluster the match was played upon (used to fetch replays)
+    first_blood_time : int
+        Time of first-blood occurrance
+    lobby_type : int
+        Type of lobby
+    human_players : int
+        Number of human players in the game
+    leagueid : int
+        The league that this match was a part of
+    positive_votes : int
+        The number of thumbs-up the game has received by users
+    negative_votes : int
+        The number of thumbs-down the game has received by users
+    game_mode : int
+        Game mode
+    engine : int
+        Source 1/Source 2
+    radiant_score : int
+        TODO
+    dire_score : int
+        TODO
+    flags : ?
+        TODO
     """
     def leavers(self):
         """
-        :return: List of leavers in a game.
-
-        :rtype: list(SteamAccount)
+        Returns
+        -------
+        list(SteamAccount)
+            List of leavers in a game.
         """
         return [p['steam_account'] for p in self['players'] if p['leaver_status'] != 0]
 
     def has_leavers(self):
         """
-        :return: ``True`` if the game contains a leaver
-
-        :rtype: bool
+        Returns
+        -------
+        bool
+            ``True`` if the game contains a leaver
         """
         has_leaver = False
         for p in self['players']:
@@ -365,69 +377,74 @@ class MatchDetails(AbstractResponse):
 class LocalizedHero(AbstractParse):
     """Localized hero information
 
-    :var name: Hero name
-    :var id: Hero ID
-    :var localized_name: Name of hero in language specified
-
-    :vartype name: str
-    :vartype id: ind
-    :vartype localized_name: str
+    Attributes
+    ----------
+    name : str
+        Hero name
+    id : int
+        Hero ID
+    localized_name : str
+        Name of hero in language specified
     """
     pass
 
 class LocalizedGameItem(AbstractParse):
     """Localized item information
 
-    :var id: Item ID
-    :var name: Item name
-    :var cost: Cost of item
-    :var secret_shop: True if the item is sold in secret shop
-    :var side_shop: True if the item is sold in side shop
-    :var recipe: True if it is a recipe
-    :var localized_name: Name of item in language specified
-
-    :vartype id: int
-    :vartype name: str
-    :vartype cost: int
-    :vartype secret_shop: bool
-    :vartype side_shop: bool
-    :vartype recipe: bool
-    :vartype localized_name: str
+    Attributes
+    ----------
+    id : int
+        Item ID
+    name : str
+        Item name
+    cost : int
+        Cost of item
+    secret_shop : bool
+        True if the item is sold in secret shop
+    side_shop : bool
+        True if the item is sold in side shop
+    recipe : bool
+        True if it is a recipe
+    localized_name : str
+        Name of item in language specified
     """
     pass
 
 class Heroes(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_heroes` response object
+    """:any:`get_heroes` response object
 
-    :var heroes: List of localized hero information
-    :var count: Number of heroes returned
-    
-    :vartype heroes: list(LocalizedHero)
-    :vartype count: int
+    Attributes
+    ----------
+    heroes : list(LocalizedHero)
+        List of localized hero information
+    count : int
+        Number of heroes returned
     """
     def parse_response(self):
         super().parse_response()
         self['heroes'] = [LocalizedHero(h) for h in self.get('heroes', [])]
 
 class GameItems(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_game_items` response object
+    """:any:`get_game_items` response object
 
-    :var game_items: List of localized item information
-    
-    :vartype game_items: list(LocalizedGameItem)
+    Attributes
+    ----------
+    game_items : list(LocalizedGameItems)
+        List of localized item information
     """
     def parse_response(self):
         super().parse_response()
         self['game_items'] = [LocalizedGameItem(i) for i in self.pop('items', [])]
 
 class TournamentPrizePool(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_tournament_prize_pool` response object
+    """:any:`get_tournament_prize_pool` response object
 
-    :var prize_pool: Prize pool
-    :var league_id: League ID for which prize pool was fetched
-
-    :vartype prize_pool: int
-    :vartype league_id: int
+    Attributes
+    ----------
+    prize_pool : int
+        Prize pool
+    league_id : int
+        League ID for which prize pool was fetched
     """
     pass
 
@@ -435,46 +452,48 @@ class TournamentPrizePool(AbstractResponse):
 class PlayerLive(AbstractParse):
     """Information of a player in live game
 
-    :var player_slot: Slot of player within the team
-    :var steam_account: Steam account of the player
-    :var hero: Hero played
-    :var kills: Number of kills
-    :var deaths: Number of deaths
-    :var assists: Number of assists
-    :var last_hits: Number of last hits
-    :var denies: Number of denies
-    :var gold: Current amount of gold
-    :var level: Current level
-    :var gold_per_min: gold/min at time of query
-    :var xp_per_min: XP/min at time of query
-    :var abilities: List of ability information
-    :var ultimate_state: Current state of ultimate
-    :var ultimate_cooldown: Remaining time for ultimate to come off cooldown
-    :var inventory: List of items in player inventory
-    :var respawn_timer: Remain time for player to respawn
-    :var position_x: X coordinate of hero
-    :var position_y: Y coordinate of hero
-    :var net_worth: Net worth of the hero
-
-    :vartype player_slot: int
-    :vartype steam_account: SteamAccount
-    :vartype hero: Hero
-    :vartype kills: int
-    :vartype deaths: int
-    :vartype assists: int
-    :vartype denies: int
-    :vartype gold: int
-    :vartype level: int
-    :vartype gold_per_min: int
-    :vartype xp_per_min: int
-    :vartype abilities: list(AbilityInfo)
-    :vartype ultimate_state: int
-    :vartype ultimate_cooldown: int
-    :vartype inventory: list(Item)
-    :vartype respawn_timer: int
-    :vartype position_x: float
-    :vartype position_y: float
-    :vartype net_worth: int
+    Attributes
+    ----------
+    player_slot : int
+        Slot of player within the team
+    steam_account : SteamAccount
+        Steam account of the player
+    hero : Hero
+        Hero played
+    kills : int
+        Number of kills
+    deaths : int
+        Number of deaths
+    assists : int
+        Number of assists
+    last_hits : int
+        Number of last hits
+    denies : int
+        Number of denies
+    gold : int
+        Current amount of gold
+    level : int
+        Current level
+    gold_per_min : int
+        gold/min at time of query
+    xp_per_min : int
+        XP/min at time of query
+    abilities : list(AbilityInfo)
+        List of ability information
+    ultimate_state : int
+        Current state of ultimate
+    ultimate_cooldown : int
+        Remaining time for ultimate to come off cooldown
+    inventory : list(Item)
+        List of items in player inventory
+    respawn_timer : int
+        Remain time for player to respawn
+    position_x : float
+        X coordinate of hero
+    position_y : float
+        Y coordinate of hero
+    net_worth : int
+        Net worth of the hero
     """
     def parse(self):
         self['hero'] = entities.Hero(self.pop('hero_id', None))
@@ -489,17 +508,18 @@ class PlayerLive(AbstractParse):
 class TeamLive(AbstractParse):
     """Information of a team in live game
 
-    :var score: Current number of kills by the team
-    :var buildings: State of buildings
-    :var picks: List of heroes picked
-    :var bans: List of heroes banned
-    :var players: List of player summaries
-    
-    :vartype score: int 
-    :vartype buildings: Buildings
-    :vartype picks: list(Hero)
-    :vartype bans: list(Hero)
-    :vartype players: list(PlayerLive)
+    Attributes
+    ----------
+    score : int
+        Current number of kills by the team
+    buildings : Buildings
+        State of buildings
+    picks : list(Hero)
+        List of heroes picked
+    bans : list(Hero)
+        List of heroes banned
+    players : list(PlayerLive)
+        List of player summaries
     """
     def parse(self):
 
@@ -522,15 +542,16 @@ class TeamLive(AbstractParse):
 class Scoreboard(AbstractParse):
     """Scoreboard of live game
 
-    :var duration: Duration of the game at time of query
-    :var roshan_respawn_timer: Time left for Roshan to respawn
-    :var radiant: Radiant team summary
-    :var dire: Dire team summary
-
-    :vartype duration: int
-    :vartype roshan_respawn_timer: int
-    :vartype radiant: TeamLive
-    :vartype dire: TeamLive
+    Attributes
+    ----------
+    duration : int
+        Duration of the game at time of query
+    roshan_respawn_timer : int
+        Time left for Roshan to respawn
+    radiant : TeamLive
+        Radiant team summary
+    dire : TeamLive
+        Dire team summary
     """
     def parse(self):
         self['radiant'] = TeamLive(self.get('radiant', {}))
@@ -539,15 +560,16 @@ class Scoreboard(AbstractParse):
 class TeamInfo(AbstractParse):
     """Information about team
 
-    :var team_name: The team's name.
-    :var team_id: The team's unique ID.
-    :var team_logo: The UGC id for the team logo.
-    :var complete: Whether the players for this team are all team members.
-
-    :vartype team_name: str
-    :vartype team_id: int
-    :vartype team_logo: int
-    :vartype complete: bool
+    Attributes
+    ----------
+    team_name : str
+        The team's name.
+    team_id : int
+        The team's unique ID.
+    team_logo : int
+        The UGC id for the team logo.
+    complete : bool
+        Whether the players for this team are all team members.
     """
     pass
 
@@ -555,33 +577,34 @@ class TeamInfo(AbstractParse):
 class Game(AbstractParse):
     """Summary of a live league game
 
-    :var radiant_team: Radiant team information
-    :var dire_team: Dire team information
-    :var players: List of players in the game
-    :var scoreboard: Game scoreboard at time of query
-    :var lobby_id: ID of lobby
-    :var match_id: Unique ID used to identify match
-    :var spectators: Number of spectators
-    :var league_id: Unique ID for the league of the match
-    :var league_node_id: Unique ID of node within the league
-    :var stream_delay_s: Stream delay in seconds
-    :var radiant_series_win: Number of wins by radiant team
-    :var dire_series_win: Number of wins by dire team
-    :var series_type: Type of series
-
-    :vartype radiant_team: TeamInfo
-    :vartype dire_team: TeamInfo
-    :vartype players: list(PlayerMinimal)
-    :vartype scoreboard: Scoreboard
-    :vartype lobby_id: int
-    :vartype match_id: int
-    :vartype spectators: int 
-    :vartype league_id: int
-    :vartype league_node_id: int
-    :vartype stream_delay_s: int
-    :vartype radiant_series_win: int
-    :vartype dire_series_win: int
-    :vartype series_type: int
+    Attributes
+    ----------
+    radiant_team : TeamInfo
+        Radiant team information
+    dire_team : TeamInfo
+        Dire team information
+    players : List(PlayerMinimal)
+        List of players in the game
+    scoreboard : Scoreboard
+        Game scoreboard at time of query
+    lobby_id : int
+        ID of lobby
+    match_id : int
+        Unique ID used to identify match
+    spectators : int
+        Number of spectators
+    league_id : int
+        Unique ID for the league of the match
+    league_node_id : int
+        Unique ID of node within the league
+    stream_delay_s : int
+        Stream delay in seconds
+    radiant_series_win : int
+        Number of wins by radiant team
+    dire_series_win : int
+        Number of wins by dire team
+    series_type : int
+        Type of series
     """
     def parse(self):
         self['radiant_team'] = TeamInfo(self.get('radiant_team', {}))
@@ -590,11 +613,12 @@ class Game(AbstractParse):
         self['players'] = [PlayerMinimal(p) for p in self.get('players', [])]
 
 class LiveLeagueGames(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_live_league_games` response object
+    """:any:`get_live_league_games` response object
 
-    :var games: List of games
-
-    :vartype games: list(Game)
+    Attributes
+    ----------
+    games : list(Game)
+        List of games
     """
     def parse_response(self):
         super().parse_response()
@@ -605,53 +629,54 @@ class LiveLeagueGames(AbstractResponse):
 class LiveGameSummary(AbstractParse):
     """Summary of a live game
 
-    :var players: List of player info
-    :var radiant_towers: Radiant towers
-    :var dire_towers: Dire towers
-    :var activate_time: TODO
-    :var deactivate_time: TODO
-    :var server_steam_id: Steam ID of server
-    :var lobby_id: ID of lobby
-    :var league_id: Unique ID for the league of the match
-    :var lobby_type: Type of lobby
-    :var game_time: Game time
-    :var delay: Stream delay (game, spectator delay)
-    :var spectators: Current number of spectators
-    :var game_mode: Game mode of current game
-    :var average_mmr: Average MMR of the game
-    :var match_id: Unique ID used to identify match
-    :var series_id: Unique ID used to identify series
-    :var radiant_team: Information about radiant team
-    :var dire_team: Information about dire team
-    :var sort_score: TODO
-    :var last_update_time: TODO
-    :var radiant_lead: Gold lead of radiant team
-    :var radiant_score: TODO
-    :var dire_score: TODO
-
-    :vartype players: PlayerMinimal
-    :vartype radiant_towers: Buildings
-    :vartype dire_towers: Buildings
-    :vartype activate_time: int
-    :vartype deactivate_time: int
-    :vartype server_steam_id: int
-    :vartype lobby_id: int
-    :vartype league_id: int
-    :vartype lobby_type: int
-    :vartype game_time: int
-    :vartype delay: int
-    :vartype spectators: int
-    :vartype game_mode: int
-    :vartype average_mmr: int
-    :vartype match_id: int
-    :vartype series_id: int
-    :vartype radiant_team: TeamInfo
-    :vartype dire_team: TeamInfo
-    :vartype sort_score: int
-    :vartype last_update_time: int
-    :vartype radiant_lead: int
-    :vartype radiant_score: int
-    :vartype dire_score: int
+    Attributes
+    ----------
+    players : PlayerMinimal
+        List of player info
+    radiant_towers : Buildings
+        Radiant towers
+    dire_towers : Buildings
+        Dire towers
+    activate_time : int
+        TODO
+    deactivate_time : int
+        TODO
+    server_steam_id : int
+        Steam ID of server
+    lobby_id : int
+        ID of lobby
+    league_id : int
+        Unique ID for the league of the match
+    lobby_type : int
+        Type of lobby
+    game_time : int
+        Game time
+    delay : int
+        Stream delay (game, spectator delay)
+    spectators : int
+        Current number of spectators
+    game_mode : int
+        Game mode of current game
+    average_mmr : int
+        Average MMR of the game
+    match_id : int
+        Unique ID used to identify match
+    series_id : int
+        Unique ID used to identify series
+    radiant_team : TeamInfo
+        Information about radiant team
+    dire_team : TeamInfo
+        Information about dire team
+    sort_score : int
+        TODO
+    last_update_time : int
+        TODO
+    radiant_lead : int
+        Gold lead of radiant team
+    radiant_score : int
+        TODO
+    dire_score : int
+        TODO
     """
     def parse(self):
         tower_states = self.pop('building_state', 0)
@@ -672,38 +697,41 @@ class LiveGameSummary(AbstractParse):
         self['dire_team'] = TeamInfo({'dire_name': dire_team_name, 'dire_id': dire_team_id})
 
 class TopLiveGame(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_top_live_game` response object
+    """:any:`get_top_live_game` response object
 
-    :var game_list: List of top live games
-
-    :vartype game_list: list(LiveGameSummary)
+    Attributes
+    ----------
+    game_list : list(LiveGameSummary)
+        List of top live games
     """
     def parse_response(self):
         self['game_list'] = [LiveGameSummary(g) for g in self.get('game_list', [])]
 
 class TeamInfoByTeamID(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_team_info_by_team_id` response object
+    """:any:`get_team_info_by_team_id` response object
 
-    :var teams: List of team information
-
-    :vartype teams: list(TeamInfo)
+    Attributes
+    ----------
+    teams : list(TeamInfo)
+        List of team information
     """
     def parse_response(self):
         super().parse_response()
         self['teams'] = [TeamInfo(t) for t in self.get('teams', [])]
 
 class BroadcasterInfo(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_broadcaster_info` response object
+    """:any:`get_broadcaster_info` response object
 
-    :var steam_account: Steam account of broadcaster
-    :var server_steam_id: Unique ID of game server currently being broadcasted
-    :var live: ``True`` if the user is currently broadcasting
-    :var allow_live_video: ``True`` if the user has allowed live video
-
-    :vartype steam_account: SteamAccount
-    :vartype server_steam_id: int
-    :vartype live: bool
-    :vartype allow_live_video: bool
+    Attributes
+    ----------
+    steam_account : SteamAccount
+        Steam account of broadcaster
+    server_steam_id : int
+        Unique ID of game server currently being broadcasted
+    live : bool
+        ``True`` if the user is currently broadcasting
+    allow_live_video : bool
+        ``True`` if the user has allowed live video
     """
     def parse_response(self):
         self['steam_account'] = entities.SteamAccount(self.pop('account_id', None))
@@ -711,47 +739,48 @@ class BroadcasterInfo(AbstractResponse):
 class SteamDetails(AbstractParse):
     """Information about a player as on Steam.
 
-    :var steam_account: Steam account of the player
-    :var communityvisibility: A string representing the access setting of the profile
-    :var profilestate: Set to ``1`` if the user has configured their profile
-    :var personname: Display name
-    :var lastlogoff: Unix timestamp of when the player was last online
-    :var profileurl: The URL to the user's steam profile
-    :var avatar: URL of 32x32 image
-    :var avatarmedium: URL of 64x64 image
-    :var avatarfull: URL of 184x184 image
-    :var personastate: A string representing user's status
-    :var commentpermission: If present the profile allows public comments
-    :var realname: The user's real name
-    :var primaryclanid: The 64 bit ID of the user's primary group
-    :var timecreated: A unix timestamp of the date the profile was created
-    :var loccountrycode: ISO 3166 code of where the user is located
-    :var locstatecode: Variable length code representing the state the user is located in
-    :var loccityid: An integer ID internal to Steam representing the user's city
-    :var gameid: If the user is in game this will be set to it's app ID as a string
-    :var gameextrainfo: The title of the game
-    :var gameserverip: The server URL given as an IP address and port number
-
-    :vartype steam_account: SteamAccount
-    :vartype communityvisibility: str
-    :vartype profilestate: int
-    :vartype personname: str
-    :vartype lastlogoff: int
-    :vartype profileurl: str
-    :vartype avatar: str
-    :vartype avatarmedium: str
-    :vartype avatarfull: str
-    :vartype personastate: str
-    :vartype commentpermission: int
-    :vartype realname: str
-    :vartype primaryclanid: int
-    :vartype timecreated: int
-    :vartype loccountrycode: int
-    :vartype locstatecode: int
-    :vartype loccityid: int
-    :vartype gameid: int
-    :vartype gameextrainfo: str
-    :vartype gameserverip: str
+    Attributes
+    ----------
+    steam_account : SteamAccount
+        Steam account of the player
+    communityvisibility : str
+        A string representing the access setting of the profile
+    profilestate : int
+        Set to ``1`` if the user has configured their profile
+    personname : str
+        Display name
+    lastlogoff : int
+        Unix timestamp of when the player was last online
+    profileurl : str
+        The URL to the user's steam profile
+    avatar : str
+        URL of 32x32 image
+    avatarmedium : str
+        URL of 64x64 image
+    avatarfull : str
+        URL of 184x184 image
+    personastate : str
+        A string representing user's status
+    commentpermission : int
+        If present the profile allows public comments
+    realname : str
+        The user's real name
+    primaryclanid : int
+        The 64 bit ID of the user's primary group
+    timecreated : int
+        A unix timestamp of the date the profile was created
+    loccountrycode : int
+        ISO 3166 code of where the user is located
+    locstatecode : int
+        Variable length code representing the state the user is located in
+    loccityid : int
+        An integer ID internal to Steam representing the user's city
+    gameid : int
+        If the user is in game this will be set to it's app ID as a string
+    gameextrainfo : str 
+        The title of the game
+    gameserverip : str
+        The server URL given as an IP address and port number
     """
     def parse(self):
         self['steam_account'] = entities.SteamAccount(self.get('steamid'))
@@ -778,11 +807,12 @@ class SteamDetails(AbstractParse):
         self['personastate'] = persona_descr[self.pop('personastate', 0)]
         
 class PlayerSummaries(AbstractResponse):
-    """:py:meth:`~d2api.APIWrapper.get_player_summaries` response object
+    """:any:`get_player_summaries` response object
 
-    :var players: List of steam information in ascending order of account ids
-    
-    :vartype players: list(SteamDetails)
+    Attributes
+    ----------
+    players : list(SteamDetails)
+        List of steam information in ascending order of account ids
     """
     def parse_response(self):
         super().parse_response('response')

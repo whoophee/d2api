@@ -59,11 +59,12 @@ class Entity(dict):
 class Hero(Entity):
     """Wrapper to map hero information to hero_id
     
-    :var hero_id: Unique identifier of hero
-    :var hero_name: Name of the hero
-
-    :vartype hero_id: int
-    :vartype hero_name: str
+    Attributes
+    ----------
+    hero_id : int
+        Unique identifier of hero
+    hero_name : str
+        Name of the hero
     """
     def __repr__(self):
         return "Hero(hero_id = {})".format(self['hero_id'])
@@ -82,15 +83,16 @@ class Hero(Entity):
 class Item(Entity):
     """Wrapper to map item information to item_id
 
-    :var item_id: Unique identifier of item
-    :var item_cost: Cost of the item
-    :var item_aliases: List of names by which the item is known
-    :var item_name: Name of the item
-
-    :vartype item_id: int
-    :vartype item_cost: int
-    :vartype item_aliases: list(str)
-    :vartype item_name: str
+    Attributes
+    ----------
+    item_id : int
+        Unique identifier of item
+    item_cost : int
+        Cost of the item
+    item_aliases : list(str)
+        List of names by which the item is known
+    item_name : str
+        Name of the item
     """
     def __repr__(self):
         return "Item(item_id = {})".format(self['item_id'])
@@ -110,11 +112,12 @@ class Item(Entity):
 class Ability(Entity):
     """Wrapper to map ability data to ability_id
     
-    :var ability_id: Unique identifier of ability
-    :var ability_name: Name of the ability
-
-    :vartype ability_id: int
-    :vartype ability_name: str
+    Attributes
+    ----------
+    ability_id : int
+        Unique identifier of ability
+    ability_name : str
+        Name of the ability
     """
     def __repr__(self):
         return "Ability(ability_id = {})".format(self['ability_id'])
@@ -133,11 +136,12 @@ class Ability(Entity):
 class SteamAccount(Entity):
     """Wrapper to implicitly store steam32 and steam64 account IDs
     
-    :var id32: 32-bit Steam ID
-    :var id64: 64-bit Steam ID
-
-    :vartype id32: int
-    :vartype id64: int
+    Attributes
+    ----------
+    id32 : int
+        32-bit Steam ID
+    id64 : int
+        64-bit Steam ID
     """
     def __repr__(self):
         return "SteamAccount(account_id = {})".format(self['id32'])
