@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import unittest
-from pathlib import Path
 
 import d2api
 from d2api.src import endpoints
@@ -203,7 +202,7 @@ class LiveLeagueGamesTests(unittest.TestCase):
         'get_live_league_games() should return a LiveLeagueGames object.' )
     
     def test_livegame_parse(self):
-        p = Path(os.path.join(os.path.dirname(__file__), 'ref', 'livegame.json'))
+        p = os.path.abspath(os.path.join(os.path.dirname(__file__), 'ref', 'livegame.json'))
         json = util.decode_json(open(p, encoding = 'utf8').read())
         game = wrappers.Game(json)
         
