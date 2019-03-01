@@ -4,11 +4,8 @@ import os
 import unittest
 
 import d2api
-from d2api.src import endpoints
 from d2api.src import entities
-from d2api.src import errors as d2errors
 from d2api.src import wrappers
-from d2api import update_local_data
 from d2api.src import util
 
 # TODO: A whole lot more test cases

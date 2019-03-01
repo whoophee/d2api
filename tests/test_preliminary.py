@@ -4,7 +4,6 @@ import os
 import unittest
 
 import d2api
-from d2api.src import endpoints
 from d2api.src import entities
 from d2api.src import errors as d2errors
 from d2api.src import wrappers
@@ -107,4 +106,4 @@ class DtypeTests(unittest.TestCase):
         obj2['c'] = 3
         self.assertEqual(obj1['b'], 2, 'BaseWrapper __getitem__ does not work as intended.')
         with self.assertRaises(KeyError, msg = 'Trying to access non-existent properties should raise KeyError.'):
-            obj1['unexpected_key']
+            tst = obj1['unexpected_key']

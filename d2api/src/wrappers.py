@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import copy
+"""Parse wrapper definitions"""
+
 import pprint
 
 from . import entities
 from . import util
-"""Parse wrapper definitions"""
 
 def _get_side_from_slot(player_slot):
     """Get player team based on player slot"""

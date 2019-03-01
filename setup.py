@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 """Setup script"""
 
-import re
 from os import path
 
 from setuptools import setup
