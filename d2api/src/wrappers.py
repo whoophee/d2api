@@ -27,13 +27,16 @@ class BaseWrapper(dict):
     def _copy_dict(self, other):
         for k, v in other.items():
             super().__setitem__(k, v)
-            
-    def __init__(self, default_obj = {}):
+
+    def assign_subkey(self, rname):
+        self._copy_dict(self.pop(rname, {}))
+
+    def __init__(self, default_obj):
         self._copy_dict(default_obj)
 
 class AbstractParse(BaseWrapper):
     """Interface to implement parsed objects."""
-    def __init__(self, default_obj = {}):
+    def __init__(self, default_obj):
         """
         Parameters
         ----------
@@ -42,7 +45,7 @@ class AbstractParse(BaseWrapper):
         """
         super().__init__(default_obj)
         self.parse()
-    
+
     def parse(self):
         pass
 
@@ -53,12 +56,12 @@ class AbstractResponse(BaseWrapper):
         super().__init__(util.decode_json(response_text))
         self.parse_response()
 
-    def parse_response(self, rname = 'result'):
-        super()._copy_dict(self.pop(rname, {}))
+    def parse_response(self):
+        super().assign_subkey('result')
 
 class PlayerMinimal(AbstractParse):
     """A minimal information wrapper for a player
-    
+
     Attributes
     ----------
     steam_account : SteamAccount
@@ -84,7 +87,7 @@ class PlayerMinimal(AbstractParse):
 # TODO : parse lobby_type or add enumeration for lobby_type
 class MatchSummary(AbstractParse):
     """A brief summary of queried games
-    
+
     Attributes
     ----------
     match_id : int
@@ -110,9 +113,9 @@ class MatchHistory(AbstractResponse):
         List of match summaries
     """
     def parse_response(self):
-        super().parse_response()
+        super().assign_subkey('result')
         self['matches'] = [MatchSummary(match) for match in self.get('matches', [])]
-       
+
 class InventoryUnit(AbstractParse):
     """Any unit having item slots."""
     def all_items(self):
@@ -139,7 +142,7 @@ class InventoryUnit(AbstractParse):
 
 class AdditionalUnit(InventoryUnit):
     """An inventoried unit besides heroes (e.g. Lone druid bear)
-    
+
     Attributes
     ----------
     inventory : list(Item)
@@ -205,7 +208,7 @@ class PlayerUnit(InventoryUnit):
         Total damage done to opponent towers at  the end of the match
     hero_healing : int
         Total healing done to other heroes at the end of the match
-    additional_units : list(AdditionalUnit) 
+    additional_units : list(AdditionalUnit)
         Additional units belonging to the current unit
     inventory : list(Item)
         List of inventory items
@@ -355,7 +358,7 @@ class MatchDetails(AbstractResponse):
         return has_leaver
 
     def parse_response(self):
-        super().parse_response()
+        super().assign_subkey('result')
 
         minimal = lambda x: PlayerMinimal(_get_subdict(x, ['account_id', 'player_slot', 'hero_id']))
 
@@ -368,7 +371,7 @@ class MatchDetails(AbstractResponse):
         picks_bans = [PickBan(pb) for pb in self.get('picks_bans', [])]
         self['picks_bans'] = sorted(picks_bans, key = lambda x: x['order'])
 
-        
+
         for side in ['radiant', 'dire']:
             tower_status = self.pop('tower_status_{}'.format(side), None)
             barracks_status = self.pop('barracks_status_{}'.format(side), None)
@@ -421,7 +424,7 @@ class Heroes(AbstractResponse):
         Number of heroes returned
     """
     def parse_response(self):
-        super().parse_response()
+        super().assign_subkey('result')
         self['heroes'] = [LocalizedHero(h) for h in self.get('heroes', [])]
 
 class GameItems(AbstractResponse):
@@ -433,7 +436,7 @@ class GameItems(AbstractResponse):
         List of localized item information
     """
     def parse_response(self):
-        super().parse_response()
+        super().assign_subkey('result')
         self['game_items'] = [LocalizedGameItem(i) for i in self.pop('items', [])]
 
 class TournamentPrizePool(AbstractResponse):
@@ -526,7 +529,7 @@ class TeamLive(AbstractParse):
         tower_status = self.get('tower_state')
         barracks_status = self.get('barracks_state')
         self['buildings'] = Buildings({'tower_status': tower_status, 'barracks_status': barracks_status})
-        
+
         self['picks'] = [entities.Hero(h['hero_id']) for h in self.get('picks', [])]
         self['bans'] = [entities.Hero(h['hero_id']) for h in self.get('bans', [])]
 
@@ -621,7 +624,7 @@ class LiveLeagueGames(AbstractResponse):
         List of games
     """
     def parse_response(self):
-        super().parse_response()
+        super().assign_subkey('result')
         self['games'] = [Game(g) for g in self['games']]
 
 # TODO: add lobby type enumeration
@@ -683,11 +686,11 @@ class LiveGameSummary(AbstractParse):
         dire_tower_state = tower_states // 2**11
         radiant_tower_state = tower_states % 2**11
 
-    
+
         self['radiant_towers'] = Buildings({'tower_status': radiant_tower_state})
         self['dire_towers'] = Buildings({'tower_status': dire_tower_state})
         self['players'] = [PlayerMinimal(p) for p in self.get('players', [])]
-        
+
         radiant_team_name = self.pop('team_name_radiant', None)
         dire_team_name = self.pop('team_name_dire', None)
         radiant_team_id = self.pop('team_id_radiant', None)
@@ -716,7 +719,7 @@ class TeamInfoByTeamID(AbstractResponse):
         List of team information
     """
     def parse_response(self):
-        super().parse_response()
+        super().assign_subkey('result')
         self['teams'] = [TeamInfo(t) for t in self.get('teams', [])]
 
 class BroadcasterInfo(AbstractResponse):
@@ -777,7 +780,7 @@ class SteamDetails(AbstractParse):
         An integer ID internal to Steam representing the user's city
     gameid : int
         If the user is in game this will be set to it's app ID as a string
-    gameextrainfo : str 
+    gameextrainfo : str
         The title of the game
     gameserverip : str
         The server URL given as an IP address and port number
@@ -786,8 +789,8 @@ class SteamDetails(AbstractParse):
         self['steam_account'] = entities.SteamAccount(self.get('steamid'))
 
         comm_descr = {
-            1: 'private', 
-            2: 'friends_only', 
+            1: 'private',
+            2: 'friends_only',
             3: 'friends_of_friends',
             4: 'users_only',
             5: 'public'
@@ -805,7 +808,7 @@ class SteamDetails(AbstractParse):
             6: 'looking_to_play'
         }
         self['personastate'] = persona_descr[self.pop('personastate', 0)]
-        
+
 class PlayerSummaries(AbstractResponse):
     """:any:`get_player_summaries` response object
 
@@ -815,6 +818,6 @@ class PlayerSummaries(AbstractResponse):
         List of steam information in ascending order of account ids
     """
     def parse_response(self):
-        super().parse_response('response')
+        super().assign_subkey('response')
         # For some reason, the WebAPI doesn't maintain relative ordering. Sorted to make the response consistent.
         self['players'] = sorted([SteamDetails(p) for p in self.get('players', [])], key = lambda x: x['steam_account']['id64'])

@@ -13,21 +13,21 @@ from d2api import update_local_data
 
 class APIPreliminaryTests(unittest.TestCase):
     def test_environment_api_key_set(self):
-        self.assertIsNotNone(os.environ.get('D2_API_KEY'), 
+        self.assertIsNotNone(os.environ.get('D2_API_KEY'),
         'D2_API_KEY was not set in environment')
 
     def test_correct_api_key(self):
         key = 'abcdxyz'
         tmp_api = d2api.APIWrapper(key)
 
-        with self.assertRaises(d2errors.APIAuthenticationError, 
+        with self.assertRaises(d2errors.APIAuthenticationError,
         msg = 'Request with API key \'{0}\' should raise authentication error'.format(key)):
             tmp_api.get_match_details('4176987886')
-    
+
     def test_insufficient_params(self):
         with self.assertRaises(d2errors.APIInsufficientArguments, msg = "match_id is a required argument for get_match_details"):
             d2api.APIWrapper().get_match_details(match_id = None)
-        
+
     def test_api_method_unavailable(self):
         method_url = 'http://api.steampowered.com/IDOTA2Match_570/RANDOMMETHOD/v0001/'
         with self.assertRaises(d2errors.APIMethodUnavailable, msg = "{0} is an unavailable method.".format(method_url)):
@@ -63,31 +63,31 @@ class EntityTests(unittest.TestCase):
         steam_repr = repr(entities.SteamAccount(1))
         steam_match_str = "SteamAccount(account_id = 1)"
         self.assertEqual(steam_repr, steam_match_str, "repr(entities.SteamAccount(1)) should be {0}".format(steam_match_str))
-    
+
     def test_ability_bool(self):
         ability1 = entities.Ability(None)
         ability2 = entities.Ability(2)
         self.assertTrue(not ability1, "not {0} should be True".format(ability1))
         self.assertFalse(not ability2, "not {0} should be False".format(ability2))
-    
+
     def test_hero_bool(self):
         hero1 = entities.Hero(None)
         hero2 = entities.Hero(2)
         self.assertTrue(not hero1, "not {0} should be True".format(hero1))
         self.assertFalse(not hero2, "not {0} should be False".format(hero2))
-    
+
     def test_item_bool(self):
         item1 = entities.Item(None)
         item2 = entities.Item(2)
         self.assertTrue(not item1, "not {0} should be True".format(item1))
         self.assertFalse(not item2, "not {0} should be False".format(item2))
-    
+
     def test_steamaccount_bool(self):
         acct1 = entities.SteamAccount(None)
         acct2 = entities.SteamAccount(2)
         self.assertTrue(not acct1, "not {0} should be True".format(acct1))
         self.assertFalse(not acct2, "not {0} should be False".format(acct2))
-    
+
 
 class DtypeTests(unittest.TestCase):
     def test_steam_32_64(self):
@@ -97,7 +97,7 @@ class DtypeTests(unittest.TestCase):
         account2 = entities.SteamAccount(account_id = steam32)
         self.assertEqual(account1, account2,
         'SteamAccount created with 32 Bit or 64 Bit SteamID should be indistinguishable')
-    
+
     def test_basewrapper(self):
         obj1 = wrappers.BaseWrapper({'a':1, 'b':2, 'c':3})
         obj2 = wrappers.BaseWrapper({'a':1})

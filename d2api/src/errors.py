@@ -4,7 +4,7 @@ class BaseError(Exception): # pragma: no cover
     """Generic error wrapper."""
     def __init__(self, msg):
         self._msg = msg
-        
+
     def __str__(self):
         return repr(self._msg)
 
@@ -19,8 +19,8 @@ class APIMethodUnavailable(BaseError):
         self._msg = "HTTP 404: \"{}\" is an unsupported/discontinued API method.".format(method_url)
 
 class APIInsufficientArguments(BaseError):
-    """Error for incomplete API call.""" 
-    def __init__(self, query = None, params = {}):
+    """Error for incomplete API call."""
+    def __init__(self, query = None, params = None):
         self._msg = "HTTP 400: Insufficient arguments for \"{0}\". Parameters provided: {1}".format(query, params)
 
 class APITimeoutError(BaseError): # pragma: no cover

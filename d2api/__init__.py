@@ -12,10 +12,10 @@ def _parse_steam_account(cur_args):
 
     if 'account_id' in cur_args:
         account_id = entities.SteamAccount(cur_args['account_id'])['id64']
-    
+
     if 'steam_account' in cur_args:
         account_id = cur_args.pop('steam_account')['id64']
-    
+
     cur_args['account_id'] = account_id
 
 def _parse_hero(cur_args):
@@ -30,7 +30,7 @@ def _parse_steam_account_list(cur_args):
 
     if 'account_ids' in cur_args:
         account_ids = ','.join([str(entities.SteamAccount(s)['id64']) for s in cur_args.pop('account_ids')])
-    
+
     if 'steam_accounts' in cur_args:
         account_ids = ','.join([str(s['id64']) for s in cur_args.pop('steam_accounts')])
 
@@ -59,7 +59,7 @@ class APIWrapper:
 
         Parameters
         ----------
-        url : string 
+        url : string
             Request url
         wrapper_class : Class
             Wrapper class used to parse response
@@ -85,12 +85,12 @@ class APIWrapper:
 
     def get_match_history(self, **kwargs):
         """Get a list of matches, filtered by various parameters.
-        
+
         Parameters
         ----------
-        hero_id : int, optional 
+        hero_id : int, optional
             Matches containing this hero. A list of hero IDs can be fetched via the :any:`get_heroes()` method
-        hero : Hero, optional 
+        hero : Hero, optional
             Used in place of hero_id
         game_mode : int, optional
             Games of this game mode are fetched
@@ -108,7 +108,7 @@ class APIWrapper:
             Start searching for matches equal to or older than this match ID
         matches_requested : int, optional
             Defaults to `100`
-        tournament_games_only : int, optional 
+        tournament_games_only : int, optional
             0 = False, 1 = True
 
         Returns
@@ -121,14 +121,14 @@ class APIWrapper:
         return self._api_call(endpoints.GET_MATCH_HISTORY, wrappers.MatchHistory, **kwargs)
 
     def get_match_history_by_sequence_num(self, **kwargs):
-        """Get a list of matches ordered by sequence number. 
+        """Get a list of matches ordered by sequence number.
         Uses a parser similar to that of :any:`get_match_history()` method
-        
+
         Parameters
         ----------
-        start_at_match_seq_num : int 
+        start_at_match_seq_num : int
             The match sequence number to start returning results from
-        matches_requested : int, optional 
+        matches_requested : int, optional
             Defaults to `100`
 
         Returns
@@ -140,12 +140,12 @@ class APIWrapper:
 
     def get_match_details(self, match_id, **kwargs):
         """Get detailed information about a particular match.
-        
+
         Parameters
         ----------
         match_id : int, string
             Match ID
-        
+
         Returns
         -------
         MatchDetails
@@ -161,7 +161,7 @@ class APIWrapper:
         ----------
         language : string, optional
             The `language <https://partner.steamgames.com/doc/store/localization#supported_languages>`_ to provide hero names in
-        itemizedonly : bool, optional 
+        itemizedonly : bool, optional
             Return a list of itemized heroes only
 
         Returns
@@ -173,10 +173,10 @@ class APIWrapper:
 
     def get_game_items(self, **kwargs):
         """Get a list of items in Dota 2.
-        
+
         Parameters
         ----------
-        language : string, optional 
+        language : string, optional
             The `language <https://partner.steamgames.com/doc/store/localization#supported_languages>`_ to provide hero names in
 
         Returns
@@ -185,13 +185,13 @@ class APIWrapper:
             Item information.
         """
         return self._api_call(endpoints.GET_GAME_ITEMS, wrappers.GameItems, **kwargs)
-    
+
     def get_tournament_prize_pool(self, **kwargs):
         """Get the current prizepool of specific tournaments.
-        
+
         Parameters
         ----------
-        leagueid : int 
+        leagueid : int
             The ID of the league to get the prize pool of
 
         Return
@@ -200,13 +200,13 @@ class APIWrapper:
             Prizepool of a tournament.
         """
         return self._api_call(endpoints.GET_TOURNAMENT_PRIZE_POOL, wrappers.TournamentPrizePool, **kwargs)
-    
+
     def get_top_live_game(self, partner = 0, **kwargs):
         """Get details of on-going live games.
-        
+
         Parameters
         ----------
-        partner : int, optional 
+        partner : int, optional
             Which partner's games to use (default `0`)
 
         Returns
@@ -216,15 +216,15 @@ class APIWrapper:
         """
         kwargs['partner'] = partner
         return self._api_call(endpoints.GET_TOP_LIVE_GAME, wrappers.TopLiveGame, **kwargs)
-    
+
     def get_team_info_by_team_id(self, **kwargs):
         """Get a list of teams' information.
-        
+
         Parameters
         ----------
-        start_at_team_id : int, optional 
+        start_at_team_id : int, optional
             The team id to start returning results from
-        teams_requested : int, optional 
+        teams_requested : int, optional
             The amount of teams to return
 
         Returns
@@ -236,7 +236,7 @@ class APIWrapper:
 
     def get_live_league_games(self, **kwargs):
         """Get a list of in-progress league matches, as well as their details at the time of query.
-        
+
         Returns
         -------
         LiveLeagueGames
@@ -249,11 +249,11 @@ class APIWrapper:
 
         Parameters
         ----------
-        account_id : int 
+        account_id : int
             32/64-bit account ID
-        steam_account : SteamAccount 
+        steam_account : SteamAccount
             Used in place of account_id
-        
+
         Returns
         -------
         BroadcasterInfo
@@ -268,9 +268,9 @@ class APIWrapper:
 
         Parameters
         ----------
-        account_ids : list(int) 
+        account_ids : list(int)
             32/64-bit account ID
-        steam_accounts : list(SteamAccount) 
+        steam_accounts : list(SteamAccount)
             Used in place of account IDs
 
         Returns
@@ -284,10 +284,10 @@ class APIWrapper:
 
 def update_local_data(purge = True):
     """Synchronize local data with current repository data
-    
+
     Parameters
     ----------
-    purge : bool 
+    purge : bool
         Set to ``True`` to delete local content
     """
     return entities._update(purge)

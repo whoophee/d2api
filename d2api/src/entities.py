@@ -49,7 +49,7 @@ all_items = _load_local_json('items.json')
 all_abilities = _load_local_json('abilities.json')
 
 
-# Most ID based response values have more data associated with them. 
+# Most ID based response values have more data associated with them.
 # This wrapper helps fetch them without having to use auxillary/helper functions.
 class Entity(dict):
     """Generic entity class"""
@@ -58,7 +58,7 @@ class Entity(dict):
 
 class Hero(Entity):
     """Wrapper to map hero information to hero_id
-    
+
     Attributes
     ----------
     hero_id : int
@@ -78,7 +78,7 @@ class Hero(Entity):
         self['hero_id'] = hero_id
         cur_hero = all_heroes.get(hero_id, {})
         self['hero_name'] = cur_hero.get('hero_name', 'unknown_hero')
-        
+
 
 class Item(Entity):
     """Wrapper to map item information to item_id
@@ -111,7 +111,7 @@ class Item(Entity):
 
 class Ability(Entity):
     """Wrapper to map ability data to ability_id
-    
+
     Attributes
     ----------
     ability_id : int
@@ -135,7 +135,7 @@ class Ability(Entity):
 # Removes the hassle of having to manually convert between Steam 32-bit/64-bit IDs
 class SteamAccount(Entity):
     """Wrapper to implicitly store steam32 and steam64 account IDs
-    
+
     Attributes
     ----------
     id32 : int
@@ -191,5 +191,5 @@ def _update(purge):
         all_items = _load_local_json('items.json')
         all_abilities = _load_local_json('abilities.json')
         return remote_meta
-    except: # pragma: no cover
-        return {}
+    except Exception as e: # pragma: no cover
+        return {"exception":e}
