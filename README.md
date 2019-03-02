@@ -20,9 +20,9 @@ $ pip install d2api
 ### Clone from github
 Download the latest build and install using:
 ```bash
-git clone https://github.com/whoophee/d2api/
-cd d2api/
-python setup.py install
+$ git clone https://github.com/whoophee/d2api/
+$ cd d2api/
+$ python setup.py install
 ```
 
 ## Getting Started
