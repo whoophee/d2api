@@ -20,21 +20,21 @@ $ pip install d2api
 ### Clone from github
 Download the latest build and install using:
 ```bash
-$ git clone https://github.com/whoophee/d2api/
-$ cd d2api/
-$ python setup.py install
+git clone https://github.com/whoophee/d2api/
+cd d2api/
+python setup.py install
 ```
 
 ## Getting Started
 
 First of all, you need an API key from [Steam](https://steamcommunity.com/dev/apikey). Once that's done, you can initialize the wrapper in one of two ways.
 
-#### Initialize using Environment Variable
+### Initialize using Environment Variable
 Set the environment variable ``D2_API_KEY`` to the API key you just generated, and then initialize your wrapper using,
 ```python
 api = d2api.APIWrapper()
 ```
-#### Initialize inline
+### Initialize inline
 You can also initialize the wrapper inline using,
 ```python
 # This takes priority over the environment variable

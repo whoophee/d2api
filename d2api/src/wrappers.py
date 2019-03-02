@@ -537,7 +537,7 @@ class TeamLive(AbstractParse):
         # because the WebAPI is stupid
         # Steam WebAPI returns multiple entries with the same name which I can only assume correspond to each player
         # util.decode_json describes the modified parser (to handle repeated names)
-        for i in range(len(players)):
+        for i in range(5):
             players[i]['abilities'] = self.pop('abilities_{}'.format(i), [])
 
         self['players'] = [PlayerLive(p) for p in players]

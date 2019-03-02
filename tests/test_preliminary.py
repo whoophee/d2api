@@ -106,4 +106,4 @@ class DtypeTests(unittest.TestCase):
         obj2['c'] = 3
         self.assertEqual(obj1['b'], 2, 'BaseWrapper __getitem__ does not work as intended.')
         with self.assertRaises(KeyError, msg = 'Trying to access non-existent properties should raise KeyError.'):
-            tst = obj1['unexpected_key']
+            print(obj1['unexpected_key'])
