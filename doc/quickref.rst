@@ -249,7 +249,9 @@ get_top_live_game()
             series_id,
             server_steam_id,
             sort_score,
-            spectators
+            spectators,
+            team_logo_dire,
+            team_logo_radiant
         }
     }
     
@@ -285,7 +287,160 @@ get_live_league_games()
 =======================
 ::
 
-    {games, status}
+    {
+        list(games): {
+            dire_series_wins,
+            dire_team: {
+                complete,
+                team_id,
+                team_logo,
+                team_name
+            },
+            league_id,
+            league_node_id,
+            lobby_id,
+            match_id,
+            list(players): {
+                hero: {hero_id, hero_name},
+                name,
+                side,
+                steam_account: {id32, id64}
+            },
+            radiant_series_wins,
+            radiant_team: {
+                complete,
+                team_id,
+                team_logo,
+                team_name
+            },
+            scoreboard: {
+                dire: {
+                    list(abilities): {ability_id, ability_level},
+                    list(bans): {hero_id, hero_name},
+                    barracks_state,
+                    buildings: {
+                        barracks_status,
+                        bot_ancient,
+                        bot_melee,
+                        bot_ranged,
+                        bot_t1,
+                        bot_t2,
+                        bot_t3,
+                        mid_melee,
+                        mid_ranged,
+                        mid_t1,
+                        mid_t2,
+                        mid_t3,
+                        top_ancient,
+                        top_melee,
+                        top_ranged,
+                        top_t1,
+                        top_t2,
+                        top_t3,
+                        tower_status
+                    },
+                    list(picks): {hero_id, hero_name},
+                    list(players): {
+                        list(abilities): {
+                            ability: {ability_id, ability_name},
+                            ability_level
+                        },
+                        assists,
+                        deaths,
+                        denies,
+                        gold,
+                        gold_per_min,
+                        hero: {hero_id, hero_name},
+                        list(inventory): {
+                            list(item_aliases),
+                            item_cost,
+                            item_id,
+                            item_name
+                        },
+                        kills,
+                        last_hits,
+                        level,
+                        net_worth,
+                        player_slot,
+                        position_x,
+                        position_y,
+                        respawn_timer,
+                        steam_account: {id32, id64},
+                        ultimate_cooldown,
+                        ultimate_state,
+                        xp_per_min
+                    },
+                    score,
+                    tower_state
+                },
+                duration,
+                radiant: {
+                    list(abilities): {ability_id, ability_level},
+                    list(bans): {hero_id, hero_name},
+                    barracks_state,
+                    buildings: {
+                        barracks_status,
+                        bot_ancient,
+                        bot_melee,
+                        bot_ranged,
+                        bot_t1,
+                        bot_t2,
+                        bot_t3,
+                        mid_melee,
+                        mid_ranged,
+                        mid_t1,
+                        mid_t2,
+                        mid_t3,
+                        top_ancient,
+                        top_melee,
+                        top_ranged,
+                        top_t1,
+                        top_t2,
+                        top_t3,
+                        tower_status
+                    },
+                    list(picks): {hero_id, hero_name},
+                    list(players): {
+                        list(abilities): {
+                            ability: {ability_id, ability_name},
+                            ability_level
+                        },
+                        assists,
+                        deaths,
+                        denies,
+                        gold,
+                        gold_per_min,
+                        hero: {hero_id, hero_name},
+                        list(inventory): {
+                            list(item_aliases),
+                            item_cost,
+                            item_id,
+                            item_name
+                        },
+                        kills,
+                        last_hits,
+                        level,
+                        net_worth,
+                        player_slot,
+                        position_x,
+                        position_y,
+                        respawn_timer,
+                        steam_account: {id32, id64},
+                        ultimate_cooldown,
+                        ultimate_state,
+                        xp_per_min
+                    },
+                    score,
+                    tower_state
+                },
+                roshan_respawn_timer
+            },
+            series_type,
+            spectators,
+            stream_delay_s
+        },
+        status
+    }
     
 
 get_broadcaster_info()
