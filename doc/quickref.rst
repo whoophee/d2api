@@ -1,7 +1,10 @@
-# Quick Reference
+Quick Reference
+###############
 Below, is the generic dictionary access structure for any of the given endpoints.
 
-## get_match_history()
+get_match_history()
+===================
+::
 
     {
         list(matches): {
@@ -24,7 +27,9 @@ Below, is the generic dictionary access structure for any of the given endpoints
     }
     
 
-## get_match_details()
+get_match_details()
+===================
+::
 
     {
         cluster,
@@ -143,7 +148,9 @@ Below, is the generic dictionary access structure for any of the given endpoints
     }
     
 
-## get_heroes()
+get_heroes()
+============
+::
 
     {
         count,
@@ -156,7 +163,9 @@ Below, is the generic dictionary access structure for any of the given endpoints
     }
     
 
-## get_game_items()
+get_game_items()
+================
+::
 
     {
         list(game_items): {
@@ -172,7 +181,9 @@ Below, is the generic dictionary access structure for any of the given endpoints
     }
     
 
-## get_tournament_prize_pool()
+get_tournament_prize_pool()
+===========================
+::
 
     {
         league_id,
@@ -181,7 +192,9 @@ Below, is the generic dictionary access structure for any of the given endpoints
     }
     
 
-## get_top_live_game()
+get_top_live_game()
+===================
+::
 
     {
         list(game_list): {
@@ -241,7 +254,9 @@ Below, is the generic dictionary access structure for any of the given endpoints
     }
     
 
-## get_team_info_by_team_id()
+get_team_info_by_team_id()
+==========================
+::
 
     {
         status,
@@ -266,12 +281,16 @@ Below, is the generic dictionary access structure for any of the given endpoints
     }
     
 
-## get_live_league_games()
+get_live_league_games()
+=======================
+::
 
     {games, status}
     
 
-## get_broadcaster_info()
+get_broadcaster_info()
+======================
+::
 
     {
         live,
@@ -280,7 +299,9 @@ Below, is the generic dictionary access structure for any of the given endpoints
     }
     
 
-## get_player_summaries()
+get_player_summaries()
+======================
+::
 
     {
         list(players): {

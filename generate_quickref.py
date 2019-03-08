@@ -91,11 +91,12 @@ class QuickRef:
         
     
     def generate_markdown(self):
-        with open(path_to_doc("quickref.md"), 'w') as f:
-            f.write("# Quick Reference\n")
+        with open(path_to_doc("quickref.rst"), 'w') as f:
+            f.write("Quick Reference\n")
+            f.write("###############\n")
             f.write("Below, is the generic dictionary access structure for any of the given endpoints.\n")
             for fname, content in self.md:
-                f.write("\n## {}\n\n".format(fname))
+                f.write("\n{}\n{}\n::\n\n".format(fname, "="*len(fname)))
                 for c in content.split("\n"):
                     f.write("    {}\n".format(c))
 
