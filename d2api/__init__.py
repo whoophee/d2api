@@ -71,7 +71,12 @@ class APIWrapper:
         status = response.status_code
 
         if status == 200:
-            return wrapper_class(response.text) if self.parse_response else response.text
+            if self.parse_response:
+                current_response = wrapper_class(response.text)
+                current_response.url = response.url
+                return current_response
+            else:
+                return response.text
         elif status == 403:
             raise errors.APIAuthenticationError(self.api_key)
         elif status == 404:

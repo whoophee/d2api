@@ -11,7 +11,8 @@ This Python library is an unofficial wrapper and parser for the `Dota 2 Web API 
 .. toctree::
    :maxdepth: 2
    
-   installation
-   endpoints
-   documentation
-   tutorial
+   Installation <installation>
+   Getting Started <tutorial>
+   Quick Reference <quickref>
+   Endpoints <endpoints>
+   Documentation <documentation>
