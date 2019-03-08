@@ -315,7 +315,6 @@ get_live_league_games()
             },
             scoreboard: {
                 dire: {
-                    list(abilities): {ability_id, ability_level},
                     list(bans): {hero_id, hero_name},
                     barracks_state,
                     buildings: {
@@ -375,7 +374,6 @@ get_live_league_games()
                 },
                 duration,
                 radiant: {
-                    list(abilities): {ability_id, ability_level},
                     list(bans): {hero_id, hero_name},
                     barracks_state,
                     buildings: {

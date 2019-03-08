@@ -540,6 +540,8 @@ class TeamLive(AbstractParse):
         for i, player in enumerate(players):
             player['abilities'] = self.pop('abilities_{}'.format(i), [])
 
+        self.pop("abilities", None)
+
         self['players'] = [PlayerLive(p) for p in players]
 
 class Scoreboard(AbstractParse):
