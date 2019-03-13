@@ -3,6 +3,7 @@
 """Parse wrapper definitions"""
 
 import pprint
+from collections.abc import MutableMapping 
 
 from . import entities
 from . import util
@@ -19,23 +20,33 @@ def _get_subdict(d, keys):
     """Get a subdict with specific keys"""
     return {k: d.get(k) for k in keys}
 
-class BaseWrapper(dict):
-    """Base wrapper class for parsed results."""
-    def __str__(self):
-        return pprint.pformat(super().copy())
+class Dota2Dict(MutableMapping):
+    def __getitem__(self, key):
+        return self.data[key]
+    
+    def __setitem__(self, key, val):
+        self.data[key] = val
+    
+    def __delitem__(self, key):
+        del self.data[key]
+    
+    def __iter__(self):
+        return self.data.__iter__()
+    
+    def __len__(self):
+        return self.data.__len__()
 
-    def _copy_dict(self, other):
-        for k, v in other.items():
-            super().__setitem__(k, v)
+    def assign_subkey(self, key):
+        self.data = self.data.get(key, {})
 
-    def assign_subkey(self, rname):
-        self._copy_dict(self.pop(rname, {}))
+    def __init__(self, data = None):
+        self.data = data if data != None else {}
 
-    def __init__(self, default_obj):
-        self._copy_dict(default_obj)
-
-class AbstractParse(BaseWrapper):
+class AbstractParse(Dota2Dict):
     """Interface to implement parsed objects."""
+    def __str__(self):
+        return pprint.pformat(self.data)
+
     def __init__(self, default_obj):
         """
         Parameters
@@ -49,15 +60,18 @@ class AbstractParse(BaseWrapper):
     def parse(self):
         pass
 
-class AbstractResponse(BaseWrapper):
+class AbstractResponse(Dota2Dict):
     """Interface to implement parsed response objects."""
+    def __str__(self):
+        return pprint.pformat(self.data)
+
     def __init__(self, response_text):
         self.raw_json = response_text
         super().__init__(util.decode_json(response_text))
         self.parse_response()
 
     def parse_response(self):
-        super().assign_subkey('result')
+        self.assign_subkey('result')
 
 class PlayerMinimal(AbstractParse):
     """A minimal information wrapper for a player

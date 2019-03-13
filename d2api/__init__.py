@@ -54,7 +54,7 @@ class APIWrapper:
         self.parse_response = parse_response
 
 
-    def _api_call(self, url, wrapper_class = wrappers.BaseWrapper, **kwargs):
+    def _api_call(self, url, wrapper_class = lambda x: x, **kwargs):
         """Helper function to perform WebAPI requests.
 
         Parameters

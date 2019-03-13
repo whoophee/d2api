@@ -97,13 +97,3 @@ class DtypeTests(unittest.TestCase):
         account2 = entities.SteamAccount(account_id = steam32)
         self.assertEqual(account1, account2,
         'SteamAccount created with 32 Bit or 64 Bit SteamID should be indistinguishable')
-
-    def test_basewrapper(self):
-        obj1 = wrappers.BaseWrapper({'a':1, 'b':2, 'c':3})
-        obj2 = wrappers.BaseWrapper({'a':1})
-        self.assertNotEqual(obj1, obj2, '{0} and {1} are unequal.'.format(obj1, obj2))
-        obj2['b'] = 2
-        obj2['c'] = 3
-        self.assertEqual(obj1['b'], 2, 'BaseWrapper __getitem__ does not work as intended.')
-        with self.assertRaises(KeyError, msg = 'Trying to access non-existent properties should raise KeyError.'):
-            print(obj1['unexpected_key'])
