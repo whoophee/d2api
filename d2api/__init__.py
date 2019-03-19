@@ -1,10 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import time
 
 import requests
 
 from .src import endpoints, entities, errors, wrappers
+
+# Decorator to limit API request rate
+def rate_limited(max_per_second):
+    min_interval = 1.0 / float(max_per_second)
+    def decorate(func):
+        last_time_called = [0.0]
+        def rate_limited_function(*args,**kargs):
+            elapsed = time.clock() - last_time_called[0]
+            left = min_interval - elapsed
+            if left > 0:
+                time.sleep(left)
+            ret = func(*args,**kargs)
+            last_time_called[0] = time.clock()
+            return ret
+        return rate_limited_function
+    return decorate
+
 
 def _parse_steam_account(cur_args):
     """steam_account/account_id parse helper"""
@@ -53,7 +71,7 @@ class APIWrapper:
 
         self.parse_response = parse_response
 
-
+    @rate_limited(1)
     def _api_call(self, url, wrapper_class = lambda x: x, **kwargs):
         """Helper function to perform WebAPI requests.
 
