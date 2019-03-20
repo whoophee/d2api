@@ -7,23 +7,6 @@ import requests
 
 from .src import endpoints, entities, errors, wrappers
 
-# Decorator to limit API request rate
-def rate_limited(max_per_second):
-    min_interval = 1.0 / float(max_per_second)
-    def decorate(func):
-        last_time_called = [0.0]
-        def rate_limited_function(*args,**kargs):
-            elapsed = time.clock() - last_time_called[0]
-            left = min_interval - elapsed
-            if left > 0:
-                time.sleep(left)
-            ret = func(*args,**kargs)
-            last_time_called[0] = time.clock()
-            return ret
-        return rate_limited_function
-    return decorate
-
-
 def _parse_steam_account(cur_args):
     """steam_account/account_id parse helper"""
     account_id = None
@@ -65,13 +48,21 @@ class APIWrapper:
         Steam API key
     parse_response : bool
         set to ``False`` to get an unparsed json string
+    requests_per_second : int
+        rate limit requests to send requests politely (set to ``-1`` to ignore rate limiting)
     """
-    def __init__(self, api_key = None, parse_response = True):
+    def __init__(self, api_key = None, parse_response = True, requests_per_second = 1):
         self.api_key = api_key if api_key else os.environ.get('D2_API_KEY')
 
         self.parse_response = parse_response
 
-    @rate_limited(1)
+        if requests_per_second > 0:
+            self._interval = 1/requests_per_second
+        else:
+            self._interval = 0
+        
+        self._last_request = 0
+
     def _api_call(self, url, wrapper_class = lambda x: x, **kwargs):
         """Helper function to perform WebAPI requests.
 
@@ -84,6 +75,13 @@ class APIWrapper:
         """
         if not 'key' in kwargs:
             kwargs['key'] = self.api_key
+
+        # Maintain time of last request to prevent spamming.
+        if self._interval != 0:
+            remain = self._last_request + self._interval - time.time()
+            if remain > 0:
+                time.sleep(remain)
+            self._last_request = time.time()
 
         response = requests.get(url, params = kwargs, timeout = 60)
         status = response.status_code
