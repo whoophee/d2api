@@ -8,11 +8,23 @@ from d2api.src import entities
 from d2api.src import wrappers
 from d2api.src import util
 
+# Test calls creates a new APIWrapper instance during ever setUp
+# This prevents the currently implemented wrapper from rate limiting queries
+# and as a result, causes Travis to fail with HTTP 429 error.
+# A singleton is used to circumvent this situation
+class TestAPI:
+    _api_instance = None
+    @staticmethod
+    def get_instance():
+        if TestAPI._api_instance == None:
+            TestAPI._api_instance = d2api.APIWrapper()
+        return TestAPI._api_instance
+
 # TODO: A whole lot more test cases
 
 class MatchHistoryTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_match_history = api.get_match_history
 
     def test_get_match_history_dtype(self):
@@ -42,7 +54,7 @@ class MatchHistoryTests(unittest.TestCase):
 
 class MatchHistoryBySeqNumTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_match_history_by_sequence_num = api.get_match_history_by_sequence_num
 
     def test_get_match_history_by_sequence_num_dtype(self):
@@ -51,7 +63,7 @@ class MatchHistoryBySeqNumTests(unittest.TestCase):
 
 class MatchDetailsTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_match_details = api.get_match_details
 
     def test_get_match_details_dtype(self):
@@ -107,7 +119,7 @@ class MatchDetailsTests(unittest.TestCase):
 
 class HeroesTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_heroes = api.get_heroes
 
     def test_get_heroes_dtype(self):
@@ -123,7 +135,7 @@ class HeroesTests(unittest.TestCase):
 
 class GameItemsTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_game_items = api.get_game_items
 
     def test_get_game_items_dtype(self):
@@ -139,7 +151,7 @@ class GameItemsTests(unittest.TestCase):
 
 class TournamentPrizePoolTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_tournament_prize_pool = api.get_tournament_prize_pool
 
     def test_get_tournament_prize_pool_dtype(self):
@@ -148,7 +160,7 @@ class TournamentPrizePoolTests(unittest.TestCase):
 
 class TopLiveGameTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_top_live_game = api.get_top_live_game
 
     def test_get_top_live_game_dtype(self):
@@ -157,7 +169,7 @@ class TopLiveGameTests(unittest.TestCase):
 
 class LanguageTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.api = api
 
     def test_wrapper_language(self):
@@ -170,7 +182,7 @@ class LanguageTests(unittest.TestCase):
 
 class TeamInfoByTeamIDTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_team_info_by_team_id = api.get_team_info_by_team_id
 
     def test_get_team_info_by_team_id_dtype(self):
@@ -191,7 +203,7 @@ class TeamInfoByTeamIDTests(unittest.TestCase):
 
 class LiveLeagueGamesTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_live_league_games = api.get_live_league_games
 
     def test_get_live_league_games_dtype(self):
@@ -208,7 +220,7 @@ class LiveLeagueGamesTests(unittest.TestCase):
 
 class BroadcasterInfoTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_broadcaster_info = api.get_broadcaster_info
 
     def test_get_broadcaster_info_dtype(self):
@@ -217,7 +229,7 @@ class BroadcasterInfoTests(unittest.TestCase):
 
 class PlayerSummariesTests(unittest.TestCase):
     def setUp(self):
-        api = d2api.APIWrapper()
+        api = TestAPI.get_instance()
         self.get_player_summaries = api.get_player_summaries
 
     def test_get_player_summaries_dtype(self):
