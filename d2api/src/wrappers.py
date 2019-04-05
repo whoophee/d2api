@@ -127,7 +127,7 @@ class MatchHistory(AbstractResponse):
         List of match summaries
     """
     def parse_response(self):
-        super().assign_subkey('result')
+        self.assign_subkey('result')
         self['matches'] = [MatchSummary(match) for match in self.get('matches', [])]
 
 class InventoryUnit(AbstractParse):
@@ -372,7 +372,7 @@ class MatchDetails(AbstractResponse):
         return has_leaver
 
     def parse_response(self):
-        super().assign_subkey('result')
+        self.assign_subkey('result')
 
         minimal = lambda x: PlayerMinimal(_get_subdict(x, ['account_id', 'player_slot', 'hero_id']))
 
@@ -438,7 +438,7 @@ class Heroes(AbstractResponse):
         Number of heroes returned
     """
     def parse_response(self):
-        super().assign_subkey('result')
+        self.assign_subkey('result')
         self['heroes'] = [LocalizedHero(h) for h in self.get('heroes', [])]
 
 class GameItems(AbstractResponse):
@@ -450,7 +450,7 @@ class GameItems(AbstractResponse):
         List of localized item information
     """
     def parse_response(self):
-        super().assign_subkey('result')
+        self.assign_subkey('result')
         self['game_items'] = [LocalizedGameItem(i) for i in self.pop('items', [])]
 
 class TournamentPrizePool(AbstractResponse):
@@ -640,7 +640,7 @@ class LiveLeagueGames(AbstractResponse):
         List of games
     """
     def parse_response(self):
-        super().assign_subkey('result')
+        self.assign_subkey('result')
         self['games'] = [Game(g) for g in self['games']]
 
 # TODO: add lobby type enumeration
@@ -735,7 +735,7 @@ class TeamInfoByTeamID(AbstractResponse):
         List of team information
     """
     def parse_response(self):
-        super().assign_subkey('result')
+        self.assign_subkey('result')
         self['teams'] = [TeamInfo(t) for t in self.get('teams', [])]
 
 class BroadcasterInfo(AbstractResponse):
@@ -834,6 +834,6 @@ class PlayerSummaries(AbstractResponse):
         List of steam information in ascending order of account ids
     """
     def parse_response(self):
-        super().assign_subkey('response')
+        self.assign_subkey('response')
         # For some reason, the WebAPI doesn't maintain relative ordering. Sorted to make the response consistent.
         self['players'] = sorted([SteamDetails(p) for p in self.get('players', [])], key = lambda x: x['steam_account']['id64'])
