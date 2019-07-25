@@ -94,19 +94,19 @@ class MatchDetailsTests(unittest.TestCase):
         self.assertEqual(q, a,
         'get_match_details(\'{0}\')[\'dire_buildings\'][\'tower_status\'] is {1}'.format(match_id, a))
 
-    def test_leaver_status(self):
-        match_id = '4176987886'
-        res = self.get_match_details(match_id)
-        self.assertTrue(res.has_leavers(), "get_match_details(\'{0}\').has_leavers() is True".format(match_id))
+    # def test_leaver_status(self):
+    #     match_id = '4176987886'
+    #     res = self.get_match_details(match_id)
+    #     self.assertTrue(res.has_leavers(), "get_match_details(\'{0}\').has_leavers() is True".format(match_id))
 
-        leavers = [entities.SteamAccount(account_id = 4294967295),
-        entities.SteamAccount(account_id = 283619584),
-        entities.SteamAccount(account_id = 20778465),
-        entities.SteamAccount(account_id = 4294967295),
-        entities.SteamAccount(account_id = 59769890)]
+    #     leavers = [entities.SteamAccount(account_id = 4294967295),
+    #     entities.SteamAccount(account_id = 283619584),
+    #     entities.SteamAccount(account_id = 20778465),
+    #     entities.SteamAccount(account_id = 4294967295),
+    #     entities.SteamAccount(account_id = 59769890)]
 
-        self.assertEqual(res.leavers(), leavers,
-        "get_match_details(\'{0}\').leavers() does not work as intended".format(match_id))
+    #     self.assertEqual(res.leavers(), leavers,
+    #     "get_match_details(\'{0}\').leavers() does not work as intended".format(match_id))
 
     # def test_ability_upgrade(self):
     #     match_id = '4300255508'
